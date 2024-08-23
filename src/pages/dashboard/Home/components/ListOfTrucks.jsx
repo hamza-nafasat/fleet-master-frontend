@@ -1,12 +1,4 @@
-import {
-  Box,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Typography,
-} from "@mui/material";
+import { Box, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import LocationIcon from "../../../../assets/svgs/home/LocationIcon";
 import PlayIcon from "../../../../assets/svgs/home/PlayIcon";
@@ -44,12 +36,8 @@ const ListOfTrucks = () => {
     setSelectedTruck(truck);
     setModalType("map");
   };
-  const handleOpenVideoModal = () => {
-    setModalType("videos");
-  };
-  const handleCloseModal = () => {
-    setModalType(null);
-  };
+  const handleOpenVideoModal = () => setModalType("videos");
+  const handleCloseModal = () => setModalType(null);
 
   useEffect(() => {
     dispatch(getAllTrucksAction());
@@ -134,8 +122,7 @@ const ListOfTrucks = () => {
                   {trucks && (
                     <Box
                       sx={{
-                        background:
-                          truck?.status === "connected" ? "#3aa357" : "#ff0000",
+                        background: truck?.status === "connected" ? "#3aa357" : "#ff0000",
                         width: "13px",
                         height: "13px",
                         borderRadius: "50%",
@@ -153,10 +140,7 @@ const ListOfTrucks = () => {
                       gap: "9px",
                     }}
                   >
-                    <Box
-                      sx={{ cursor: "pointer" }}
-                      onClick={() => handleOpenMapModal(truck)}
-                    >
+                    <Box sx={{ cursor: "pointer" }} onClick={() => handleOpenMapModal(truck)}>
                       <LocationIcon />
                     </Box>
                     <Box sx={{ cursor: "pointer" }}>

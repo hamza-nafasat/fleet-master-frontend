@@ -3,11 +3,10 @@
 import { Box, Grid, Typography } from "@mui/material";
 import { Fragment, useState } from "react";
 import thumbnailPng from "../../../../../../assets/images/thumbnail.png";
+import CloseIcon from "../../../../../../assets/svgs/modal/CloseIcon";
 
-const SdCardModal = ({ onClose }) => {
+const SdCardModal = ({ liveUrl, onClose }) => {
   const [layout, setLayout] = useState("layout1");
-  const liveStreamUrl = "https://5701-110-39-11-3.ngrok-free.app/";
-
   const handleChangeLayout = (newLayout) => {
     setLayout(newLayout);
   };
@@ -48,7 +47,7 @@ const SdCardModal = ({ onClose }) => {
   ];
 
   return (
-    <Fragment>
+    <Box sx={{ position: "relative" }}>
       <Box
         sx={{
           color: "rgba(0, 107, 206, 1)",
@@ -58,6 +57,12 @@ const SdCardModal = ({ onClose }) => {
         }}
       >
         SD CARD REMOVAL
+      </Box>
+      <Box
+        sx={{ textAlign: "center", cursor: "pointer", position: "absolute", top: "10px", right: "10px" }}
+        onClick={onClose}
+      >
+        <CloseIcon />
       </Box>
       <Box sx={{ display: "flex", alignItems: "center", gap: "1.2rem" }}>
         <LayoutOne click={() => handleChangeLayout("layout1")} />
@@ -72,21 +77,22 @@ const SdCardModal = ({ onClose }) => {
             key={i}
             sx={{ transition: "all cubic-bezier(0.19, 1, 0.22, 1) 1s" }}
           >
-            <iframe
-              width="100%"
-              height="250"
-              src={liveStreamUrl} // Use the defined liveStreamUrl here
-              title="Live Stream"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowfullscreen
-              autoFocus
-            ></iframe>
+            {
+              <iframe
+                width="100%"
+                height="250"
+                src={liveUrl}
+                title="Live Stream"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowfullscreen
+              ></iframe>
+            }
             <Typography sx={{ textAlign: "center", fontWeight: 600 }}>{channel.name}</Typography>
           </Grid>
         ))}
       </Grid>
-    </Fragment>
+    </Box>
   );
 };
 

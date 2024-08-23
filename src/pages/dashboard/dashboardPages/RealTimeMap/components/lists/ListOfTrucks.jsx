@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   InputAdornment,
   Table,
   TableBody,
@@ -11,29 +10,31 @@ import {
   Typography,
   styled,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import AlertIcon from "../../../../../../assets/svgs/map/AlertIcon";
-import RingIcon from "../../../../../../assets/svgs/map/RingIcon";
-import SearchIcon from "../../../../../../assets/svgs/map/SearchIcon";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import LocationIcon from "../../../../../../assets/svgs/home/LocationIcon";
 import PlayIcon from "../../../../../../assets/svgs/home/PlayIcon";
 import VideoRecordIcon from "../../../../../../assets/svgs/home/VideoRecordIcon";
-import { useDispatch, useSelector } from "react-redux";
+import AlertIcon from "../../../../../../assets/svgs/map/AlertIcon";
+import RingIcon from "../../../../../../assets/svgs/map/RingIcon";
+import SearchIcon from "../../../../../../assets/svgs/map/SearchIcon";
+import Modal from "../../../../../../components/modal/Modal";
 import { getAllTrucksAction } from "../../../../../../redux/actions/truck.actions";
 import SdCardModal from "../../../../report/video/components/sdCardRemoval/SdCardModal";
-import Modal from "../../../../../../components/modal/Modal";
 
 const ListOfTrucks = () => {
   const dispatch = useDispatch();
   const [openVideoModal, setOpenVideoModal] = useState(false);
   const [searchTruck, setSearchTruck] = useState("");
   const { trucks } = useSelector((state) => state.truck);
+  const [liveUrl, setLiveUrl] = useState(null);
 
   const filteredTrucks = trucks?.filter((truck) =>
     String(truck.fleetNumber)?.toLowerCase().includes(searchTruck.toLowerCase())
   );
 
-  const handleOpenModal = () => {
+  const handleOpenModal = (url) => {
+    setLiveUrl(url);
     setOpenVideoModal(true);
     console.log("open modal");
   };
@@ -84,34 +85,37 @@ const ListOfTrucks = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {filteredTrucks?.map((truck, i) => (
-            <TableRow key={i}>
-              <BodyTableCell>{truck?.fleetNumber}</BodyTableCell>
-              <BodyTableCell>
-                <Typography
-                  sx={{
-                    width: "16px",
-                    height: "16px",
-                    background:
-                      truck.status === "connected" ? "rgba(58, 163, 87, 1)" : "rgba(255, 101, 84, 1)",
-                    borderRadius: "50%",
-                  }}
-                ></Typography>
-              </BodyTableCell>
-              <BodyTableCell>
-                <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                  <LocationIcon />
-                  <VideoRecordIcon />
-                  <PlayIcon onClick={handleOpenModal} />
-                </Box>
-              </BodyTableCell>
-            </TableRow>
-          ))}
+          {filteredTrucks?.map((truck, i) => {
+            const liveStreamUrl = truck?.devices?.find((device) => device.type == "video")?.url;
+            return (
+              <TableRow key={i}>
+                <BodyTableCell>{truck?.fleetNumber}</BodyTableCell>
+                <BodyTableCell>
+                  <Typography
+                    sx={{
+                      width: "16px",
+                      height: "16px",
+                      background:
+                        truck.status === "connected" ? "rgba(58, 163, 87, 1)" : "rgba(255, 101, 84, 1)",
+                      borderRadius: "50%",
+                    }}
+                  ></Typography>
+                </BodyTableCell>
+                <BodyTableCell>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                    <LocationIcon />
+                    <VideoRecordIcon />
+                    {liveStreamUrl && <PlayIcon onClick={() => handleOpenModal(liveStreamUrl)} />}
+                  </Box>
+                </BodyTableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
       {openVideoModal && (
         <Modal zIndex={999} onClose={handleCloseModal}>
-          <SdCardModal onClose={handleCloseModal} />
+          <SdCardModal liveUrl={liveUrl} onClose={handleCloseModal} />
         </Modal>
       )}
     </Box>

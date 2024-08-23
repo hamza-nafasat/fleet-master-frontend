@@ -14,8 +14,7 @@ export const truckSchema = Yup.object({
     .test(
       "fileFormat",
       "Unsupported file format",
-      (value) =>
-        value && ["image/jpeg", "image/png", "image/gif"].includes(value.type)
+      (value) => value && ["image/jpeg", "image/png", "image/gif"].includes(value.type)
     )
     .test(
       "fileSize",
@@ -35,8 +34,7 @@ export const addDriverSchema = Yup.object({
     .test(
       "fileFormat",
       "Unsupported file format",
-      (value) =>
-        value && ["image/jpeg", "image/png", "image/gif"].includes(value.type)
+      (value) => value && ["image/jpeg", "image/png", "image/gif"].includes(value.type)
     )
     .test(
       "fileSize",
@@ -56,8 +54,7 @@ export const addEmployeeSchema = Yup.object({
     .test(
       "fileFormat",
       "Unsupported file format",
-      (value) =>
-        value && ["image/jpeg", "image/png", "image/gif"].includes(value.type)
+      (value) => value && ["image/jpeg", "image/png", "image/gif"].includes(value.type)
     )
     .test(
       "fileSize",
@@ -68,7 +65,7 @@ export const addEmployeeSchema = Yup.object({
 
 export const attachModalSchema = Yup.object({
   deviceId: Yup.string().required("Device name is required"),
-  // deviceType: Yup.string().required('Device type is required'),
+  deviceType: Yup.string().required("Device type is required"),
 });
 
 export const addDeviceSchema = Yup.object({
@@ -82,9 +79,7 @@ export const addFenceSchema = Yup.object({
   name: Yup.string().required("Geofence name is required"),
   status: Yup.string().required("Status is required"),
   alert: Yup.string().required("Alert name is required"),
-  startDate: Yup.date()
-    .required("Start date is required")
-    .typeError("Start date must be a valid date"),
+  startDate: Yup.date().required("Start date is required").typeError("Start date must be a valid date"),
   endDate: Yup.date()
     .required("End date is required")
     .typeError("End date must be a valid date")
@@ -108,8 +103,7 @@ export const registerSchema = Yup.object({
     .test(
       "fileFormat",
       "Unsupported file format",
-      (value) =>
-        value && ["image/jpeg", "image/png", "image/gif"].includes(value.type)
+      (value) => value && ["image/jpeg", "image/png", "image/gif"].includes(value.type)
     )
     .test(
       "fileSize",
