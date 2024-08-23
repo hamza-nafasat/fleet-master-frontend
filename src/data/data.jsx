@@ -338,3 +338,26 @@ export const planCards = [
         btnBg: "linear-gradient(180deg, #FFC24A 0%, #EF4C66 161.43%)",
     },
 ];
+
+export const alertType = [
+    {
+        type: 'High Speed Detect',
+    },
+    {
+        type: 'In Fence Detect',
+    },
+    {
+        type: 'Out Fence Detect',
+    },
+]
+export const severityType = [
+    {
+        type: 'High',
+    },
+    {
+        type: 'Medium',
+    },
+    {
+        type: 'Low',
+    },
+]

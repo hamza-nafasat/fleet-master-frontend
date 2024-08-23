@@ -2,53 +2,61 @@ import React, { useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box, FormControlLabel, Switch, Typography } from "@mui/material";
 import DownloadIcon from "../../../../assets/svgs/reports/DownloadIcon";
-import EditIcon from '../../../../assets/svgs/settings/EditIcon'
+import EditIcon from "../../../../assets/svgs/settings/EditIcon";
 import Modal from "../../../../components/modal/Modal";
 import EditAlert from "./components/EditAlert";
+import HighSpeedIcon from "../../../../assets/svgs/settings/HighSpeedIcon";
+import InfenceIcon from "../../../../assets/svgs/settings/InfenceIcon";
+import OutfenceIcon from "../../../../assets/svgs/settings/OutfenceIcon";
+import HighIcon from "../../../../assets/svgs/settings/HighIcon";
+import LowIcon from "../../../../assets/svgs/settings/LowIcon";
+import MediumIcon from "../../../../assets/svgs/settings/MediumIcon";
+import AddAlert from "./components/AddAlert";
+import AddIcon from "../../../../assets/svgs/settings/AddIcon";
 
 const rows = [
   {
     id: 1,
-    alertType: "SD Card removal",
-    notificationType: "Alice Smith",
+    alertType: "High Speed",
+    notificationType: "On Email",
     date: "01/14/2024 - 02:31",
-    severity: 'High',
+    severity: "High",
     status: "Enabled",
     actions: "",
   },
   {
     id: 2,
-    alertType: "SD Card removal",
-    notificationType: "Alice Smith",
+    alertType: "Out Fence",
+    notificationType: "On Platform",
     date: "01/14/2024 - 02:31",
-    severity: 'High',
+    severity: "Medium",
     status: "Enabled",
     actions: "",
   },
   {
     id: 3,
-    alertType: "SD Card removal",
-    notificationType: "Alice Smith",
+    alertType: "High Speed",
+    notificationType: "On Email",
     date: "01/14/2024 - 02:31",
-    severity: 'High',
+    severity: "High",
     status: "Enabled",
     actions: "",
   },
   {
     id: 4,
-    alertType: "SD Card removal",
-    notificationType: "Alice Smith",
+    alertType: "In Fence",
+    notificationType: "On Platform",
     date: "01/14/2024 - 02:31",
-    severity: 'High',
+    severity: "Low",
     status: "Enabled",
     actions: "",
   },
   {
     id: 5,
-    alertType: "SD Card removal",
-    notificationType: "Alice Smith",
+    alertType: "Out Fence",
+    notificationType: "On Platform",
     date: "01/14/2024 - 02:31",
-    severity: 'High',
+    severity: "Medium",
     status: "Enabled",
     actions: "",
   },
@@ -56,106 +64,177 @@ const rows = [
 
 const AlertType = () => {
   const [modalType, setModalType] = useState(null);
-  
-  const handleOpenEditModal = () => {
-    setModalType('edit');
-    }
-    
+
+  const handleOpenEditModal = () => setModalType("edit");
+  const handleOpenAddModal = () => setModalType("add");
   const handleCloseModal = () => {
     setModalType(null);
-    }
-      
+  };
+
   const columns = [
-    { field: "alertType", headerName: "ALERT TYPE", headerAlign: 'center', align: 'center', width: 250 },
-    { 
-      field: "severity", 
-      headerName: "SEVERITY", 
-      width: 150,
-      headerAlign: 'center', 
-      align: 'center',
+    {
+      field: "alertType",
+      headerName: "ALERT TYPE",
+      width: 250,
       renderCell: (params) => (
-        <Box sx={{
-          height: '50px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '80%',
-          margin: 'auto'
-        }}>
-          <Box sx={{
-            background: '#ff6554',
-            borderRadius: '8px',
-            color: '#fff',
-            height: '42px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%'
-          }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            height: "100%",
+          }}
+        >
+          {params.value === "High Speed" ? (
+            <HighSpeedIcon />
+          ) : params.value === "In Fence" ? (
+            <InfenceIcon />
+          ) : (
+            <OutfenceIcon />
+          )}
+          <Typography
+            sx={{
+              color: "rgba(0, 74, 142, 1)",
+              fontSize: { xs: "14px", sm: "16px" },
+              fontWeight: "500",
+            }}
+          >
             {params.value}
+          </Typography>
+        </Box>
+      ),
+    },
+    {
+      field: "severity",
+      headerName: "SEVERITY",
+      width: 150,
+      renderCell: (params) => (
+        <Box sx={{ display: "flex", alignItems: "center", height: "100%" }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
+              p: 1,
+              borderRadius: "8px",
+              height: "35px",
+              width: "110px",
+              background:
+                params.value === "High"
+                  ? "rgba(255, 101, 84, 0.2)"
+                  : params.value === "Medium"
+                    ? "rgba(248, 152, 34, 0.2)"
+                    : "rgba(58, 163, 87, 0.2)",
+            }}
+          >
+            {params.value === "High" ? (
+              <HighIcon />
+            ) : params.value === "Medium" ? (
+              <MediumIcon />
+            ) : (
+              <LowIcon />
+            )}
+            <Typography
+              sx={{
+                fontSize: { xs: "14px", sm: "16px" },
+                fontWeight: "600",
+                color:
+                  params.value === "High"
+                    ? "rgba(255, 70, 70, 1)"
+                    : params.value === "Medium"
+                      ? "rgba(248, 152, 34, 1)"
+                      : "rgba(58, 163, 87, 1)",
+              }}
+            >
+              {params.value}
+            </Typography>
           </Box>
         </Box>
-      )
+      ),
     },
-    { field: "notificationType", headerName: "NOTIFICATION TYPE", headerAlign: 'center', align: 'center', width: 250 },
-    { 
-      field: "status", 
-      headerName: "STATUS", 
-      width: 250, 
-      headerAlign: 'center', 
-      align: 'center',
-      renderCell: (params) => (
-        <Box sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '0.5rem',
-          height: '100%'
-        }}>
-          <Typography>
-            {params.value}
-            </Typography>
-            <FormControlLabel 
-              control={
-                <Switch
-                  checked={params.value === 'Enabled'}
-                  onChange={(e) => {
-                    const newValue = e.target.checked ? 'Enabled' : 'Disabled';
-                  const updatedRows = rows.map(row => row.id === params.id ? { ...row, status: newValue } : row);
-                  params.api.updateRows([{ id: params.id, status: newValue }]);
-                  }}
-                  />
-              }
-              label=""
-            />
-        </Box>
-      )
-    },
-    { 
-      field: "actions", 
-      headerName: "ACTIONS", 
+    {
+      field: "notificationType",
+      headerName: "NOTIFICATION TYPE",
       width: 250,
-      headerAlign: 'center', 
-      align: 'center',
+      renderCell: (params) => (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            color: "#000",
+            fontSize: { xs: "14px", sm: "16px" },
+          }}
+        >
+          <Box
+            sx={{
+              width: "20px",
+              height: "20px",
+              borderRadius: "50%",
+              border: `2px solid ${params.value === "On Platform" ? "rgba(248, 152, 34, 1)" : "rgba(0, 103, 194, 1)"}`,
+            }}
+          ></Box>
+          {params.value}
+        </Box>
+      ),
+    },
+    {
+      field: "status",
+      headerName: "STATUS",
+      width: 250,
+      renderCell: (params) => (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            height: "100%",
+          }}
+        >
+          <Typography>{params.value}</Typography>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={params.value === "Enabled"}
+                onChange={(e) => {
+                  const newValue = e.target.checked ? "Enabled" : "Disabled";
+                  const updatedRows = rows.map((row) =>
+                    row.id === params.id ? { ...row, status: newValue } : row
+                  );
+                  params.api.updateRows([{ id: params.id, status: newValue }]);
+                }}
+              />
+            }
+            label=""
+          />
+        </Box>
+      ),
+    },
+    {
+      field: "actions",
+      headerName: "ACTIONS",
+      width: 250,
       renderCell: () => (
-        <Box 
+        <Box
           onClick={handleOpenEditModal}
-          sx={{ 
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-            cursor: 'pointer',
-            height: '100%'
-          }}>
+          sx={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "8px",
+            cursor: "pointer",
+            height: "100%",
+          }}
+        >
           <EditIcon />
         </Box>
-      )
+      ),
     },
   ];
-  
-      return (
-        <>
+
+  return (
+    <>
       <Box
         sx={{
           width: "100%",
@@ -168,11 +247,15 @@ const AlertType = () => {
       >
         <Box
           sx={{
+            padding: "10px 30px",
             display: "flex",
             justifyContent: "flex-end",
-            padding: "16px",
+            gap: "10px",
           }}
         >
+          <Box sx={{ cursor: "pointer" }} onClick={handleOpenAddModal}>
+            <AddIcon />
+          </Box>
           <DownloadIcon />
         </Box>
         <DataGrid
@@ -181,10 +264,10 @@ const AlertType = () => {
           pageSize={5}
           rowsPerPageOptions={[5, 10, 20]}
           headerClassName={(params) => {
-            return 'MuiDataGrid-colCell-center';
+            return "MuiDataGrid-colCell-center";
           }}
           cellClassName={(params) => {
-            return 'MuiDataGrid-cell-center';
+            return "MuiDataGrid-cell-center";
           }}
           sx={{
             "& .MuiDataGrid-row.even-row": {
@@ -244,9 +327,14 @@ const AlertType = () => {
           }}
         />
       </Box>
-      {modalType === 'edit' && (
+      {modalType === "edit" && (
         <Modal onClose={handleCloseModal}>
           <EditAlert onClose={handleCloseModal} />
+        </Modal>
+      )}
+      {modalType === "add" && (
+        <Modal onClose={handleCloseModal}>
+          <AddAlert onClose={handleCloseModal} />
         </Modal>
       )}
     </>
