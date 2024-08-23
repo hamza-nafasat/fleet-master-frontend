@@ -90,8 +90,9 @@ const EditAlert = ({ onClose, label, maxLength, type }) => {
               xs="12"
               mt={3}
               sx={{
-                display: "flex",
-                justifyContent: { xs: "unset", sm: "justify-between" },
+                display: {xs: 'block', sm: "flex"},
+                justifyContent: "space-between",
+                alignItems: 'center'
               }}
             >
               <Typography
@@ -136,6 +137,7 @@ const EditAlert = ({ onClose, label, maxLength, type }) => {
               gap: "1rem",
               justifyContent: "flex-end",
               flexGrow: 1,
+              mt: 2,
             }}
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>

@@ -13,6 +13,7 @@ import LowIcon from "../../../../assets/svgs/settings/LowIcon";
 import MediumIcon from "../../../../assets/svgs/settings/MediumIcon";
 import AddAlert from "./components/AddAlert";
 import AddIcon from "../../../../assets/svgs/settings/AddIcon";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 const rows = [
   {
@@ -192,7 +193,11 @@ const AlertType = () => {
             height: "100%",
           }}
         >
-          <Typography>{params.value}</Typography>
+          <Typography
+            sx={{ color: "#000", fontSize: { xs: "14px", sm: "16px" } }}
+          >
+            {params.value}
+          </Typography>
           <FormControlLabel
             control={
               <Switch
@@ -217,17 +222,22 @@ const AlertType = () => {
       width: 250,
       renderCell: () => (
         <Box
-          onClick={handleOpenEditModal}
           sx={{
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
             gap: "8px",
-            cursor: "pointer",
             height: "100%",
           }}
         >
-          <EditIcon />
+          <Box sx={{display: 'flex', aligItems: 'center', cursor: 'pointer'}} onClick={handleOpenEditModal}>
+            <EditIcon />
+          </Box>
+          <Box sx={{display: 'flex', aligItems: 'center', cursor: 'pointer'}}>
+            <DeleteForeverIcon
+              style={{ fontSize: "28px", color: "rgba(255, 70, 70, 1)" }}
+            />
+          </Box>
         </Box>
       ),
     },
