@@ -5,6 +5,7 @@ const initialState = {
   error: null,
   message: null,
   singleTruckReport: [],
+  dashboardDetails: [],
 };
 
 const adminSlice = createSlice({
@@ -23,9 +24,28 @@ const adminSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+
+    // get admin dashboard details
+    getAdminDashboardDetailsStart: (state) => {
+      state.loading = true;
+    },
+    getAdminDashboardDetailsSuccess: (state, action) => {
+      state.loading = false;
+      state.dashboardDetails = action.payload.data;
+    },
+    getAdminDashboardDetailsFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
   },
 });
 
-export const { getSingleTruckReportStart, getSingleTruckReportSuccess, getSingleTruckReportFailure } =
-  adminSlice.actions;
+export const {
+  getSingleTruckReportStart,
+  getSingleTruckReportSuccess,
+  getSingleTruckReportFailure,
+  getAdminDashboardDetailsStart,
+  getAdminDashboardDetailsSuccess,
+  getAdminDashboardDetailsFailure,
+} = adminSlice.actions;
 export default adminSlice;

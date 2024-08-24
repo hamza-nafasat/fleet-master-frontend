@@ -56,7 +56,7 @@ const SdCardModal = ({ liveUrl, onClose }) => {
           textAlign: "center",
         }}
       >
-        SD CARD REMOVAL
+        Dashboard Cam
       </Box>
       <Box
         sx={{ textAlign: "center", cursor: "pointer", position: "absolute", top: "10px", right: "10px" }}

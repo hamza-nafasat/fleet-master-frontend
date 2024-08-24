@@ -2,10 +2,41 @@ import Card from "./components/Card";
 import { Box, Grid } from "@mui/material";
 import PiechartFleet from "./components/PiechartFleet";
 import ReportChart from "./components/ReportChart";
-import Map from "./components/map/Map";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import ListOfTrucks from "../dashboardPages/RealTimeMap/components/lists/ListOfTrucks";
+import { useDispatch, useSelector } from "react-redux";
+import { adminDashboardDetailsAction } from "../../../redux/actions/admin.actions";
+import Map from "../dashboardPages/RealTimeMap/components/map/Map";
 const Home = () => {
+  const dispatch = useDispatch();
+  const { dashboardDetails } = useSelector((state) => state.admin);
+  const [dashboardDate, setDashboardDate] = useState({
+    totalTrucks: 0,
+    totalDrivers: 0,
+    totalAssignedTrucks: 0,
+    totalUnAssignedTrucks: 0,
+    totalEmployees: 0,
+    totalDevices: 0,
+    totalAlarms: 0,
+  });
+
+  useEffect(() => {
+    dispatch(adminDashboardDetailsAction());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (dashboardDetails) {
+      setDashboardDate((prevState) => ({
+        totalTrucks: dashboardDetails.totalTrucks || prevState.totalTrucks,
+        totalDrivers: dashboardDetails.totalDrivers || prevState.totalDrivers,
+        totalAssignedTrucks: dashboardDetails.totalAssignedTrucks || prevState.totalAssignedTrucks,
+        totalUnAssignedTrucks: dashboardDetails.totalUnAssignedTrucks || prevState.totalUnAssignedTrucks,
+        totalEmployees: dashboardDetails.totalEmployees || prevState.totalEmployees,
+        totalDevices: dashboardDetails.totalDevices || prevState.totalDevices,
+        totalAlarms: dashboardDetails.totalAlarms || prevState.totalAlarms,
+      }));
+    }
+  }, [dashboardDetails]);
   return (
     <Fragment>
       <Box
@@ -14,7 +45,7 @@ const Home = () => {
           width: "100%",
         }}
       >
-        <Card />
+        <Card dashboardDate={dashboardDate} />
       </Box>
       <Grid container spacing={3} sx={{ margin: 0 }}>
         <Grid item xs={12} md={4} sx={{ pl: "0 !important" }}>
@@ -53,14 +84,16 @@ const Home = () => {
           </Box>
         </Grid>
       </Grid>
-      <Grid container spacing={3} sx={{ margin: 0 }}>
+      <Grid container spacing={3} height={"400px"} sx={{ margin: 0 }}>
         <Grid
           item
           xs={12}
           md={4}
           lg={3}
           sx={{
+            pb: "10px !important",
             pl: "0 !important",
+            height: "100%",
             paddingRight: {
               xs: "24px",
               md: "0",
@@ -75,6 +108,8 @@ const Home = () => {
           md={8}
           lg={9}
           sx={{
+            pb: "10px !important",
+            height: "100%",
             paddingLeft: {
               xs: "0 !important",
               md: "24px !important",
@@ -86,7 +121,7 @@ const Home = () => {
             sx={{
               background: "#fff",
               borderRadius: "12px",
-              height: "300px",
+              height: "100%",
             }}
           >
             <Map />

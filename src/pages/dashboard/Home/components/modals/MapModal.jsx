@@ -1,21 +1,20 @@
+/* eslint-disable react/prop-types */
 import { Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
 import BackIcon from "../../../../../assets/svgs/modal/BackIcon";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import L from 'leaflet'
+import L from "leaflet";
 import TruckIcon from "../../../../../assets/images/truck.png";
 
 const truckIcon = new L.Icon({
   iconUrl: TruckIcon,
-  iconSize: [45, 45]
-})
+  iconSize: [45, 45],
+});
 
 const MapModal = ({ onClose, truck }) => {
-  const [truckPosition, setTruckPosition] = useState([truck?.latitude ,truck?.longitude])
-  console.log("TRUCK POSITION",truck)
-
+  const [truckPosition] = useState([truck?.latitude, truck?.longitude]);
   return (
     <>
       <Box
@@ -47,8 +46,12 @@ const MapModal = ({ onClose, truck }) => {
           <CloseIcon onClick={onClose} />
         </Box>
       </Box>
-      <Box sx={{ width: '100%', height: {xs: '300px', md: '500px'} }}>
-        <MapContainer center={[25.276987, 55.296249]} zoom={5} style={{ width: '100%', height: '100%', borderRadius: '24px' }}>
+      <Box sx={{ width: "100%", height: { xs: "300px", md: "500px" } }}>
+        <MapContainer
+          center={[25.276987, 55.296249]}
+          zoom={5}
+          style={{ width: "100%", height: "100%", borderRadius: "24px" }}
+        >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

@@ -128,7 +128,7 @@ const ListOfTrucks = () => {
         </Modal>
       )}
       {openMapModal && (
-        <Modal onClose={handleCloseMapModal}>
+        <Modal zIndex={999} onClose={handleCloseMapModal}>
           <MapModal onClose={handleCloseMapModal} truck={selectedTruck} />
         </Modal>
       )}

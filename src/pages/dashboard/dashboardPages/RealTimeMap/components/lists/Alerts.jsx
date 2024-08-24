@@ -26,7 +26,7 @@ const Alerts = () => {
   };
   return (
     <Box>
-      <Typography
+      {/* <Typography
         variant="h3"
         sx={{
           fontSize: {
@@ -75,7 +75,7 @@ const Alerts = () => {
             ALL ALERTS
           </Box>
         )}
-      </Box>
+      </Box> */}
       <ListOfTrucks />
     </Box>
   );

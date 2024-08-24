@@ -116,12 +116,12 @@ const Aside = ({ toggleNav }) => {
         //   route: "/dashboard/reports/video",
         //   page: "video-evidence",
         // },
-        {
-          icon: <ReportNestedIcon />,
-          title: "SOS",
-          route: "/dashboard/reports/sos",
-          page: "sos",
-        },
+        // {
+        //   icon: <ReportNestedIcon />,
+        //   title: "SOS",
+        //   route: "/dashboard/reports/sos",
+        //   page: "sos",
+        // },
       ],
     },
     {
