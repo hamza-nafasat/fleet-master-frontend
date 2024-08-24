@@ -15,30 +15,38 @@ import { useDispatch, useSelector } from "react-redux";
 import LocationIcon from "../../../../../../assets/svgs/home/LocationIcon";
 import PlayIcon from "../../../../../../assets/svgs/home/PlayIcon";
 import VideoRecordIcon from "../../../../../../assets/svgs/home/VideoRecordIcon";
-import AlertIcon from "../../../../../../assets/svgs/map/AlertIcon";
-import RingIcon from "../../../../../../assets/svgs/map/RingIcon";
 import SearchIcon from "../../../../../../assets/svgs/map/SearchIcon";
 import Modal from "../../../../../../components/modal/Modal";
 import { getAllTrucksAction } from "../../../../../../redux/actions/truck.actions";
+import MapModal from "../../../../Home/components/modals/MapModal";
 import SdCardModal from "../../../../report/video/components/sdCardRemoval/SdCardModal";
 
 const ListOfTrucks = () => {
   const dispatch = useDispatch();
   const [openVideoModal, setOpenVideoModal] = useState(false);
+  const [selectedTruck, setSelectedTruck] = useState(null);
+  const [openMapModal, setOpenMapModal] = useState(false);
   const [searchTruck, setSearchTruck] = useState("");
   const { trucks } = useSelector((state) => state.truck);
+
   const [liveUrl, setLiveUrl] = useState(null);
 
   const filteredTrucks = trucks?.filter((truck) =>
-    String(truck.fleetNumber)?.toLowerCase().includes(searchTruck.toLowerCase())
+    String(truck.truckName)?.toLowerCase().includes(searchTruck.toLowerCase())
   );
+  // map modal open and close handle
+  const handleOpenMapModal = (truck) => {
+    setSelectedTruck(truck);
+    setOpenMapModal(true);
+  };
+  const handleCloseMapModal = () => setOpenMapModal(false);
 
-  const handleOpenModal = (url) => {
+  // video modal open and close handler
+  const handleOpenVideoModal = (url) => {
     setLiveUrl(url);
     setOpenVideoModal(true);
-    console.log("open modal");
   };
-  const handleCloseModal = () => setOpenVideoModal(false);
+  const handleCloseVideoModal = () => setOpenVideoModal(false);
 
   useEffect(() => {
     dispatch(getAllTrucksAction());
@@ -52,13 +60,14 @@ const ListOfTrucks = () => {
             xs: "18px",
             md: "24px",
           },
+          mb: 2,
           fontWeight: 600,
           color: "#000",
         }}
       >
         LIST OF TRUCKS
       </Typography>
-      <NotificationLists />
+      {/* <NotificationLists /> */}
       <TextField
         fullWidth
         variant="outlined"
@@ -79,7 +88,7 @@ const ListOfTrucks = () => {
       <Table sx={{ mt: 2 }}>
         <TableHead>
           <TableRow>
-            <HeadTableCell>Fleet Number</HeadTableCell>
+            <HeadTableCell>Truck Name</HeadTableCell>
             <HeadTableCell>Status</HeadTableCell>
             <HeadTableCell>Action</HeadTableCell>
           </TableRow>
@@ -89,7 +98,7 @@ const ListOfTrucks = () => {
             const liveStreamUrl = truck?.devices?.find((device) => device.type == "video")?.url;
             return (
               <TableRow key={i}>
-                <BodyTableCell>{truck?.fleetNumber}</BodyTableCell>
+                <BodyTableCell>{truck?.truckName}</BodyTableCell>
                 <BodyTableCell>
                   <Typography
                     sx={{
@@ -103,9 +112,9 @@ const ListOfTrucks = () => {
                 </BodyTableCell>
                 <BodyTableCell>
                   <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                    <LocationIcon />
+                    <LocationIcon onClick={() => handleOpenMapModal(truck)} />
                     <VideoRecordIcon />
-                    {liveStreamUrl && <PlayIcon onClick={() => handleOpenModal(liveStreamUrl)} />}
+                    {liveStreamUrl && <PlayIcon onClick={() => handleOpenVideoModal(liveStreamUrl)} />}
                   </Box>
                 </BodyTableCell>
               </TableRow>
@@ -114,8 +123,13 @@ const ListOfTrucks = () => {
         </TableBody>
       </Table>
       {openVideoModal && (
-        <Modal zIndex={999} onClose={handleCloseModal}>
-          <SdCardModal liveUrl={liveUrl} onClose={handleCloseModal} />
+        <Modal zIndex={999} onClose={handleCloseVideoModal}>
+          <SdCardModal liveUrl={liveUrl} onClose={handleCloseVideoModal} />
+        </Modal>
+      )}
+      {openMapModal && (
+        <Modal onClose={handleCloseMapModal}>
+          <MapModal onClose={handleCloseMapModal} truck={selectedTruck} />
         </Modal>
       )}
     </Box>
@@ -138,92 +152,92 @@ const BodyTableCell = styled(TableCell)({
   borderBottom: "0",
 });
 
-const NotificationLists = () => {
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: "1rem",
-        my: 2,
-      }}
-    >
-      <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-        <Box
-          sx={{
-            width: "24px",
-            height: "24px",
-            background: "rgba(58, 163, 87, 1)",
-            borderRadius: "50%",
-          }}
-        ></Box>
-        <Typography variant="h5" sx={{ fontSize: "16px", fontWeight: 600 }}>
-          2
-        </Typography>
-      </Box>
-      <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-        <Box
-          sx={{
-            width: "24px",
-            height: "24px",
-            background: "rgba(255, 101, 84, 1)",
-            borderRadius: "50%",
-          }}
-        ></Box>
-        <Typography variant="h5" sx={{ fontSize: "16px", fontWeight: 600 }}>
-          0
-        </Typography>
-      </Box>
-      <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-        <Box
-          sx={{
-            width: "24px",
-            height: "24px",
-            background: "rgba(150, 150, 150, 1)",
-            borderRadius: "50%",
-          }}
-        ></Box>
-        <Typography variant="h5" sx={{ fontSize: "16px", fontWeight: 600 }}>
-          10
-        </Typography>
-      </Box>
-      <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-        <Box
-          sx={{
-            width: "24px",
-            height: "24px",
-            background: "rgba(237, 236, 11, 1)",
-            borderRadius: "50%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <AlertIcon />
-        </Box>
-        <Typography variant="h5" sx={{ fontSize: "16px", fontWeight: 600 }}>
-          2
-        </Typography>
-      </Box>
-      <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-        <Box
-          sx={{
-            width: "24px",
-            height: "24px",
-            background: "rgba(255, 100, 84, 1)",
-            borderRadius: "50%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <RingIcon />
-        </Box>
-        <Typography variant="h5" sx={{ fontSize: "16px", fontWeight: 600 }}>
-          2
-        </Typography>
-      </Box>
-    </Box>
-  );
-};
+// const NotificationLists = () => {
+//   return (
+//     <Box
+//       sx={{
+//         display: "flex",
+//         alignItems: "center",
+//         justifyContent: "space-between",
+//         gap: "1rem",
+//         my: 2,
+//       }}
+//     >
+//       <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+//         <Box
+//           sx={{
+//             width: "24px",
+//             height: "24px",
+//             background: "rgba(58, 163, 87, 1)",
+//             borderRadius: "50%",
+//           }}
+//         ></Box>
+//         <Typography variant="h5" sx={{ fontSize: "16px", fontWeight: 600 }}>
+//           2
+//         </Typography>
+//       </Box>
+//       <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+//         <Box
+//           sx={{
+//             width: "24px",
+//             height: "24px",
+//             background: "rgba(255, 101, 84, 1)",
+//             borderRadius: "50%",
+//           }}
+//         ></Box>
+//         <Typography variant="h5" sx={{ fontSize: "16px", fontWeight: 600 }}>
+//           0
+//         </Typography>
+//       </Box>
+//       <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+//         <Box
+//           sx={{
+//             width: "24px",
+//             height: "24px",
+//             background: "rgba(150, 150, 150, 1)",
+//             borderRadius: "50%",
+//           }}
+//         ></Box>
+//         <Typography variant="h5" sx={{ fontSize: "16px", fontWeight: 600 }}>
+//           10
+//         </Typography>
+//       </Box>
+//       <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+//         <Box
+//           sx={{
+//             width: "24px",
+//             height: "24px",
+//             background: "rgba(237, 236, 11, 1)",
+//             borderRadius: "50%",
+//             display: "flex",
+//             alignItems: "center",
+//             justifyContent: "center",
+//           }}
+//         >
+//           <AlertIcon />
+//         </Box>
+//         <Typography variant="h5" sx={{ fontSize: "16px", fontWeight: 600 }}>
+//           2
+//         </Typography>
+//       </Box>
+//       <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+//         <Box
+//           sx={{
+//             width: "24px",
+//             height: "24px",
+//             background: "rgba(255, 100, 84, 1)",
+//             borderRadius: "50%",
+//             display: "flex",
+//             alignItems: "center",
+//             justifyContent: "center",
+//           }}
+//         >
+//           <RingIcon />
+//         </Box>
+//         <Typography variant="h5" sx={{ fontSize: "16px", fontWeight: 600 }}>
+//           2
+//         </Typography>
+//       </Box>
+//     </Box>
+//   );
+// };

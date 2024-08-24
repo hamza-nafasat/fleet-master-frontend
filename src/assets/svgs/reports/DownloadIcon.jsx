@@ -1,13 +1,17 @@
-import React from 'react'
+/* eslint-disable react/prop-types */
 
-const DownloadIcon = () => {
+import { Fragment } from "react";
+
+const DownloadIcon = ({ onClick }) => {
   return (
-    <>
+    <Fragment>
       <svg
+        onClick={onClick}
         width="32"
         height="32"
         viewBox="0 0 32 32"
         fill="none"
+        style={{ cursor: "pointer" }}
         xmlns="http://www.w3.org/2000/svg"
       >
         <rect width="32" height="32" rx="8" fill="#0067C2" />
@@ -25,16 +29,10 @@ const DownloadIcon = () => {
           strokeLinecap="round"
           strokeLinejoin="round"
         />
-        <path
-          d="M16 18.5V8.5"
-          stroke="white"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+        <path d="M16 18.5V8.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
-    </>
-  )
-}
+    </Fragment>
+  );
+};
 
-export default DownloadIcon
+export default DownloadIcon;

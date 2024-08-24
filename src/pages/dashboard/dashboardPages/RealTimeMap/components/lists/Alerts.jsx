@@ -1,5 +1,5 @@
 import { Box, Table, TableBody, TableCell, TableHead, TableRow, Typography, styled } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 import CancelIcon from "../../../../../../assets/svgs/map/CancelIcon";
 import ListOfTrucks from "./ListOfTrucks";
 

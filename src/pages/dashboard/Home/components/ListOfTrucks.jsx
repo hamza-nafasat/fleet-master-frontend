@@ -37,6 +37,7 @@ const ListOfTrucks = () => {
     setModalType("map");
   };
   const handleOpenVideoModal = () => setModalType("videos");
+
   const handleCloseModal = () => setModalType(null);
 
   useEffect(() => {

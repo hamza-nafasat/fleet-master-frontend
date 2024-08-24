@@ -1,13 +1,17 @@
-import React from "react";
+/* eslint-disable react/prop-types */
 
-const LocationIcon = () => {
+import { Fragment } from "react";
+
+const LocationIcon = ({ onClick }) => {
   return (
-    <>
+    <Fragment>
       <svg
+        onClick={onClick}
         width="20"
         height="20"
         viewBox="0 0 20 20"
         fill="none"
+        style={{ cursor: "pointer" }}
         xmlns="http://www.w3.org/2000/svg"
       >
         <rect width="20" height="20" rx="10" fill="#08852A" />
@@ -24,7 +28,7 @@ const LocationIcon = () => {
           fill="white"
         />
       </svg>
-    </>
+    </Fragment>
   );
 };
 

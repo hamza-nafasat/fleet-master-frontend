@@ -1,156 +1,177 @@
-import React, { useState } from "react";
+import { Box, Button, CircularProgress, MenuItem, TextField, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { Box, Button, TextField, MenuItem, Typography } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import DownloadIcon from "../../../../assets/svgs/reports/DownloadIcon";
-
-const rows = [
-  {
-    id: 1,
-    date: "2024-05-22",
-    timeFrom: "08:00",
-    timeTo: "17:00",
-    fleetNumber: "3324",
-    plateNumber: "3843h",
-    driver: "John Doe",
-    deviceId: "665847057603",
-    speed: "60",
-    status: "Connected",
-    longitude: "47.6649618",
-    latitude: "24.2330492",
-  },
-  {
-    id: 2,
-    date: "2024-05-22",
-    timeFrom: "08:00",
-    timeTo: "17:00",
-    fleetNumber: "3455",
-    plateNumber: "3843h",
-    driver: "John Doe",
-    deviceId: "665847057603",
-    speed: "60",
-    status: "Connected",
-    longitude: "47.6649618",
-    latitude: "24.2330492",
-  },
-  {
-    id: 3,
-    date: "2024-05-22",
-    timeFrom: "08:00",
-    timeTo: "17:00",
-    fleetNumber: "5756",
-    plateNumber: "3843h",
-    driver: "John Doe",
-    deviceId: "665847057603",
-    speed: "60",
-    status: "Connected",
-    longitude: "47.6649618",
-    latitude: "24.2330492",
-  },
-  {
-    id: 4,
-    date: "2024-05-22",
-    timeFrom: "08:00",
-    timeTo: "17:00",
-    fleetNumber: "8777",
-    plateNumber: "3843h",
-    driver: "John Doe",
-    deviceId: "665847057603",
-    speed: "60",
-    status: "Connected",
-    longitude: "47.6649618",
-    latitude: "24.2330492",
-  },
-  {
-    id: 9,
-    date: "2024-05-22",
-    timeFrom: "08:00",
-    timeTo: "17:00",
-    fleetNumber: "2364",
-    plateNumber: "3843h",
-    driver: "John Doe",
-    deviceId: "665847057603",
-    speed: "60",
-    status: "Disconnected",
-    longitude: "47.6649618",
-    latitude: "24.2330492",
-  },
-  {
-    id: 2,
-    date: "2024-05-22",
-    timeFrom: "08:00",
-    timeTo: "17:00",
-    fleetNumber: "9807",
-    plateNumber: "3843h",
-    driver: "John Doe",
-    deviceId: "665847057603",
-    speed: "60",
-    status: "Disconnected",
-    longitude: "47.6649618",
-    latitude: "24.2330492",
-  },
-];
+import { getSingleTruckReportsAction } from "../../../../redux/actions/admin.actions";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 const columns = [
-  { field: "date", headerName: "DATE/TIME", headerAlign: 'center', align: 'center', width: 150 },
-  { field: "fleetNumber", headerName: "FLEET NUMBER", headerAlign: 'center', align: 'center', width: 130 },
-  { field: "plateNumber", headerName: "PLATE NUMBER", headerAlign: 'center', align: 'center', width: 150 },
-  { field: "driver", headerName: "DRIVER", headerAlign: 'center', align: 'center', width: 120 },
-  { field: "deviceId", headerName: "DEVICE ID", headerAlign: 'center', align: 'center', width: 150 },
-  { field: "speed", headerName: "SPEED", headerAlign: 'center', align: 'center', width: 90 },
-  { 
-    field: "status", 
-    headerName: "STATUS", 
-    width: 150,
-    renderCell: (params) => (
-      <Box sx={{ 
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '8px'
-       }}>
-        <Box sx={{
-          width: '10px',
-          height: '10px',
-          borderRadius: '50%',
-          background: params.value === 'Connected' ? '#3aa357' : '#e63946',
-        }}>
-        </Box>
-        <Typography>
-            {params.value}
-        </Typography>
-      </Box>
-    )
+  { field: "plateNumber", headerName: "PLATE NUMBER", headerAlign: "center", align: "center", width: 100 },
+  { field: "driverName", headerName: "DRIVER", headerAlign: "center", align: "center", width: 200 },
+  { field: "deviceId", headerName: "DEVICE ID", headerAlign: "center", align: "center", width: 280 },
+  {
+    field: "speed",
+    headerName: "SPEED",
+    headerAlign: "center",
+    align: "center",
+    width: 90,
+    renderCell: (params) => `${Math.round(params.value)} km/h`,
   },
-  { field: "longitude", headerName: "LONGITUDE", width: 150 },
-  { field: "latitude", headerName: "LATITUDE", width: 130 },
+  {
+    field: "truckStatus",
+    headerName: "STATUS",
+    width: 140,
+    renderCell: (params) => (
+      <Box
+        sx={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "8px",
+        }}
+      >
+        <Box
+          sx={{
+            width: "10px",
+            height: "10px",
+            borderRadius: "50%",
+            background: params.value === "connected" ? "#3aa357" : "#e63946",
+          }}
+        ></Box>
+        <Typography>{params.value}</Typography>
+      </Box>
+    ),
+  },
+  { field: "longitude", headerName: "LONGITUDE", width: 120 },
+  { field: "latitude", headerName: "LATITUDE", width: 120 },
+  {
+    field: "createdAt",
+    headerName: "DATE",
+    headerAlign: "center",
+    align: "center",
+    renderCell: (params) => {
+      if (!params.value) return "";
+      const date = new Date(params.value);
+      const formattedDate = date.toLocaleDateString("en-GB");
+      const formattedTime = date.toLocaleTimeString("en-GB", { hour12: false });
+      return `${formattedDate} ${formattedTime}`;
+    },
+    width: 200,
+  },
 ];
 
 const TruckReport = () => {
-  const [date, setDate] = useState(null);
+  const dispatch = useDispatch();
   const [timeFrom, setTimeFrom] = useState("");
   const [timeTo, setTimeTo] = useState("");
-  const [fleetNumber, setFleetNumber] = useState("");
-  const [filteredRows, setFilteredRows] = useState(rows);
+  const [plateNumber, setPlateNumber] = useState("");
+  const [filteredRows, setFilteredRows] = useState([]);
+  const [plateNumbers, setPlateNumbers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleFilter = () => {
-    const filtered = rows.filter((row) => {
-      const matchesDate = date
-        ? row.date === date.toISOString().split("T")[0]
-        : true;
-      const matchesTimeFrom = timeFrom ? row.timeFrom >= timeFrom : true;
-      const matchesTimeTo = timeTo ? row.timeTo <= timeTo : true;
-      const matchesFleetNumber = fleetNumber
-        ? row.fleetNumber === fleetNumber
-        : true;
-      return (
-        matchesDate && matchesTimeFrom && matchesTimeTo && matchesFleetNumber
-      );
-    });
-    setFilteredRows(filtered);
+  const { trucks } = useSelector((state) => state.truck);
+  const { singleTruckReport } = useSelector((state) => state.admin);
+
+  const getReportsHandler = async () => {
+    setIsLoading(true);
+    await dispatch(getSingleTruckReportsAction(timeTo, timeFrom, plateNumber));
+    setIsLoading(false);
   };
+
+  const downloadPDF = async (data) => {
+    const doc = new jsPDF();
+    let yOffset = 15;
+
+    // Centered Text Function
+    const centerText = (text, y, fontSize = 16, color = [0, 0, 0]) => {
+      doc.setFontSize(fontSize);
+      doc.setTextColor(...color);
+      const textWidth = doc.getTextWidth(text);
+      const x = (doc.internal.pageSize.getWidth() - textWidth) / 2;
+      doc.text(text, x, y);
+    };
+
+    // Add Date and Time in Upper Left Corner
+    const addDateAndTime = () => {
+      const now = new Date();
+      const formattedDate = now.toLocaleDateString();
+      const formattedTime = now.toLocaleTimeString();
+      doc.setFontSize(8); // Smaller font size
+      doc.setTextColor(150, 150, 150); // Light gray color for the date and time
+      doc.text(`Generated on: ${formattedDate} ${formattedTime}`, 8, 5);
+    };
+
+    // Add Truck Data Table with Heading
+    const addTruckTable = () => {
+      const truckData = data.map((truck, index) => [
+        index + 1,
+        truck.plateNumber,
+        truck.driverName,
+        truck.truckStatus.toUpperCase(),
+        truck.latitude.toFixed(4),
+        truck.longitude.toFixed(4),
+        truck.speed.toFixed(2),
+        new Date(truck.createdAt).toLocaleString(),
+      ]);
+
+      // Add Table Heading
+      centerText("Truck Report", yOffset, 18, [63, 81, 181]);
+      yOffset += 10;
+
+      // Add Truck Data Table
+      doc.autoTable({
+        head: [
+          [
+            "#",
+            "Plate Number",
+            "Driver Name",
+            "Truck Status",
+            "Latitude",
+            "Longitude",
+            "Speed",
+            "Created At",
+          ],
+        ],
+        body: truckData,
+        startY: yOffset,
+        styles: {
+          halign: "center",
+          valign: "middle",
+          fontSize: 10,
+          cellPadding: 4,
+          lineColor: [200, 200, 200],
+          lineWidth: 0.5,
+        },
+        headStyles: {
+          fillColor: [33, 150, 243],
+          textColor: [255, 255, 255],
+        },
+        alternateRowStyles: {
+          fillColor: [240, 240, 240],
+        },
+      });
+    };
+
+    addDateAndTime();
+    addTruckTable();
+
+    // Save the PDF
+    doc.save("truck-report.pdf");
+  };
+  useEffect(() => {
+    if (singleTruckReport) {
+      console.log("singleTruckReport", singleTruckReport);
+      setFilteredRows(singleTruckReport);
+    }
+  }, [singleTruckReport]);
+
+  useEffect(() => {
+    if (trucks) {
+      setPlateNumbers(trucks.map((truck) => truck.plateNumber));
+    }
+  }, [trucks]);
 
   return (
     <Box
@@ -169,12 +190,12 @@ const TruckReport = () => {
           alignItems: "center",
           justifyContent: "space-between",
           flexWrap: {
-            xs: 'wrap',
-            md: 'nowrap'
+            xs: "wrap",
+            md: "nowrap",
           },
           gap: {
-            xs: '1.5rem',
-            md: "30px"
+            xs: "1.5rem",
+            md: "30px",
           },
           padding: "20px 20px 40px 20px",
           background: "#ffffff",
@@ -182,30 +203,6 @@ const TruckReport = () => {
           borderBottom: "1px solid #11111133",
         }}
       >
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DatePicker
-            sx={{
-              width: "100%",
-              "& .MuiInputBase-root": {
-                borderColor: "#11111133",
-                borderRadius: "8px",
-              },
-              "& .MuiInputBase-input": {
-                padding: "0 10px",
-                height: "40px",
-                color: '#11111199',
-                fontSize: '16px'
-              },
-              "& .MuiFormLabel-root": {
-                top: "-8px ",
-              },
-            }}
-            label="Date"
-            value={date}
-            onChange={(newValue) => setDate(newValue)}
-            renderInput={(params) => <TextField {...params} />}
-          />
-        </LocalizationProvider>
         <TextField
           sx={{
             width: "100%",
@@ -216,12 +213,12 @@ const TruckReport = () => {
             "& .MuiInputBase-input": {
               padding: "0 10px",
               height: "40px",
-              color: '#11111199',
-              fontSize: '16px'
+              color: "#11111199",
+              fontSize: "16px",
             },
           }}
-          label="Time From"
-          type="time"
+          label="From"
+          type="datetime-local"
           value={timeFrom}
           onChange={(e) => setTimeFrom(e.target.value)}
           InputLabelProps={{
@@ -238,12 +235,12 @@ const TruckReport = () => {
             "& .MuiInputBase-input": {
               padding: "0 10px",
               height: "40px",
-              color: '#11111199',
-              fontSize: '16px'
+              color: "#11111199",
+              fontSize: "16px",
             },
           }}
-          label="Time To"
-          type="time"
+          label="To"
+          type="datetime-local"
           value={timeTo}
           onChange={(e) => setTimeTo(e.target.value)}
           InputLabelProps={{
@@ -259,32 +256,39 @@ const TruckReport = () => {
             },
             "& .MuiSelect-select": {
               padding: "8px 10px",
-              color: '#11111199',
-              fontSize: '16px'
+              color: "#11111199",
+              fontSize: "16px",
             },
             "& .MuiFormLabel-root": {
               top: "-8px ",
             },
           }}
           select
-          label="Fleet Number"
-          value={fleetNumber}
-          onChange={(e) => setFleetNumber(e.target.value)}
+          label="Truk Plate Number"
+          value={plateNumber}
+          onChange={(e) => setPlateNumber(e.target.value)}
         >
-          {Array.from(new Set(rows.map((row) => row.fleetNumber))).map(
-            (fleetNumber) => (
-              <MenuItem key={fleetNumber} value={fleetNumber}>
-                {fleetNumber}
-              </MenuItem>
-            )
-          )}
+          {plateNumbers?.map((plateNumber) => (
+            <MenuItem key={plateNumber} value={plateNumber}>
+              {plateNumber}
+            </MenuItem>
+          ))}
         </TextField>
         <Button
+          disabled={isLoading}
           variant="contained"
-          onClick={handleFilter}
-          sx={{ width: "100%", borderRadius: "8px" }}
+          onClick={getReportsHandler}
+          sx={{
+            width: "100%",
+            borderRadius: "8px",
+            ":disabled": {
+              opacity: 0.5,
+              cursor: "not-allowed",
+            },
+          }}
         >
-          Show Report
+          {isLoading ? <CircularProgress sx={{ color: "#ffffff", mx: 2 }} size={24} /> : null}
+          {isLoading ? "Loading..." : "Get Reports"}
         </Button>
       </Box>
       <Box
@@ -294,10 +298,11 @@ const TruckReport = () => {
           padding: "16px",
         }}
       >
-        <DownloadIcon />
+        <DownloadIcon onClick={() => downloadPDF(filteredRows)} />
       </Box>
       <DataGrid
         rows={filteredRows}
+        getRowId={(row) => row._id}
         columns={columns}
         pageSize={5}
         rowsPerPageOptions={[5, 10, 20]}
