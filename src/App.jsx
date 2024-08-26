@@ -36,95 +36,92 @@ const GeoFence = lazy(() => import("./pages/dashboard/dashboardPages/geofence/Ge
 const RealTimeMap = lazy(() => import("./pages/dashboard/dashboardPages/RealTimeMap/RealTimeMap"));
 const SubscriptionPlan = lazy(() => import("./pages/dashboard/plans/subscriptionPlan/SubscriptionPlan"));
 const SubscriptionHistory = lazy(
-    () => import("./pages/dashboard/plans/subscriptionHistory/SubscriptionHistory")
+  () => import("./pages/dashboard/plans/subscriptionHistory/SubscriptionHistory")
 );
 const TruckDetail = lazy(() => import("./pages/dashboard/settings/trucks/components/TruckDetail"));
 const Notification = lazy(() => import("./pages/dashboard/navigation/header/components/NotificationDetail"));
 const Register = lazy(() => import("./pages/auth/register/Register"));
 
 function App() {
-    const { user, message, error, loading } = useSelector((state) => state.user);
+  const { user, message, error, loading } = useSelector((state) => state.user);
 
-    const dispatch = useDispatch();
-    useEffect(() => {
-        socket.on("connect", () => {
-            console.log(socket.id);
-        });
-        socket.on(socketEvent.SENSORS_DATA, (data) => {
-            console.log("trucks data coming from server ", data);
-            dispatch(getDeviceDataAction(data));
-        });
-    }, [dispatch]);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log(socket.id);
+    });
+    socket.on(socketEvent.SENSORS_DATA, (data) => {
+      console.log("trucks data coming from server ", data);
+      dispatch(getDeviceDataAction(data));
+    });
+    socket.on(socketEvent.NOTIFICATIONS, (data) => {
+      console.log("i am called");
+      dispatch(getNewNotificationsAction());
+    });
+  }, [dispatch]);
 
-    useEffect(() => {
-        dispatch(getMyProfileAction());
-        dispatch(getAllNotificationsAction());
-        dispatch(getNewNotificationsAction());
-    }, [dispatch]);
+  useEffect(() => {
+    dispatch(getMyProfileAction());
+    dispatch(getAllNotificationsAction());
+    dispatch(getNewNotificationsAction());
+  }, [dispatch]);
 
-    // show message and error
-    useEffect(() => {
-        if (message) {
-            toast.success(message);
-            dispatch(clearUserMessage());
-        }
-        if (error) {
-            toast.error(error);
-            dispatch(clearUserError());
-        }
-    }, [message, error, dispatch]);
-    return (
-        <Elements stripe={stripeLoad}>
-            <Router>
-                <Suspense fallback={<GlobalLoader />}>
-                    <Routes>
-                        <Route
-                            element={
-                                <ProtectedRoute
-                                    isLogin={user ? false : true}
-                                    user={user}
-                                    redirect="/dashboard/home"
-                                />
-                            }
-                        >
-                            <Route path="/login" element={<Login />} />
-                            <Route path="/register" element={<Register />} />
-                        </Route>
-                        <Route path="/verify-otp" element={<Otp />} />
-                        <Route path="/forget-password" element={<ForgetPassword />} />
-                        <Route
-                            path="/verify-email"
-                            element={<NotVerified user={user} isVerified={user?.isVerified} />}
-                        />
-                        <Route path="/reset-password/:reset-token" element={<ResetPassword />} />
-                        <Route path="/" element={<Navigate replace to="/login" />} />
-                        <Route element={<ProtectedRoute user={user} isLogin={user ? true : false} />}>
-                            <Route path="/dashboard" element={<Dashboard />}>
-                                <Route index element={<Navigate replace to="home" />} />
-                                <Route path="home" element={<Home />} />
-                                <Route path="reports/truck-report" element={<TruckReport />} />
-                                <Route path="reports/operations" element={<DailyOperations />} />
-                                <Route path="reports/sos" element={<SOS />} />
-                                <Route path="reports/video" element={<VideoEvidence />} />
-                                <Route path="setting/alert" element={<AlertType />} />
-                                <Route path="setting/drivers" element={<Drivers />} />
-                                <Route path="setting/trucks" element={<Trucks />} />
-                                <Route path="setting/devices" element={<Devices />} />
-                                <Route path="setting/employees" element={<Employees />} />
-                                <Route path="real-time-map" element={<RealTimeMap />} />
-                                <Route path="geofence" element={<GeoFence />} />
-                                <Route path="plans/subscription-plan" element={<SubscriptionPlan />} />
-                                <Route path="plans/subscription-history" element={<SubscriptionHistory />} />
-                                <Route path="truck-detail/:truckId" element={<TruckDetail />} />
-                                <Route path="notification" element={<Notification />} />
-                            </Route>
-                        </Route>
-                    </Routes>
-                    <ToastContainer />
-                </Suspense>
-            </Router>
-        </Elements>
-    );
+  // show message and error
+  useEffect(() => {
+    if (message) {
+      toast.success(message);
+      dispatch(clearUserMessage());
+    }
+    if (error) {
+      toast.error(error);
+      dispatch(clearUserError());
+    }
+  }, [message, error, dispatch]);
+  return (
+    <Elements stripe={stripeLoad}>
+      <Router>
+        <Suspense fallback={<GlobalLoader />}>
+          <Routes>
+            <Route
+              element={
+                <ProtectedRoute isLogin={user ? false : true} user={user} redirect="/dashboard/home" />
+              }
+            >
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+            </Route>
+            <Route path="/verify-otp" element={<Otp />} />
+            <Route path="/forget-password" element={<ForgetPassword />} />
+            <Route path="/verify-email" element={<NotVerified user={user} isVerified={user?.isVerified} />} />
+            <Route path="/reset-password/:reset-token" element={<ResetPassword />} />
+            <Route path="/" element={<Navigate replace to="/login" />} />
+            <Route element={<ProtectedRoute user={user} isLogin={user ? true : false} />}>
+              <Route path="/dashboard" element={<Dashboard />}>
+                <Route index element={<Navigate replace to="home" />} />
+                <Route path="home" element={<Home />} />
+                <Route path="reports/truck-report" element={<TruckReport />} />
+                <Route path="reports/operations" element={<DailyOperations />} />
+                <Route path="reports/sos" element={<SOS />} />
+                <Route path="reports/video" element={<VideoEvidence />} />
+                <Route path="setting/alert" element={<AlertType />} />
+                <Route path="setting/drivers" element={<Drivers />} />
+                <Route path="setting/trucks" element={<Trucks />} />
+                <Route path="setting/devices" element={<Devices />} />
+                <Route path="setting/employees" element={<Employees />} />
+                <Route path="real-time-map" element={<RealTimeMap />} />
+                <Route path="geofence" element={<GeoFence />} />
+                <Route path="plans/subscription-plan" element={<SubscriptionPlan />} />
+                <Route path="plans/subscription-history" element={<SubscriptionHistory />} />
+                <Route path="truck-detail/:truckId" element={<TruckDetail />} />
+                <Route path="notification" element={<Notification />} />
+              </Route>
+            </Route>
+          </Routes>
+          <ToastContainer />
+        </Suspense>
+      </Router>
+    </Elements>
+  );
 }
 
 export default App;
