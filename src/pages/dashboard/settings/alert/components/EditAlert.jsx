@@ -1,30 +1,69 @@
+/* eslint-disable react/prop-types */
 import {
   Box,
   Button,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
   Grid,
-  styled,
   MenuItem,
   TextField,
   Typography,
-  FormControlLabel,
-  Checkbox,
-  FormGroup,
 } from "@mui/material";
-import React, { useState } from "react";
+import { Fragment, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import BackIcon from "../../../../../assets/svgs/modal/BackIcon";
 import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
-import { alertType, severityType } from "../../../../../data/data";
-import { regions } from "../../../../../data/data";
+import { getAllAlertsActions, updateAlertAction } from "../../../../../redux/actions/alert.actions";
+const alertType = [{ type: "infence" }, { type: "outfence" }, { type: "speed" }];
+const severityType = [{ type: "high" }, { type: "medium" }, { type: "low" }];
+const status = [{ type: "enable" }, { type: "disable" }];
 
-const EditAlert = ({ onClose, label, maxLength, type }) => {
-  const [selected, setSelected] = useState("On Platform");
+const EditAlert = ({ alert, onClose }) => {
+  const dispatch = useDispatch();
+  const { message } = useSelector((state) => state.alert);
 
-  const handleChange = (event) => {
-    setSelected(event.target.name);
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    alertType: alert.type,
+    severityType: alert.severity,
+    platform: alert.platform,
+    status: alert.status,
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
+  const handleUpdate = async () => {
+    setIsLoading(true);
+
+    try {
+      await dispatch(
+        updateAlertAction({
+          alertId: alert._id,
+          platform: formData.platform,
+          severity: formData.severityType,
+          type: formData.alertType,
+          status: formData.status,
+        })
+      );
+      await dispatch(getAllAlertsActions());
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (message) onClose();
+  }, [message, onClose]);
+
   return (
-    <>
+    <Fragment>
       <Box
         sx={{
           display: "flex",
@@ -48,10 +87,10 @@ const EditAlert = ({ onClose, label, maxLength, type }) => {
           <Box sx={{ cursor: "pointer", height: "25px" }} onClick={onClose}>
             <BackIcon />
           </Box>
-          EDIT ALERT
+          ADD ALERT
         </Box>
         <Box sx={{ cursor: "pointer" }} onClick={onClose}>
-          <CloseIcon onClick={onClose} />
+          <CloseIcon />
         </Box>
       </Box>
       {/* Form  */}
@@ -66,33 +105,63 @@ const EditAlert = ({ onClose, label, maxLength, type }) => {
         }}
       >
         <Box sx={{ width: "100%", display: "flex", flexDirection: "column" }}>
-          <Grid container spacing="16">
-            <Grid item xs="12" lg="6">
-              <TextField select fullWidth label="Alert Type">
+          <Grid container spacing={2}>
+            <Grid item xs={12} lg={6}>
+              <TextField
+                name="alertType"
+                onChange={handleChange}
+                select
+                fullWidth
+                label="Alert Type"
+                value={formData.alertType}
+              >
                 {alertType.map((type, i) => (
                   <MenuItem key={i} value={type.type}>
-                    {type.type}
+                    {type.type?.toUpperCase()}
                   </MenuItem>
                 ))}
               </TextField>
             </Grid>
-            <Grid item xs="12" lg="6">
-              <TextField select fullWidth label="Severity Type">
+            <Grid item xs={12} lg={6}>
+              <TextField
+                name="severityType"
+                onChange={handleChange}
+                select
+                fullWidth
+                label="Severity Type"
+                value={formData.severityType}
+              >
                 {severityType.map((type, i) => (
                   <MenuItem key={i} value={type.type}>
-                    {type.type}
+                    {type.type?.toUpperCase()}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              <TextField
+                name="status"
+                onChange={handleChange}
+                select
+                fullWidth
+                label="Status"
+                value={formData.status}
+              >
+                {status.map((s, i) => (
+                  <MenuItem key={i} value={s.type}>
+                    {s.type?.toUpperCase()}
                   </MenuItem>
                 ))}
               </TextField>
             </Grid>
             <Grid
               item
-              xs="12"
+              xs={12}
               mt={3}
               sx={{
-                display: {xs: 'block', sm: "flex"},
+                display: { xs: "block", sm: "flex" },
                 justifyContent: "space-between",
-                alignItems: 'center'
+                alignItems: "center",
               }}
             >
               <Typography
@@ -109,23 +178,25 @@ const EditAlert = ({ onClose, label, maxLength, type }) => {
                   sx={{ color: "rgba(17, 17, 17, 1)", fontWeight: 600 }}
                   control={
                     <Checkbox
-                      checked={selected === "Email"}
+                      checked={formData.platform === "email"}
+                      value={"email"}
                       onChange={handleChange}
-                      name="Email"
+                      name="platform"
                     />
                   }
-                  label="Email"
+                  label="email"
                 />
                 <FormControlLabel
                   sx={{ color: "rgba(17, 17, 17, 1)", fontWeight: 600 }}
                   control={
                     <Checkbox
-                      checked={selected === "On Platform"}
+                      value={"platform"}
+                      checked={formData.platform === "platform"}
                       onChange={handleChange}
-                      name="On Platform"
+                      name="platform"
                     />
                   }
-                  label="On Platform"
+                  label="platform"
                 />
               </FormGroup>
             </Grid>
@@ -141,8 +212,9 @@ const EditAlert = ({ onClose, label, maxLength, type }) => {
             }}
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-              <CancelBtn onClick={onClose}>Cancel</CancelBtn>
               <Button
+                variant="outlined"
+                onClick={onClose}
                 sx={{
                   color: "#fff",
                   borderRadius: "16px",
@@ -150,21 +222,31 @@ const EditAlert = ({ onClose, label, maxLength, type }) => {
                   padding: "16px",
                 }}
               >
-                Save
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                disabled={isLoading}
+                onClick={handleUpdate}
+                sx={{
+                  color: "#fff",
+                  borderRadius: "16px",
+                  width: "137px",
+                  padding: "16px",
+                  ":disabled": {
+                    opacity: 0.5,
+                    cursor: "not-allowed",
+                  },
+                }}
+              >
+                {isLoading ? "Saving..." : "Save"}
               </Button>
             </Box>
           </Box>
         </Box>
       </Box>
-    </>
+    </Fragment>
   );
 };
 
 export default EditAlert;
-
-const CancelBtn = styled("span")({
-  fontsize: "16px",
-  fontWeight: 600,
-  color: "rgba(17, 17, 17, 1)",
-  cursor: "pointer",
-});

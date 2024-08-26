@@ -1,9 +1,11 @@
-import React from 'react'
+import React from "react";
 
-const EditIcon = () => {
+const EditIcon = ({ onClick }) => {
   return (
     <>
       <svg
+        onClick={onClick}
+        style={{ cursor: "pointer" }}
         width="24"
         height="24"
         viewBox="0 0 24 24"
@@ -26,7 +28,7 @@ const EditIcon = () => {
         />
       </svg>
     </>
-  )
-}
+  );
+};
 
-export default EditIcon
+export default EditIcon;

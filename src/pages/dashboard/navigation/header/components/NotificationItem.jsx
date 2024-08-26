@@ -1,17 +1,19 @@
 /* eslint-disable react/prop-types */
-import SDIcon from "../../../../../assets/svgs/notification/SDIcon";
+import { Box, Typography } from "@mui/material";
 import FatigueIcon from "../../../../../assets/svgs/notification/FatigueIcon";
 import GeoFencingIcon from "../../../../../assets/svgs/notification/GeoFencingIcon";
 import InFenceIcon from "../../../../../assets/svgs/notification/InFence";
-import HeadwayIcon from "../../../../../assets/svgs/notification/HeadwayIcon";
-import { Box, Typography } from "@mui/material";
 import { timeAgo } from "../../../../../utils/features";
+import { useNavigate } from "react-router-dom";
 
-const NotificationItem = ({ createdAt, type, message, isRead }) => {
+const NotificationItem = ({ truckId, createdAt, type, message, isRead }) => {
+  const navigate = useNavigate();
   const { backgroundColor, icon } = getNotificationDetails(type);
+  const navigateToTruck = () => navigate(`/dashboard/truck-detail/${truckId}`);
 
   return (
     <Box
+      onClick={navigateToTruck}
       sx={{
         display: "flex",
         alignItems: "center",
@@ -78,18 +80,13 @@ export default NotificationItem;
 
 const getNotificationDetails = (type) => {
   switch (type) {
-    case "sdcard-removal":
-      return { backgroundColor: "rgba(255, 214, 10, 1)", icon: <SDIcon /> };
-    case "fatigue-detection":
+    case "speed":
       return { backgroundColor: "rgba(255, 107, 107, 1)", icon: <FatigueIcon /> };
     case "outfence":
       return { backgroundColor: "rgba(100, 221, 23, 1)", icon: <GeoFencingIcon /> };
-    case "headway-monitoring":
-      return { backgroundColor: "rgba(158, 158, 158, 1)", icon: <HeadwayIcon /> };
     case "infence":
       return { backgroundColor: "rgba(255, 171, 64, 1)", icon: <InFenceIcon /> };
-    case "driverCreated":
-      return { backgroundColor: "rgba(129, 212, 250, 1)", icon: <InFenceIcon /> };
+
     default:
       return { backgroundColor: "#e0e0e0", icon: null };
   }

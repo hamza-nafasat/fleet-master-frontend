@@ -1,80 +1,85 @@
-import React, { useState } from "react";
-import { DataGrid } from "@mui/x-data-grid";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Box, FormControlLabel, Switch, Typography } from "@mui/material";
-import DownloadIcon from "../../../../assets/svgs/reports/DownloadIcon";
+import { DataGrid } from "@mui/x-data-grid";
+import { Fragment, useEffect, useState } from "react";
+import { confirmAlert } from "react-confirm-alert";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import AddIcon from "../../../../assets/svgs/settings/AddIcon";
 import EditIcon from "../../../../assets/svgs/settings/EditIcon";
-import Modal from "../../../../components/modal/Modal";
-import EditAlert from "./components/EditAlert";
+import HighIcon from "../../../../assets/svgs/settings/HighIcon";
 import HighSpeedIcon from "../../../../assets/svgs/settings/HighSpeedIcon";
 import InfenceIcon from "../../../../assets/svgs/settings/InfenceIcon";
-import OutfenceIcon from "../../../../assets/svgs/settings/OutfenceIcon";
-import HighIcon from "../../../../assets/svgs/settings/HighIcon";
 import LowIcon from "../../../../assets/svgs/settings/LowIcon";
 import MediumIcon from "../../../../assets/svgs/settings/MediumIcon";
+import OutfenceIcon from "../../../../assets/svgs/settings/OutfenceIcon";
+import Modal from "../../../../components/modal/Modal";
+import { deleteAlertAction, getAllAlertsActions } from "../../../../redux/actions/alert.actions";
+import { clearAlertError, clearAlertMessage } from "../../../../redux/slices/alert.slice";
 import AddAlert from "./components/AddAlert";
-import AddIcon from "../../../../assets/svgs/settings/AddIcon";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-
-const rows = [
-  {
-    id: 1,
-    alertType: "High Speed",
-    notificationType: "On Email",
-    date: "01/14/2024 - 02:31",
-    severity: "High",
-    status: "Enabled",
-    actions: "",
-  },
-  {
-    id: 2,
-    alertType: "Out Fence",
-    notificationType: "On Platform",
-    date: "01/14/2024 - 02:31",
-    severity: "Medium",
-    status: "Enabled",
-    actions: "",
-  },
-  {
-    id: 3,
-    alertType: "High Speed",
-    notificationType: "On Email",
-    date: "01/14/2024 - 02:31",
-    severity: "High",
-    status: "Enabled",
-    actions: "",
-  },
-  {
-    id: 4,
-    alertType: "In Fence",
-    notificationType: "On Platform",
-    date: "01/14/2024 - 02:31",
-    severity: "Low",
-    status: "Enabled",
-    actions: "",
-  },
-  {
-    id: 5,
-    alertType: "Out Fence",
-    notificationType: "On Platform",
-    date: "01/14/2024 - 02:31",
-    severity: "Medium",
-    status: "Enabled",
-    actions: "",
-  },
-];
+import EditAlert from "./components/EditAlert";
 
 const AlertType = () => {
+  const dispatch = useDispatch();
+  const { alerts, message, error } = useSelector((state) => state.alert);
   const [modalType, setModalType] = useState(null);
+  const [rows, setRows] = useState([]);
+  const [selectedAlert, setSelectedAlert] = useState(null);
 
-  const handleOpenEditModal = () => setModalType("edit");
+  const handleOpenEditModal = (row) => {
+    setSelectedAlert(row);
+    setModalType("edit");
+  };
   const handleOpenAddModal = () => setModalType("add");
   const handleCloseModal = () => {
     setModalType(null);
   };
+  // delete alert function
+  const deleteAlertHandler = async (id) => {
+    confirmAlert({
+      title: "Confirm delete Alert",
+      message: "Are you sure you want to delete this alert?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: async () => {
+            if (!id) return toast.info("Alert Id not found", { autoClose: 2000 });
+            await dispatch(deleteAlertAction(id));
+            await dispatch(getAllAlertsActions());
+          },
+        },
+        {
+          label: "No",
+          onClick: () => {
+            toast.info("Delete action cancelled", { autoClose: 2000 });
+          },
+        },
+      ],
+    });
+  };
+
+  useEffect(() => {
+    dispatch(getAllAlertsActions());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (alerts) setRows(alerts);
+  }, [alerts]);
+
+  useEffect(() => {
+    if (message) {
+      toast.success(message);
+      dispatch(clearAlertMessage());
+    }
+    if (error) {
+      toast.error(error);
+      dispatch(clearAlertError());
+    }
+  }, [alerts, dispatch, error, message]);
 
   const columns = [
     {
-      field: "alertType",
+      field: "type",
       headerName: "ALERT TYPE",
       width: 250,
       renderCell: (params) => (
@@ -86,9 +91,9 @@ const AlertType = () => {
             height: "100%",
           }}
         >
-          {params.value === "High Speed" ? (
+          {params.value === "speed" ? (
             <HighSpeedIcon />
-          ) : params.value === "In Fence" ? (
+          ) : params.value === "infence" ? (
             <InfenceIcon />
           ) : (
             <OutfenceIcon />
@@ -122,16 +127,16 @@ const AlertType = () => {
               height: "35px",
               width: "110px",
               background:
-                params.value === "High"
+                params.value === "hight"
                   ? "rgba(255, 101, 84, 0.2)"
-                  : params.value === "Medium"
+                  : params.value === "medium"
                     ? "rgba(248, 152, 34, 0.2)"
                     : "rgba(58, 163, 87, 0.2)",
             }}
           >
-            {params.value === "High" ? (
+            {params.value === "high" ? (
               <HighIcon />
-            ) : params.value === "Medium" ? (
+            ) : params.value === "medium" ? (
               <MediumIcon />
             ) : (
               <LowIcon />
@@ -141,21 +146,21 @@ const AlertType = () => {
                 fontSize: { xs: "14px", sm: "16px" },
                 fontWeight: "600",
                 color:
-                  params.value === "High"
+                  params.value === "high"
                     ? "rgba(255, 70, 70, 1)"
-                    : params.value === "Medium"
+                    : params.value === "medium"
                       ? "rgba(248, 152, 34, 1)"
                       : "rgba(58, 163, 87, 1)",
               }}
             >
-              {params.value}
+              {params.value?.toUpperCase()}
             </Typography>
           </Box>
         </Box>
       ),
     },
     {
-      field: "notificationType",
+      field: "platform",
       headerName: "NOTIFICATION TYPE",
       width: 250,
       renderCell: (params) => (
@@ -173,10 +178,10 @@ const AlertType = () => {
               width: "20px",
               height: "20px",
               borderRadius: "50%",
-              border: `2px solid ${params.value === "On Platform" ? "rgba(248, 152, 34, 1)" : "rgba(0, 103, 194, 1)"}`,
+              border: `2px solid ${params.value === "platform" ? "rgba(248, 152, 34, 1)" : "rgba(0, 103, 194, 1)"}`,
             }}
           ></Box>
-          {params.value}
+          {params.value == "platform" ? "On Platform" : "On Email"}
         </Box>
       ),
     },
@@ -193,26 +198,8 @@ const AlertType = () => {
             height: "100%",
           }}
         >
-          <Typography
-            sx={{ color: "#000", fontSize: { xs: "14px", sm: "16px" } }}
-          >
-            {params.value}
-          </Typography>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={params.value === "Enabled"}
-                onChange={(e) => {
-                  const newValue = e.target.checked ? "Enabled" : "Disabled";
-                  const updatedRows = rows.map((row) =>
-                    row.id === params.id ? { ...row, status: newValue } : row
-                  );
-                  params.api.updateRows([{ id: params.id, status: newValue }]);
-                }}
-              />
-            }
-            label=""
-          />
+          <Typography sx={{ color: "#000", fontSize: { xs: "14px", sm: "16px" } }}>{params.value}</Typography>
+          <FormControlLabel control={<Switch readOnly checked={params.value === "enable"} />} label="" />
         </Box>
       ),
     },
@@ -220,7 +207,7 @@ const AlertType = () => {
       field: "actions",
       headerName: "ACTIONS",
       width: 250,
-      renderCell: () => (
+      renderCell: (params) => (
         <Box
           sx={{
             display: "inline-flex",
@@ -230,21 +217,27 @@ const AlertType = () => {
             height: "100%",
           }}
         >
-          <Box sx={{display: 'flex', aligItems: 'center', cursor: 'pointer'}} onClick={handleOpenEditModal}>
-            <EditIcon />
-          </Box>
-          <Box sx={{display: 'flex', aligItems: 'center', cursor: 'pointer'}}>
-            <DeleteForeverIcon
-              style={{ fontSize: "28px", color: "rgba(255, 70, 70, 1)" }}
-            />
-          </Box>
+          <EditIcon onClick={() => handleOpenEditModal(params?.row)} />
+
+          <button
+            style={{
+              background: "transparent",
+              border: "none",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+            }}
+            onClick={() => deleteAlertHandler(params?.row?._id)}
+          >
+            <DeleteForeverIcon style={{ fontSize: "28px", color: "rgba(255, 70, 70, 1)" }} />
+          </button>
         </Box>
       ),
     },
   ];
-
   return (
-    <>
+    <Fragment>
       <Box
         sx={{
           width: "100%",
@@ -266,17 +259,17 @@ const AlertType = () => {
           <Box sx={{ cursor: "pointer" }} onClick={handleOpenAddModal}>
             <AddIcon />
           </Box>
-          <DownloadIcon />
         </Box>
         <DataGrid
           rows={rows}
           columns={columns}
           pageSize={5}
+          getRowId={(row) => row._id}
           rowsPerPageOptions={[5, 10, 20]}
-          headerClassName={(params) => {
+          headerClassName={() => {
             return "MuiDataGrid-colCell-center";
           }}
-          cellClassName={(params) => {
+          cellClassName={() => {
             return "MuiDataGrid-cell-center";
           }}
           sx={{
@@ -339,7 +332,7 @@ const AlertType = () => {
       </Box>
       {modalType === "edit" && (
         <Modal onClose={handleCloseModal}>
-          <EditAlert onClose={handleCloseModal} />
+          <EditAlert alert={selectedAlert} onClose={handleCloseModal} />
         </Modal>
       )}
       {modalType === "add" && (
@@ -347,7 +340,7 @@ const AlertType = () => {
           <AddAlert onClose={handleCloseModal} />
         </Modal>
       )}
-    </>
+    </Fragment>
   );
 };
 
