@@ -6,10 +6,13 @@ import InFenceIcon from "../../../../../assets/svgs/notification/InFence";
 import { timeAgo } from "../../../../../utils/features";
 import { useNavigate } from "react-router-dom";
 
-const NotificationItem = ({ truckId, createdAt, type, message, isRead }) => {
+const NotificationItem = ({ truckId, createdAt, type, message, isRead, onClose }) => {
   const navigate = useNavigate();
   const { backgroundColor, icon } = getNotificationDetails(type);
-  const navigateToTruck = () => navigate(`/dashboard/truck-detail/${truckId}`);
+  const navigateToTruck = () => {
+    onClose();
+    return navigate(`/dashboard/truck-detail/${truckId}`);
+  };
 
   return (
     <Box

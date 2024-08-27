@@ -67,6 +67,7 @@ const NotificationInnerContent = ({ handleNotificationClose }) => {
           message={notification?.message}
           createdAt={notification?.createdAt}
           isRead={notification?.isRead}
+          onClose={handleNotificationClose}
         />
       ))}
       <Link
