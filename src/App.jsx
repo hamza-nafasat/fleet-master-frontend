@@ -20,6 +20,7 @@ import { getDeviceDataAction } from "./redux/actions/device.actions";
 import { getAllNotificationsAction, getNewNotificationsAction } from "./redux/actions/notification.actions";
 import { getMyProfileAction } from "./redux/actions/user.actions";
 import { clearUserError, clearUserMessage } from "./redux/slices/user.slice";
+import { adminDashboardDetailsAction } from "./redux/actions/admin.actions";
 
 const Login = lazy(() => import("./pages/auth/login"));
 const Home = lazy(() => import("./pages/dashboard/Home/Home"));
@@ -39,7 +40,9 @@ const SubscriptionHistory = lazy(
   () => import("./pages/dashboard/plans/subscriptionHistory/SubscriptionHistory")
 );
 const TruckDetail = lazy(() => import("./pages/dashboard/settings/trucks/components/TruckDetail"));
-const Notification = lazy(() => import("./pages/dashboard/navigation/header/components/NotificationDetail"));
+const Notification = lazy(
+  () => import("./pages/dashboard/navigation/header/components/NotificationDetail")
+);
 const Register = lazy(() => import("./pages/auth/register/Register"));
 
 function App() {
@@ -54,9 +57,10 @@ function App() {
       console.log("trucks data coming from server ", data);
       dispatch(getDeviceDataAction(data));
     });
-    socket.on(socketEvent.NOTIFICATIONS, (data) => {
+    socket.on(socketEvent.NOTIFICATIONS, async (data) => {
       console.log("i am called");
-      dispatch(getNewNotificationsAction());
+      await dispatch(adminDashboardDetailsAction());
+      await dispatch(getNewNotificationsAction());
     });
   }, [dispatch]);
 
@@ -92,7 +96,10 @@ function App() {
             </Route>
             <Route path="/verify-otp" element={<Otp />} />
             <Route path="/forget-password" element={<ForgetPassword />} />
-            <Route path="/verify-email" element={<NotVerified user={user} isVerified={user?.isVerified} />} />
+            <Route
+              path="/verify-email"
+              element={<NotVerified user={user} isVerified={user?.isVerified} />}
+            />
             <Route path="/reset-password/:reset-token" element={<ResetPassword />} />
             <Route path="/" element={<Navigate replace to="/login" />} />
             <Route element={<ProtectedRoute user={user} isLogin={user ? true : false} />}>

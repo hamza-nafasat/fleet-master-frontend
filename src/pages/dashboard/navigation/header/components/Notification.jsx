@@ -3,7 +3,10 @@ import { Box, styled } from "@mui/material";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import NotificationIcon from "../../../../../assets/svgs/NotifictionIcon";
-import { getAllNotificationsAction } from "../../../../../redux/actions/notification.actions";
+import {
+  getAllNotificationsAction,
+  readAllNotificationsAction,
+} from "../../../../../redux/actions/notification.actions";
 import NotificationContent from "./NotificationContent";
 import { adminDashboardDetailsAction } from "../../../../../redux/actions/admin.actions";
 
@@ -17,7 +20,10 @@ const Notification = ({ length }) => {
     await dispatch(adminDashboardDetailsAction());
   };
 
-  const handleNotificationClose = () => setNotificationOpen(null);
+  const handleNotificationClose = async () => {
+    setNotificationOpen(null);
+    await dispatch(readAllNotificationsAction());
+  };
 
   return (
     <>
