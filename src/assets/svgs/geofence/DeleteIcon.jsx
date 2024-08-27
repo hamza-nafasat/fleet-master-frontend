@@ -1,13 +1,16 @@
-import React from 'react'
+/* eslint-disable react/prop-types */
+import { Fragment } from "react";
 
-const DeleteIcon = () => {
+const DeleteIcon = ({ onClick, isLoading }) => {
   return (
-    <>
+    <Fragment>
       <svg
+        onClick={onClick}
         width="24"
         height="24"
         viewBox="0 0 24 24"
         fill="none"
+        style={{ cursor: isLoading ? "not-allowed" : "pointer", opacity: isLoading ? "0.5" : "1" }}
         xmlns="http://www.w3.org/2000/svg"
       >
         <rect width="24" height="24" rx="12" fill="#FF6969" />
@@ -18,8 +21,8 @@ const DeleteIcon = () => {
           strokeWidth="0.6"
         />
       </svg>
-    </>
-  )
-}
+    </Fragment>
+  );
+};
 
-export default DeleteIcon
+export default DeleteIcon;

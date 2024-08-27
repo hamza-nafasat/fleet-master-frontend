@@ -1,17 +1,20 @@
 import { Box } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
+import { confirmAlert } from "react-confirm-alert";
+import { FcViewDetails } from "react-icons/fc";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import DeleteIcon from "../../../../../assets/svgs/geofence/DeleteIcon";
 import DownloadIcon from "../../../../../assets/svgs/reports/DownloadIcon";
+import { adminDashboardDetailsAction } from "../../../../../redux/actions/admin.actions";
 import {
   deleteNotificationAction,
   getAllNotificationsAction,
   getNewNotificationsAction,
   readAllNotificationsAction,
 } from "../../../../../redux/actions/notification.actions";
-import { confirmAlert } from "react-confirm-alert";
-import { toast } from "react-toastify";
 
 const NotificationDetail = () => {
   const dispatch = useDispatch();
@@ -30,6 +33,7 @@ const NotificationDetail = () => {
             setIsDelLoading(true);
             await dispatch(deleteNotificationAction(row.id));
             await dispatch(getAllNotificationsAction());
+            await dispatch(adminDashboardDetailsAction());
             setIsDelLoading(false);
           },
         },
@@ -63,22 +67,26 @@ const NotificationDetail = () => {
       headerName: "Created At",
       headerAlign: "center",
       align: "center",
-      width: 300,
+      width: 200,
     },
 
     {
       field: "operation",
       headerName: "OPERATION",
       align: "center",
-      width: 120,
+      headerAlign: "center",
+      width: 180,
       renderCell: (params) => (
         <Box
-          sx={{
-            cursor: isDelLoading ? "not-allowed" : "pointer",
-          }}
-          onClick={() => handleDeleteList(params.row)}
+          sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", gap: 3 }}
         >
-          <DeleteIcon />
+          <DeleteIcon onClick={() => handleDeleteList(params.row)} isLoading={isDelLoading} />
+          <Link
+            style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+            to={`/dashboard/truck-detail/${params.row._id}`}
+          >
+            <FcViewDetails style={{ fontSize: "1.8rem", cursor: "pointer" }} />
+          </Link>
         </Box>
       ),
     },
