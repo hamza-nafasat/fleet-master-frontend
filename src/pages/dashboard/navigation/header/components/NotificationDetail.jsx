@@ -115,9 +115,11 @@ const NotificationDetail = () => {
   }, [notifications]);
 
   useEffect(() => {
-    dispatch(readAllNotificationsAction());
-    dispatch(getAllNotificationsAction());
-    dispatch(getNewNotificationsAction());
+    (async () => {
+      await dispatch(readAllNotificationsAction());
+      await dispatch(getAllNotificationsAction());
+      await dispatch(getNewNotificationsAction());
+    })();
   }, [dispatch]);
   return (
     <Box
