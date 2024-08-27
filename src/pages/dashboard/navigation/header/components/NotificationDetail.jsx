@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { confirmAlert } from "react-confirm-alert";
 import { FcViewDetails } from "react-icons/fc";
 import { useDispatch, useSelector } from "react-redux";
@@ -114,13 +114,15 @@ const NotificationDetail = () => {
     }
   }, [notifications]);
 
-  useEffect(() => {
-    (async () => {
-      await dispatch(readAllNotificationsAction());
-      await dispatch(getAllNotificationsAction());
-      await dispatch(getNewNotificationsAction());
-    })();
+  const enterInPage = useCallback(async () => {
+    await dispatch(readAllNotificationsAction());
+    await dispatch(getAllNotificationsAction());
+    await dispatch(getNewNotificationsAction());
   }, [dispatch]);
+
+  useEffect(() => {
+    enterInPage();
+  }, [enterInPage]);
   return (
     <Box
       sx={{
