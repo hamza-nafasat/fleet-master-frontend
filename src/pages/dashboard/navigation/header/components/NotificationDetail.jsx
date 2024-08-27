@@ -83,7 +83,7 @@ const NotificationDetail = () => {
           <DeleteIcon onClick={() => handleDeleteList(params.row)} isLoading={isDelLoading} />
           <Link
             style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
-            to={`/dashboard/truck-detail/${params.row._id}`}
+            to={`/dashboard/truck-detail/${params?.row?.truckId}`}
           >
             <FcViewDetails style={{ fontSize: "1.8rem", cursor: "pointer" }} />
           </Link>
@@ -96,6 +96,7 @@ const NotificationDetail = () => {
       setRows(
         notifications.map((notification) => {
           return {
+            ...notification,
             id: notification._id,
             type: notification.type,
             message: notification.message,

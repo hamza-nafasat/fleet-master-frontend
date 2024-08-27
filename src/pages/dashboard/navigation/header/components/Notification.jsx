@@ -25,10 +25,12 @@ const Notification = ({ length }) => {
         <NotificationIcon />
         {length > 0 && <NotificationNumbers>{length}</NotificationNumbers>}
       </NotificationBox>
-      <NotificationContent
-        notificationOpen={notificationOpen}
-        handleNotificationClose={handleNotificationClose}
-      />
+      {notificationOpen && (
+        <NotificationContent
+          notificationOpen={notificationOpen}
+          handleNotificationClose={handleNotificationClose}
+        />
+      )}
     </>
   );
 };
