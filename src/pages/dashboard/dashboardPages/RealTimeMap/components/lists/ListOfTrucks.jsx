@@ -123,12 +123,12 @@ const ListOfTrucks = () => {
         </TableBody>
       </Table>
       {openVideoModal && (
-        <Modal zIndex={999} onClose={handleCloseVideoModal}>
+        <Modal zIndex={9999} onClose={handleCloseVideoModal}>
           <SdCardModal liveUrl={liveUrl} onClose={handleCloseVideoModal} />
         </Modal>
       )}
       {openMapModal && (
-        <Modal zIndex={999} onClose={handleCloseMapModal}>
+        <Modal zIndex={9999} onClose={handleCloseMapModal}>
           <MapModal onClose={handleCloseMapModal} truck={selectedTruck} />
         </Modal>
       )}

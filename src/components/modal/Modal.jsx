@@ -1,10 +1,10 @@
 /* eslint-disable react/prop-types */
 import { styled } from "@mui/material";
-import React from "react";
+import { Fragment } from "react";
 
 const Modal = ({ children, onClose, zIndex = 1 }) => {
   return (
-    <>
+    <Fragment>
       <ModalOuter onClick={onClose} sx={{ zIndex: zIndex }}>
         <ModalInner
           onClick={(e) => e.stopPropagation()}
@@ -27,7 +27,7 @@ const Modal = ({ children, onClose, zIndex = 1 }) => {
           {children}
         </ModalInner>
       </ModalOuter>
-    </>
+    </Fragment>
   );
 };
 
