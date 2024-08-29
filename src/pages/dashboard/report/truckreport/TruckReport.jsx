@@ -87,7 +87,7 @@ const TruckReport = () => {
     // Centered Text Function
     const centerText = (text, y, fontSize = 16, color = [0, 0, 0]) => {
       doc.setFontSize(fontSize);
-      doc.setTextColor(...color);
+      doc.settextcolor(...color);
       const textWidth = doc.getTextWidth(text);
       const x = (doc.internal.pageSize.getWidth() - textWidth) / 2;
       doc.text(text, x, y);
@@ -99,7 +99,7 @@ const TruckReport = () => {
       const formattedDate = now.toLocaleDateString();
       const formattedTime = now.toLocaleTimeString();
       doc.setFontSize(8); // Smaller font size
-      doc.setTextColor(150, 150, 150); // Light gray color for the date and time
+      doc.settextcolor(150, 150, 150); // Light gray color for the date and time
       doc.text(`Generated on: ${formattedDate} ${formattedTime}`, 8, 5);
     };
 
@@ -146,7 +146,7 @@ const TruckReport = () => {
         },
         headStyles: {
           fillColor: [33, 150, 243],
-          textColor: [255, 255, 255],
+          textcolor: [255, 255, 255],
         },
         alternateRowStyles: {
           fillColor: [240, 240, 240],

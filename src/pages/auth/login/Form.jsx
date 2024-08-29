@@ -31,7 +31,8 @@ const Form = () => {
     if (message) {
       toast.success(message);
       dispatch(clearUserMessage());
-      return navigate("/dashboard/home");
+      navigate("/dashboard/home");
+      return;
     }
     if (error) {
       toast.error(error);
