@@ -87,7 +87,7 @@ const TruckReport = () => {
     // Centered Text Function
     const centerText = (text, y, fontSize = 16, color = [0, 0, 0]) => {
       doc.setFontSize(fontSize);
-      doc.settextcolor(...color);
+      doc.setTextColor(...color);
       const textWidth = doc.getTextWidth(text);
       const x = (doc.internal.pageSize.getWidth() - textWidth) / 2;
       doc.text(text, x, y);
@@ -99,7 +99,7 @@ const TruckReport = () => {
       const formattedDate = now.toLocaleDateString();
       const formattedTime = now.toLocaleTimeString();
       doc.setFontSize(8); // Smaller font size
-      doc.settextcolor(150, 150, 150); // Light gray color for the date and time
+      doc.setTextColor(150, 150, 150); // Light gray color for the date and time
       doc.text(`Generated on: ${formattedDate} ${formattedTime}`, 8, 5);
     };
 
@@ -160,17 +160,29 @@ const TruckReport = () => {
     // Save the PDF
     doc.save("truck-report.pdf");
   };
+
+  useEffect(() => {
+    dispatch(getSingleTruckReportsAction());
+  }, [dispatch]);
+
   useEffect(() => {
     if (singleTruckReport) {
-      console.log("singleTruckReport", singleTruckReport);
-      setFilteredRows(singleTruckReport);
+      const flattenedData = singleTruckReport.map((report) => ({
+        ...report,
+        plateNumber: report.truck?.plateNumber || "",
+        driverName: `${report.truck?.assignedTo?.firstName} ${report.truck?.assignedTo?.lastName}` || "",
+        deviceId: report.truck?.devices?.find((device) => device.type == "gps")?._id || "",
+        truckStatus: report.truck?.status || "",
+        fleetNumber: report.truck?.fleetnumber || "",
+        createdAt: report.createdAt,
+        updatedAt: report.updatedAt,
+      }));
+      setFilteredRows(flattenedData);
     }
   }, [singleTruckReport]);
 
   useEffect(() => {
-    if (trucks) {
-      setPlateNumbers(trucks.map((truck) => truck.plateNumber));
-    }
+    if (trucks) setPlateNumbers(trucks.map((truck) => truck.plateNumber));
   }, [trucks]);
 
   return (
