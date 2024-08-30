@@ -17,7 +17,10 @@ import BackIcon from "../../../../../assets/svgs/modal/BackIcon";
 import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
 import SaveIcon from "../../../../../assets/svgs/settings/SaveIcon";
 import { getAllDevicesAction } from "../../../../../redux/actions/device.actions";
-import { attachDeviceToTruckAction } from "../../../../../redux/actions/truck.actions";
+import {
+  attachDeviceToTruckAction,
+  getSingleTruckAction,
+} from "../../../../../redux/actions/truck.actions";
 import { attachModalSchema } from "../../../../../schemas";
 
 const AttacheModal = ({ onClose, truckId }) => {
@@ -41,6 +44,7 @@ const AttacheModal = ({ onClose, truckId }) => {
     onSubmit: async (values) => {
       setIsLoading(true);
       await dispatch(attachDeviceToTruckAction(truckId, values.deviceId));
+      await dispatch(getSingleTruckAction(truckId));
       setIsLoading(false);
       onClose();
     },

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import AddLinkIcon from "@mui/icons-material/AddLink";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -5,18 +6,17 @@ import { Avatar, Box, Grid, Tooltip, Typography, styled } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { confirmAlert } from "react-confirm-alert";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import profilePic from "../../../../../assets/images/settings/vehicle-pic.png";
 import Modal from "../../../../../components/modal/Modal";
 import {
+  deleteTruckAction,
   detachDeviceFromTruckAction,
+  getAllTrucksAction,
   getSingleTruckAction,
 } from "../../../../../redux/actions/truck.actions";
-import {
-  clearTruckError,
-  clearTruckMessage,
-} from "../../../../../redux/slices/truck.slice";
+import { clearTruckError, clearTruckMessage } from "../../../../../redux/slices/truck.slice";
 import AttacheModal from "./AttacheModal";
 import EditIcon from "../../../../../assets/svgs/settings/EditIcon";
 import DeleteIcon from "../../../../../assets/svgs/settings/DeleteIcon";
@@ -29,12 +29,15 @@ import DetachIcon from "../../../../../assets/svgs/settings/DetachIcon";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const TruckDetail = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const params = useParams();
   const truckId = params?.truckId;
   const { truck, message, error } = useSelector((state) => state.truck);
   const [modalType, setModalType] = useState(null);
   const [truckForAttach, setTruckForAttach] = useState(null);
+
+  console.log("truck", truck);
 
   const handleOpenAttachModal = (truckId) => {
     setTruckForAttach(truckId);
@@ -46,21 +49,28 @@ const TruckDetail = () => {
     setModalType(null);
   };
 
-  const deleteHandler = () =>
+  const deleteTruckHandler = (truckId) => {
     confirmAlert({
       title: "Confirm delete Trucks",
       message: "Are you sure you want to delete the Truck?",
       buttons: [
         {
           label: "Yes",
-          onClick: console.log("deleted"),
+          onClick: async () => {
+            if (truckId) {
+              await dispatch(deleteTruckAction(truckId));
+              await dispatch(getAllTrucksAction());
+              return navigate("/dashboard/setting/trucks");
+            }
+          },
         },
         {
           label: "No",
-          // onClick: () => toast.info("Delete action cancelled", { autoClose: 2000 }),
+          onClick: () => toast.info("Delete action cancelled", { autoClose: 2000 }),
         },
       ],
     });
+  };
 
   useEffect(() => {
     if (message) {
@@ -71,21 +81,22 @@ const TruckDetail = () => {
       toast.error(error);
       dispatch(clearTruckError());
     }
-
-    dispatch(getSingleTruckAction(truckId));
-  }, [dispatch, message, error, truckId]);
+  }, [dispatch, message, error]);
+  useEffect(() => {
+    if (truckId) dispatch(getSingleTruckAction(truckId));
+  }, [dispatch, truckId]);
   return (
     <React.Fragment>
       <TruckContainer container sx={{ padding: { xs: "16px", md: "24px" } }}>
         <Grid xs={12} display="flex" justifyContent="space-between" mb={3}>
-          <Link to='/dashboard/setting/trucks'>
-            <ArrowBackIcon sx={{color:'rgba(70, 66, 85, 1)', fontSize:'24px'}} />
+          <Link to="/dashboard/setting/trucks">
+            <ArrowBackIcon sx={{ color: "rgba(70, 66, 85, 1)", fontSize: "24px" }} />
           </Link>
           <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
             <div style={{ cursor: "pointer" }} onClick={handleEditTruckModal}>
               <EditIcon />
             </div>
-            <div style={{ cursor: "pointer" }} onClick={deleteHandler}>
+            <div style={{ cursor: "pointer" }} onClick={() => deleteTruckHandler(truck?._id)}>
               <DeleteDeviceIcon />
             </div>
           </Box>
@@ -101,18 +112,27 @@ const TruckDetail = () => {
           mb={3}
         >
           <Grid container spacing={2}>
-            <Grid
-              item
-              xs={12}
-              md={8}
-              display="flex"
-              justifyContent="space-between"
-              gap={1}
-            >
-              <SingleTruckDetail />
+            <Grid item xs={12} md={8} display="flex" justifyContent="space-between" gap={1}>
+              <SingleTruckDetail truck={truck} />
             </Grid>
             <Grid item xs={12} md={4}>
-              <UserProfile />
+              {truck?.assignedTo ? (
+                <UserProfile driver={truck?.assignedTo} />
+              ) : (
+                <Box
+                  sx={{
+                    height: "100%",
+                    background: "rgba(238, 247, 255, 1)",
+                    borderRadius: "10px",
+                    padding: { xs: "8px", sm: "16px" },
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography sx={{ color: "rgba(0, 68, 131, 1)" }}>No Driver Assigned</Typography>
+                </Box>
+              )}
             </Grid>
           </Grid>
         </Grid>
@@ -134,14 +154,9 @@ const TruckDetail = () => {
             >
               Devices
             </Typography>
-            <Box
-              sx={{ cursor: "pointer" }}
-              onClick={() => handleOpenAttachModal(truck?._id)}
-            >
+            <Box sx={{ cursor: "pointer" }} onClick={() => handleOpenAttachModal(truck?._id)}>
               <Tooltip title="Attach Device">
-                <AddLinkIcon
-                  style={{ color: "#006bce", width: "40px", height: "40px" }}
-                />
+                <AddLinkIcon style={{ color: "#006bce", width: "40px", height: "40px" }} />
               </Tooltip>
             </Box>
           </Grid>
@@ -161,7 +176,7 @@ const TruckDetail = () => {
       )}
       {modalType === "edit-truck" && (
         <Modal onClose={handleCloseModal}>
-          <EditTruck onClose={handleCloseModal} />
+          <EditTruck singleTruck={truck} onClose={handleCloseModal} />
         </Modal>
       )}
     </React.Fragment>
@@ -172,7 +187,8 @@ export default TruckDetail;
 
 const DeviceCard = ({ device, truck }) => {
   const dispatch = useDispatch();
-  const deleteDeviceHandle = (truckId, deviceId) => {
+
+  const detachDeviceHandler = (truckId, deviceId) => {
     confirmAlert({
       title: "Confirm to delete",
       message: "Are you sure you want to detach device?",
@@ -180,12 +196,11 @@ const DeviceCard = ({ device, truck }) => {
         {
           label: "Yes",
           onClick: async () => {
-            if (!deviceId)
-              return toast.info("Device not found", { autoClose: 2000 });
-            if (!truckId)
-              return toast.info("Truck not found", { autoClose: 2000 });
+            if (!deviceId) return toast.info("Device not found", { autoClose: 2000 });
+            if (!truckId) return toast.info("Truck not found", { autoClose: 2000 });
             console.log("device id", deviceId, "truck id", truckId);
             await dispatch(detachDeviceFromTruckAction(truckId, deviceId));
+            await dispatch(getSingleTruckAction(truckId));
           },
         },
         {
@@ -201,18 +216,15 @@ const DeviceCard = ({ device, truck }) => {
       <Box
         sx={{
           background: "rgba(238, 247, 255, 1)",
-          borderLeft: "5px solid rgba(255, 71, 71, 1)",
+          borderLeft: device.type == "video" ? "5px solid rgba(255, 71, 71, 1)" : "5px solid lime",
           borderRadius: "0px, 14px, 14px, 0px",
+          boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.2)",
           padding: "16px",
         }}
       >
-        <Box
-          sx={{ display: "flex", justifyContent: "space-between", gap: "1rem" }}
-        >
+        <Box sx={{ display: "flex", justifyContent: "space-between", gap: "1rem" }}>
           <Box>
-            <Typography sx={{ color: "rgba(0, 107, 206, 1)" }}>
-              Camera245331
-            </Typography>
+            <Typography sx={{ color: "rgba(0, 107, 206, 1)" }}>{device?.uniqueId}</Typography>
             <Typography
               sx={{
                 color: "rgba(70, 66, 85, 1)",
@@ -220,44 +232,40 @@ const DeviceCard = ({ device, truck }) => {
                 fontSize: "16px",
               }}
             >
-              Dashboard Cam
+              {device?.name}
             </Typography>
           </Box>
-          <Box
-            onClick={() => deleteDeviceHandle(truck._id, device._id)}
-            sx={{ cursor: "pointer" }}
-          >
-            <Tooltip title="Detach Device">
+          <Tooltip title="Detach Device">
+            <Box
+              onClick={() => detachDeviceHandler(truck?._id, device._id)}
+              sx={{ cursor: "pointer", width: "20px", height: "20px" }}
+            >
               <DetachIcon />
-            </Tooltip>
-          </Box>
+            </Box>
+          </Tooltip>
         </Box>
         <Grid container spacing={1} mt={2}>
-          <Grid item xs={6}>
-            <Typography sx={{ color: "rgba(127,127,146,1)", fontSize: "12px" }}>
-              URL
-            </Typography>
-            <Typography
-              sx={{ color: "rgba(0, 107, 206, 1)", fontSize: "14px" }}
-            >
-              http://sensors.example.com
-            </Typography>
-          </Grid>
-          <Grid
-            item
-            xs={6}
-            display="flex"
-            flexDirection="column"
-            alignItems="flex-end"
-          >
-            <Typography sx={{ color: "rgba(127,127,146,1)", fontSize: "12px" }}>
-              Type
-            </Typography>
-            <Typography
-              sx={{ color: "rgba(0, 107, 206, 1)", fontSize: "14px" }}
-            >
-              Video
-            </Typography>
+          {device.type == "video" ? (
+            <Grid item xs={6} md={10}>
+              <Typography sx={{ color: "rgba(127,127,146,1)", fontSize: "12px" }}>URL</Typography>
+              <Typography
+                sx={{
+                  color: "rgba(0, 107, 206, 1)",
+                  fontSize: "13px",
+                }}
+              >
+                {device?.url}
+              </Typography>
+            </Grid>
+          ) : (
+            <Grid item xs={6} md={10}>
+              <Typography sx={{ color: "rgba(127,127,146,1)", fontSize: "12px" }}>Ip Address</Typography>
+              <Typography sx={{ color: "rgba(0, 107, 206, 1)", fontSize: "14px" }}>{device?.ip}</Typography>
+            </Grid>
+          )}
+          <Grid item xs={6} md={2} display="flex" flexDirection="column" alignItems="flex-end">
+            <Typography sx={{ color: "rgba(127,127,146,1)", fontSize: "12px" }}>Type</Typography>
+            <Typography sx={{ color: "rgba(0, 107, 206, 1)", fontSize: "14px" }}>{device?.type}</Typography>
           </Grid>
         </Grid>
       </Box>
@@ -265,7 +273,7 @@ const DeviceCard = ({ device, truck }) => {
   );
 };
 
-const SingleTruckDetail = () => {
+const SingleTruckDetail = ({ truck }) => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={7}>
@@ -285,7 +293,7 @@ const SingleTruckDetail = () => {
               fontSize: { xs: "18px", sm: "24px", md: "26px" },
             }}
           >
-            Land Cruiser V8
+            {truck?.truckName}
           </Typography>
           <Box sx={{ display: "flex", gap: "1rem" }}>
             <div style={{ cursor: "pointer" }}>
@@ -296,15 +304,17 @@ const SingleTruckDetail = () => {
             </div>
           </Box>
         </Box>
-        {truckDetailList.map((list, i) => (
-          <Box key={i}>
-            <TruckDataList title="Plate Number" value={list.plateNumber} />
-            <TruckDataList title="Fleet Number" value={list.fleetNumber} />
-            <TruckDataList title="Status" value={list.status} />
-            <TruckDataList title="Last Update" value={list.lastUpdate} />
-            <TruckDataList title="Created At" value={list.createdAt} />
-          </Box>
-        ))}
+        <TruckDataList title="Plate Number" value={truck?.plateNumber} />
+        <TruckDataList title="Fleet Number" value={truck?.fleetNumber} />
+        <TruckDataList title="Status" value={truck?.status} />
+        <TruckDataList
+          title="Last Update"
+          value={truck?.updatedAt?.split("T")[0].split("-").reverse().join("-")}
+        />
+        <TruckDataList
+          title="Created At"
+          value={truck?.createdAt?.split("T")[0].split("-").reverse().join("-")}
+        />
       </Grid>
       <Grid item xs={12} md={5}>
         <Box
@@ -318,7 +328,7 @@ const SingleTruckDetail = () => {
           }}
         >
           <img
-            src={profilePic}
+            src={truck?.image?.url}
             alt="truck image"
             style={{
               objectFit: "cover",
@@ -356,10 +366,7 @@ const TruckDataList = ({ title, value }) => {
       </Typography>
       <Typography
         sx={{
-          color:
-            value === "Connected"
-              ? "rgba(47, 239, 64, 1)"
-              : "rgba(0, 107, 206, 1)",
+          color: value === "Connected" ? "rgba(47, 239, 64, 1)" : "rgba(0, 107, 206, 1)",
           fontWeight: 500,
           fontSize: { xs: "14px", sm: "16px" },
         }}
@@ -370,7 +377,7 @@ const TruckDataList = ({ title, value }) => {
   );
 };
 
-const UserProfile = () => {
+const UserProfile = ({ driver }) => {
   return (
     <Box
       sx={{
@@ -390,7 +397,7 @@ const UserProfile = () => {
         }}
       >
         <Avatar
-          src={Profile}
+          src={driver?.image?.url}
           sx={{
             width: "102px",
             height: "102px",
@@ -404,17 +411,23 @@ const UserProfile = () => {
             fontSize: { xs: "16px", md: "20px" },
           }}
         >
-          Asif Zulfiqar
+          {driver?.firstName} {driver?.lastName}
         </Typography>
       </Box>
-      {userDetails.map((list, i) => (
-        <Box key={i}>
-          <UserList title="Email" value={list.email} />
-          <UserList title="Number" value={list.number} />
-          <UserList title="License Expiry " value={list.licenseExpiry} />
-          <UserList title="Last Update" value={list.lastUpdate} />
-        </Box>
-      ))}
+      {/* <UserList title="Email" value={driver?.email} /> */}
+      <UserList title="Mobile Number" value={driver?.phoneNumber} />
+      <UserList
+        title="License Expiry "
+        value={driver?.licenseExpiry?.split("T")[0].split("-").reverse().join("-")}
+      />
+      <UserList
+        title="Last Update"
+        value={driver?.updatedAt?.split("T")[0].split("-").reverse().join("-")}
+      />
+      <UserList
+        title="Created At"
+        value={driver?.createdAt?.split("T")[0].split("-").reverse().join("-")}
+      />
     </Box>
   );
 };
@@ -457,22 +470,3 @@ const TruckContainer = styled(Grid)({
   // height: "100%",
   marginTop: "-4rem",
 });
-
-var truckDetailList = [
-  {
-    plateNumber: "XYZ-1235",
-    fleetNumber: "Flt-23s3",
-    status: "Connected",
-    lastUpdate: "05-24-2024",
-    createdAt: "05-24-2024",
-  },
-];
-
-var userDetails = [
-  {
-    email: "asifzulfiqar@gmail.com",
-    number: "+92 334 2342342",
-    licenseExpiry: "05-24-2024",
-    lastUpdate: "05-24-2024",
-  },
-];

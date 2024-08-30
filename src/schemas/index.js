@@ -8,7 +8,7 @@ export const loginSchema = Yup.object({
 export const truckSchema = Yup.object({
   truckName: Yup.string().required("Truck name is required"),
   fleetNumber: Yup.number().required("Fleet Number is required"),
-  plateNumber: Yup.number().required("Plate Number is required"),
+  plateNumber: Yup.string().required("Plate Number is required"),
   image: Yup.mixed()
     .required("Image is required")
     .test(
