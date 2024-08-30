@@ -1,6 +1,6 @@
 import { Box, Grid } from "@mui/material";
+import ListOfTrucks from "./components/lists/ListOfTrucks";
 import Map from "./components/map/Map";
-import Alerts from "./components/lists/Alerts";
 const RealTimeMap = () => {
   return (
     <Grid container spacing={3} sx={{ margin: 0 }}>
@@ -46,7 +46,7 @@ const RealTimeMap = () => {
             },
           }}
         >
-          <Alerts />
+          <ListOfTrucks />
         </Box>
       </Grid>
     </Grid>

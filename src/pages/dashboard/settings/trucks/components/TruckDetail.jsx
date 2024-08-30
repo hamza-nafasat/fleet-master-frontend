@@ -27,6 +27,8 @@ import Profile from "../../../../../assets/images/asif.png";
 import EditTruck from "./EditTruck";
 import DetachIcon from "../../../../../assets/svgs/settings/DetachIcon";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import SdCardModal from "../../../report/video/components/sdCardRemoval/SdCardModal";
+import MapModal from "../../../Home/components/modals/MapModal";
 
 const TruckDetail = () => {
   const navigate = useNavigate();
@@ -35,7 +37,11 @@ const TruckDetail = () => {
   const truckId = params?.truckId;
   const { truck, message, error } = useSelector((state) => state.truck);
   const [modalType, setModalType] = useState(null);
+  const [openMapModal, setOpenMapModal] = useState(false);
+  const [selectedTruck, setSelectedTruck] = useState(null);
+  const [openVideoModal, setOpenVideoModal] = useState(false);
   const [truckForAttach, setTruckForAttach] = useState(null);
+  const [liveUrl, setLiveUrl] = useState(null);
 
   console.log("truck", truck);
 
@@ -71,6 +77,19 @@ const TruckDetail = () => {
       ],
     });
   };
+
+  const handleOpenMapModal = (truck) => {
+    setSelectedTruck(truck);
+    setOpenMapModal(true);
+  };
+  const handleCloseMapModal = () => setOpenMapModal(false);
+
+  // video modal open and close handler
+  const handleOpenVideoModal = (url) => {
+    setLiveUrl(url);
+    setOpenVideoModal(true);
+  };
+  const handleCloseVideoModal = () => setOpenVideoModal(false);
 
   useEffect(() => {
     if (message) {
@@ -113,7 +132,11 @@ const TruckDetail = () => {
         >
           <Grid container spacing={2}>
             <Grid item xs={12} md={8} display="flex" justifyContent="space-between" gap={1}>
-              <SingleTruckDetail truck={truck} />
+              <SingleTruckDetail
+                handleOpenMapModal={handleOpenMapModal}
+                handleOpenVideoModal={handleOpenVideoModal}
+                truck={truck}
+              />
             </Grid>
             <Grid item xs={12} md={4}>
               {truck?.assignedTo ? (
@@ -177,6 +200,16 @@ const TruckDetail = () => {
       {modalType === "edit-truck" && (
         <Modal onClose={handleCloseModal}>
           <EditTruck singleTruck={truck} onClose={handleCloseModal} />
+        </Modal>
+      )}
+      {openVideoModal && (
+        <Modal zIndex={9999} onClose={handleCloseVideoModal}>
+          <SdCardModal liveUrl={liveUrl} onClose={handleCloseVideoModal} />
+        </Modal>
+      )}
+      {openMapModal && (
+        <Modal zIndex={9999} onClose={handleCloseMapModal}>
+          <MapModal onClose={handleCloseMapModal} truck={selectedTruck} />
         </Modal>
       )}
     </React.Fragment>
@@ -273,7 +306,8 @@ const DeviceCard = ({ device, truck }) => {
   );
 };
 
-const SingleTruckDetail = ({ truck }) => {
+const SingleTruckDetail = ({ handleOpenMapModal, handleOpenVideoModal, truck }) => {
+  const url = truck?.devices?.find((device) => device.type == "video" && device.url)?.url;
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={7}>
@@ -296,12 +330,14 @@ const SingleTruckDetail = ({ truck }) => {
             {truck?.truckName}
           </Typography>
           <Box sx={{ display: "flex", gap: "1rem" }}>
-            <div style={{ cursor: "pointer" }}>
+            <div style={{ cursor: "pointer" }} onClick={() => handleOpenMapModal(truck)}>
               <LocationIcon />
             </div>
-            <div style={{ cursor: "pointer" }}>
-              <PlayIcon />
-            </div>
+            {url && (
+              <div style={{ cursor: "pointer" }} onClick={() => handleOpenVideoModal(url)}>
+                <PlayIcon />
+              </div>
+            )}
           </Box>
         </Box>
         <TruckDataList title="Plate Number" value={truck?.plateNumber} />

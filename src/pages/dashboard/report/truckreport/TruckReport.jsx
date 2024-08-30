@@ -7,6 +7,7 @@ import { getSingleTruckReportsAction } from "../../../../redux/actions/admin.act
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
+import logo from "../../../../assets/images/logo.png";
 const columns = [
   { field: "plateNumber", headerName: "PLATE NUMBER", headerAlign: "center", align: "center", width: 100 },
   { field: "driverName", headerName: "DRIVER", headerAlign: "center", align: "center", width: 200 },
@@ -80,27 +81,145 @@ const TruckReport = () => {
     setIsLoading(false);
   };
 
-  const downloadPDF = async (data) => {
+  // const downloadPDF = async (data) => {
+  //   const doc = new jsPDF();
+  //   let yOffset = 15;
+
+  //   // Centered Text Function
+  //   const centerText = (text, y, fontSize = 16, color = [0, 0, 0]) => {
+  //     doc.setFontSize(fontSize);
+  //     doc.setTextColor(...color);
+  //     const textWidth = doc.getTextWidth(text);
+  //     const x = (doc.internal.pageSize.getWidth() - textWidth) / 2;
+  //     doc.text(text, x, y);
+  //   };
+
+  //   // Add Date and Time in Upper Left Corner
+  //   const addDateAndTime = () => {
+  //     const now = new Date();
+  //     const formattedDate = now.toLocaleDateString();
+  //     const formattedTime = now.toLocaleTimeString();
+  //     doc.setFontSize(8); // Smaller font size
+  //     doc.setTextColor(150, 150, 150); // Light gray color for the date and time
+  //     doc.text(`Generated on: ${formattedDate} ${formattedTime}`, 8, 5);
+  //   };
+
+  //   // Add Truck Data Table with Heading
+  //   const addTruckTable = () => {
+  //     const truckData = data.map((truck, index) => [
+  //       index + 1,
+  //       truck.plateNumber,
+  //       truck.driverName,
+  //       truck.truckStatus.toUpperCase(),
+  //       truck.latitude.toFixed(4),
+  //       truck.longitude.toFixed(4),
+  //       truck.speed.toFixed(2),
+  //       new Date(truck.createdAt).toLocaleString(),
+  //     ]);
+
+  //     // Add Table Heading
+  //     centerText("Truck Report", yOffset, 18, [63, 81, 181]);
+  //     yOffset += 10;
+
+  //     // Add Truck Data Table
+  //     doc.autoTable({
+  //       head: [
+  //         [
+  //           "#",
+  //           "Plate Number",
+  //           "Driver Name",
+  //           "Truck Status",
+  //           "Latitude",
+  //           "Longitude",
+  //           "Speed",
+  //           "Created At",
+  //         ],
+  //       ],
+  //       body: truckData,
+  //       startY: yOffset,
+  //       styles: {
+  //         halign: "center",
+  //         valign: "middle",
+  //         fontSize: 10,
+  //         cellPadding: 4,
+  //         lineColor: [200, 200, 200],
+  //         lineWidth: 0.5,
+  //       },
+  //       headStyles: {
+  //         fillColor: [33, 150, 243],
+  //         textcolor: [255, 255, 255],
+  //       },
+  //       alternateRowStyles: {
+  //         fillColor: [240, 240, 240],
+  //       },
+  //     });
+  //   };
+
+  //   addDateAndTime();
+  //   addTruckTable();
+
+  //   // Save the PDF
+  //   doc.save("truck-report.pdf");
+  // };
+
+  const downloadPDF = async (data, userLogo = null) => {
     const doc = new jsPDF();
-    let yOffset = 15;
+    let yOffset = 30;
+
+    // Add Company Logo with Blue Background
+    const addCompanyLogo = () => {
+      const img = new Image();
+      img.src = logo; // Replace with the path to your company logo
+      doc.setFillColor(33, 150, 243); // Blue background color
+      doc.rect(10, 5, 50, 20, "F"); // Position and size of the blue background rectangle
+      doc.addImage(img, "PNG", 15, 8, 40, 15); // Position and size of the logo
+    };
+
+    // Add User Logo (if provided)
+    const addUserLogo = () => {
+      if (userLogo) {
+        const img = new Image();
+        img.src = userLogo;
+        doc.addImage(img, "PNG", 170, 5, 30, 20); // Position and size of the user logo
+      }
+    };
 
     // Centered Text Function
-    const centerText = (text, y, fontSize = 16, color = [0, 0, 0]) => {
+    const centerText = (text, y, fontSize = 16, color = [0, 0, 0], bold = false) => {
       doc.setFontSize(fontSize);
       doc.setTextColor(...color);
+      if (bold) {
+        doc.setFont("helvetica", "bold");
+      } else {
+        doc.setFont("helvetica", "normal");
+      }
       const textWidth = doc.getTextWidth(text);
       const x = (doc.internal.pageSize.getWidth() - textWidth) / 2;
       doc.text(text, x, y);
     };
 
-    // Add Date and Time in Upper Left Corner
+    // Add Date and Time in Upper Right Corner
     const addDateAndTime = () => {
       const now = new Date();
       const formattedDate = now.toLocaleDateString();
       const formattedTime = now.toLocaleTimeString();
-      doc.setFontSize(8); // Smaller font size
-      doc.setTextColor(150, 150, 150); // Light gray color for the date and time
-      doc.text(`Generated on: ${formattedDate} ${formattedTime}`, 8, 5);
+      doc.setFontSize(10);
+      doc.setTextColor(100, 100, 100);
+      doc.text(
+        `Generated on: ${formattedDate} ${formattedTime}`,
+        doc.internal.pageSize.getWidth() - 60,
+        25
+      );
+    };
+
+    // Add Header
+    const addHeader = () => {
+      addCompanyLogo();
+      addUserLogo();
+      centerText("Truck Report", yOffset, 22, [33, 150, 243], true);
+      yOffset += 10;
+      centerText("Fleet Management", yOffset, 14, [63, 81, 181]);
+      yOffset += 20;
     };
 
     // Add Truck Data Table with Heading
@@ -115,10 +234,6 @@ const TruckReport = () => {
         truck.speed.toFixed(2),
         new Date(truck.createdAt).toLocaleString(),
       ]);
-
-      // Add Table Heading
-      centerText("Truck Report", yOffset, 18, [63, 81, 181]);
-      yOffset += 10;
 
       // Add Truck Data Table
       doc.autoTable({
@@ -136,6 +251,7 @@ const TruckReport = () => {
         ],
         body: truckData,
         startY: yOffset,
+        theme: "grid",
         styles: {
           halign: "center",
           valign: "middle",
@@ -145,17 +261,35 @@ const TruckReport = () => {
           lineWidth: 0.5,
         },
         headStyles: {
-          fillColor: [33, 150, 243],
-          textcolor: [255, 255, 255],
+          fillColor: [63, 81, 181],
+          textColor: [255, 255, 255],
+          fontStyle: "bold",
         },
         alternateRowStyles: {
-          fillColor: [240, 240, 240],
+          fillColor: [245, 245, 245],
         },
+        tableLineColor: [200, 200, 200],
+        tableLineWidth: 0.5,
       });
     };
 
+    addHeader();
     addDateAndTime();
     addTruckTable();
+
+    // Add Footer
+    const addFooter = () => {
+      doc.setFontSize(10);
+      doc.setTextColor(150, 150, 150);
+      doc.text(
+        "Company Name | Company Address | Phone: (123) 456-7890",
+        doc.internal.pageSize.getWidth() / 2,
+        doc.internal.pageSize.getHeight() - 10,
+        { align: "center" }
+      );
+    };
+
+    addFooter();
 
     // Save the PDF
     doc.save("truck-report.pdf");
