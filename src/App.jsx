@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./App.css";
+import './App.css'
 import GlobalLoader from "./components/loader/Loader";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import NotVerified from "./components/verification/NotVerified";

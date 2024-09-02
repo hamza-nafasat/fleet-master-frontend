@@ -50,9 +50,6 @@ const Header = () => {
                 >
                     {pageTitle}
                 </Typography>
-                <SaudiLogoDiv>
-                    <img src={SaudiLogo} alt="saudi logo" style={{ width: "92px", height: "auto" }} />
-                </SaudiLogoDiv>
                 <Notification length={newNotifications?.length} />
                 <Box
                     onClick={() => toggleNav(true)}
