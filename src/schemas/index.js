@@ -97,7 +97,6 @@ export const registerSchema = Yup.object({
     .min(6)
     .required("Password is required"),
   address: Yup.string().required("Address is required"),
-  period: Yup.string().required("Time period is required"),
   image: Yup.mixed()
     .required("Image is required")
     .test(
@@ -105,9 +104,5 @@ export const registerSchema = Yup.object({
       "Unsupported file format",
       (value) => value && ["image/jpeg", "image/png", "image/gif"].includes(value.type)
     )
-    .test(
-      "fileSize",
-      "File is too large",
-      (value) => value && value.size <= 1024 * 1024 // 1MB limit
-    ),
+    .test("fileSize", "File is too large", (value) => value && value.size <= 1024 * 1024),
 });

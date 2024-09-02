@@ -1,5 +1,14 @@
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { Box, Button, Grid, IconButton, InputAdornment, styled, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  InputAdornment,
+  styled,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,7 +16,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import CameraIcon from "../../../assets/svgs/modal/CameraIcon";
 import { registerUserAction } from "../../../redux/actions/user.actions";
-import { clearUserError, clearUserMessage } from "../../../redux/slices/user.slice";
 import { registerSchema } from "../../../schemas";
 
 const Form = () => {
@@ -16,7 +24,7 @@ const Form = () => {
   const [profile, setProfile] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { message, error } = useSelector((state) => state.user);
+  const { message } = useSelector((state) => state.user);
 
   const initialValues = {
     firstName: "",
@@ -26,7 +34,6 @@ const Form = () => {
     password: "",
     confirmPassword: "",
     address: "",
-    period: "",
     image: "",
   };
 
@@ -37,10 +44,9 @@ const Form = () => {
       onSubmit: async (values) => {
         setLoading(true);
         if (values.password !== values.confirmPassword) {
-          setLoading(true);
+          setLoading(false);
           return toast.error("Password does not match");
         }
-        console.log("values", values);
         const formData = new FormData();
         formData.append("firstName", values.firstName);
         formData.append("lastName", values.lastName);
@@ -48,7 +54,7 @@ const Form = () => {
         formData.append("phoneNumber", values.phone);
         formData.append("password", values.password);
         formData.append("address", values.address);
-        formData.append("trialPeriod", values.period);
+        formData.append("trialPeriod", "7");
         formData.append("file", values.image);
         await dispatch(registerUserAction(formData));
         setLoading(false);
@@ -69,16 +75,10 @@ const Form = () => {
 
   useEffect(() => {
     if (message) {
-      toast.success(message);
-      dispatch(clearUserMessage());
       resetForm();
       return navigate("/verify-email");
     }
-    if (error) {
-      toast.error(error);
-      dispatch(clearUserError());
-    }
-  }, [message, error, dispatch, resetForm, navigate]);
+  }, [message, dispatch, resetForm, navigate]);
 
   return (
     <FormContainer onSubmit={handleSubmit}>
