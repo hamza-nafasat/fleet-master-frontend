@@ -45,7 +45,7 @@ export default Notification;
 
 const NotificationBox = styled(Box)({
   position: "absolute",
-  right: "0px",
+  right: "50px",
   top: "30px",
   width: "72px",
   cursor: "pointer",

@@ -18,6 +18,17 @@ a {
     border-radius: 0 !important;
 }
 
+.leaflet-popup-content {
+  margin: 0 !important;
+}
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+  background: rgba(0, 107, 206, 1) !important;
+}
+.leaflet-popup-content p {
+    margin: 0 !important;
+    border-radius: 12px !important;
+}
+
 .react-confirm-alert-body {
     background: rgba(0, 107, 206, 1) !important;
     color: #fff !important;

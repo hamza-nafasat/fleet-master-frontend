@@ -123,7 +123,7 @@ const Map = () => {
         {truckPositions.map((truck) => (
           <Marker key={truck.id} position={truck.position} icon={truckIcon}>
             <Popup>
-              {truck.name} is here: <pre>{JSON.stringify(truck.position, null, 2)}</pre>
+              {truck.name} is here: <pre>{JSON.stringify(truck.position, null, 2)}</pre> 
             </Popup>
           </Marker>
         ))}
