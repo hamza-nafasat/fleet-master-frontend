@@ -16,7 +16,6 @@ const Header = () => {
   const { newNotifications } = useSelector((state) => state.notification);
   let pageTitle = urlArr[urlArr.length - 1].replaceAll("-", " ");
   const {user} = useSelector((state) => state.user)
-  console.log('user', user)
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -65,10 +64,10 @@ const Header = () => {
           <Notification length={newNotifications?.length} />
           <Box
             onClick={handleClick}
-            sx={{ cursor: "pointer", display: "inline-block", position:'absolute', top:'30px', right:'20px' }}
+            sx={{ cursor: "pointer", display: "inline-block", position:'absolute', top:'25px', right:'20px' }}
           >
             <img
-              src={profilePic}
+              src={user?.image?.url || profilePic}
               alt="Saudi Arabia Logo"
               style={{
                 width: "45px",
@@ -95,7 +94,7 @@ const Header = () => {
               },
             }}
           >
-            <MenuItem
+            {/* <MenuItem
               sx={{
                 fontSize: "14px",
                 fontWeight: "500",
@@ -103,12 +102,12 @@ const Header = () => {
               onClick={handleClose}
             >
               My Profile
-            </MenuItem>
+            </MenuItem> */}
             <MenuItem
               sx={{ fontSize: "14px", fontWeight: "500" }}
               onClick={handleClose}
             >
-              Sign out
+              Logout
             </MenuItem>
           </Menu>
         </Box>

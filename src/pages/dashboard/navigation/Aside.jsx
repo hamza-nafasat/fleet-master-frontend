@@ -303,36 +303,6 @@ const Aside = ({ toggleNav }) => {
           </Box>
         </Stack>
         <Box sx={{ display: "flex", flexDirection: "column", width: "100%", gap: "1rem" }}>
-          <AsideTruckSec>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: "12px",
-                cursor: "pointer",
-              }}
-            >
-              <Typography
-                variant="h5"
-                sx={{
-                  fontSize: "14px",
-                  fontWeight: "500",
-                  color: "#ffffff",
-                }}
-              >
-                Fleet Management
-              </Typography>
-              <ChevronRightIcon />
-            </Box>
-            <Box
-              sx={{
-                position: "absolute",
-                top: "-24%",
-              }}
-            >
-              <AsideTruckIcon />
-            </Box>
-          </AsideTruckSec>
           <Button
             size="large"
             sx={{
@@ -376,16 +346,16 @@ const ImageContainer = styled(Box)({
   justifyContent: "center",
 });
 
-const AsideTruckSec = styled(Box)({
-  background: `url(${AsideTruckBgImg}) no-repeat center / cover`,
-  position: "relative",
-  width: "100%",
-  // flexGrow: '1',
-  display: "flex",
-  alignItems: "flex-end",
-  justifyContent: "center",
-  height: "141px",
-  padding: "16px",
-  borderRadius: "10px",
-  marginTop: "6rem",
-});
+// const AsideTruckSec = styled(Box)({
+//   background: `url(${AsideTruckBgImg}) no-repeat center / cover`,
+//   position: "relative",
+//   width: "100%",
+//   // flexGrow: '1',
+//   display: "flex",
+//   alignItems: "flex-end",
+//   justifyContent: "center",
+//   height: "141px",
+//   padding: "16px",
+//   borderRadius: "10px",
+//   marginTop: "6rem",
+// });

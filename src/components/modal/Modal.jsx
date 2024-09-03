@@ -1,9 +1,10 @@
 /* eslint-disable react/prop-types */
 import { styled } from "@mui/material";
 import { Fragment } from "react";
+import ReactDOM from 'react-dom';
 
-const Modal = ({ children, onClose, zIndex = 1 }) => {
-  return (
+const Modal = ({ children, onClose, zIndex = 1000 }) => {
+  return ReactDOM.createPortal(
     <Fragment>
       <ModalOuter onClick={onClose} sx={{ zIndex: zIndex }}>
         <ModalInner
@@ -27,8 +28,10 @@ const Modal = ({ children, onClose, zIndex = 1 }) => {
           {children}
         </ModalInner>
       </ModalOuter>
-    </Fragment>
+    </Fragment>,
+    document.body
   );
+
 };
 
 const ModalOuter = styled("div")({
