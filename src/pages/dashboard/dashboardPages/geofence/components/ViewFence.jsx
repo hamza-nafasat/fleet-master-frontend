@@ -7,10 +7,15 @@ import { MapContainer, Marker, Polygon, Popup, TileLayer } from "react-leaflet";
 import DetailIcon from "../../../../../assets/svgs/geofence/DetailIcon";
 import { calculatePolygonArea } from "../../../../../utils/features";
 import truckicon from "../../../../../assets/images/truck.png";
+import { useDispatch, useSelector } from "react-redux";
+import { getSingleGeofenceAction } from "../../../../../redux/actions/geofence.action";
 
 const ViewFence = ({ onClose, editModal, fence }) => {
+  const dispatch = useDispatch();
   const [drawnLayers, setDrawnLayers] = useState([]);
   const [truckPositions, setTruckPositions] = useState([]);
+
+  const { geofence } = useSelector((state) => state.geofence);
 
   const truckIcon = L.icon({
     iconUrl: truckicon,
@@ -19,18 +24,24 @@ const ViewFence = ({ onClose, editModal, fence }) => {
   });
 
   useEffect(() => {
-    if (fence?.area?.coordinates) {
-      const layer = L.polygon(fence?.area.coordinates);
-      setDrawnLayers([{ ...fence?.area, coordinates: fence?.area.coordinates, layer }]);
+    if (fence._id) {
+      dispatch(getSingleGeofenceAction(fence._id));
+    }
+  }, [fence._id, dispatch]);
+
+  useEffect(() => {
+    if (geofence?.area?.coordinates) {
+      const layer = L.polygon(geofence?.area.coordinates);
+      setDrawnLayers([{ ...geofence?.area, coordinates: geofence?.area.coordinates, layer }]);
     } else {
       setDrawnLayers([]);
     }
-  }, [fence?.area]);
+  }, [geofence?.area]);
 
   useEffect(() => {
     setTruckPositions([]);
-    if (fence?.trucks) {
-      fence.trucks.forEach((truck) => {
+    if (geofence?.trucks) {
+      geofence.trucks.forEach((truck) => {
         setTruckPositions((prev) => {
           const truckExists = prev.some((existingTruck) => existingTruck.id === truck._id);
           if (!truckExists) {
@@ -47,7 +58,7 @@ const ViewFence = ({ onClose, editModal, fence }) => {
         });
       });
     }
-  }, [fence?.trucks]);
+  }, [geofence?.trucks]);
 
   return (
     <MapContainer
@@ -64,13 +75,13 @@ const ViewFence = ({ onClose, editModal, fence }) => {
         <Polygon key={layerData?.id} positions={layerData?.coordinates}>
           <Popup className="geofencePopup">
             <ModalView
-              fence={fence}
-              name={fence?.name}
-              status={fence?.status}
-              alert={fence?.alert}
-              startTime={fence?.startDate?.split("T")[0]}
-              endTime={fence?.endDate?.split("T")[0]}
-              area={`${Math.round(calculatePolygonArea(fence?.area?.coordinates)) || 0} sq. km`}
+              fence={geofence}
+              name={geofence?.name}
+              status={geofence?.status}
+              alert={geofence?.alert}
+              startTime={geofence?.startDate?.split("T")[0]}
+              endTime={geofence?.endDate?.split("T")[0]}
+              area={`${Math.round(calculatePolygonArea(geofence?.area?.coordinates)) || 0} sq. km`}
               onClose={onClose}
               editModal={editModal}
             />
