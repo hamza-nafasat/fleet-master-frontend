@@ -16,6 +16,7 @@ const NotificationContent = ({ notificationOpen, handleNotificationClose }) => {
           height: "396px",
           borderRadius: "6px",
           boxShadow: "2px 2px 8px 0px rgba(0, 0, 0, 0.32), -2px 2px 8px 0px rgba(0, 0, 0, 0.32)",
+          // overflow: "hidden",
           "&::-webkit-scrollbar": {
             width: "6px",
           },
@@ -37,9 +38,9 @@ const NotificationContent = ({ notificationOpen, handleNotificationClose }) => {
 export default NotificationContent;
 
 const NotificationInnerContent = ({ handleNotificationClose }) => {
-  const { newNotifications } = useSelector((state) => state.notification);
+  const { notifications } = useSelector((state) => state.notification);
   return (
-    <Box height={"100%"} width={"100%"} sx={{ overflow: "auto" }}>
+    <Box height={"100%"} width={"100%"}>
       <Box
         sx={{
           display: "flex",
@@ -59,25 +60,39 @@ const NotificationInnerContent = ({ handleNotificationClose }) => {
           Notifications
         </Typography>
       </Box>
-      {newNotifications?.map((notification, index) => (
-        <NotificationItem
-          key={index}
-          truckId={notification?.truckId}
-          type={notification?.type}
-          message={notification?.message}
-          createdAt={notification?.createdAt}
-          isRead={notification?.isRead}
-          onClose={handleNotificationClose}
-        />
-      ))}
+      <Box
+        sx={{
+          height: "100%",
+          width: "100%",
+          overflow: "auto",
+        }}
+      >
+        {notifications?.map((notification, index) => (
+          <NotificationItem
+            key={index}
+            truckId={notification?.truckId}
+            type={notification?.type}
+            message={notification?.message}
+            createdAt={notification?.createdAt}
+            isRead={notification?.isRead}
+            onClose={handleNotificationClose}
+          />
+        ))}
+      </Box>
+
       <Link
         onClick={handleNotificationClose}
         to="notification"
         style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
           padding: "12px 0",
           textAlign: "center",
           display: "block",
           color: "rgba(0, 107, 206, 1)",
+          width: "100%",
+          backgroundColor: "rgba(255, 255, 255, 1)",
           fontSize: "12px",
           fontWeight: 500,
           p: 2,

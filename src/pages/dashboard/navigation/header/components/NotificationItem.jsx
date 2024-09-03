@@ -17,15 +17,14 @@ const NotificationItem = ({ truckId, createdAt, type, message, isRead, onClose }
           alignItems: "center",
           gap: "1rem",
           p: 1.5,
-          backgroundColor: isRead ? "rgba(240, 240, 240, 1)" : "rgba(255, 255, 255, 1)",
+          backgroundColor: isRead ? "rgba(255, 255, 255, 1)" : "lightgray",
           borderRadius: "12px",
-          boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-          transition: "transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease",
+          boxShadow: isRead ? "0px 4px 12px rgba(0, 0, 0, 0.1)" : "0px 2px 7px rgba(0, 0, 0, 0.1)",
+          transition: "transform 0.2s ease, box-shadow 0.2s ease",
           "&:hover": {
             cursor: "pointer",
-            backgroundColor: "lightgray",
-            transform: "scale(0.98)",
-            boxShadow: "0px 6px 20px rgba(255, 255, 255, 255)",
+            transform: "scale(1 , 1.1)",
+            boxShadow: isRead ? "0px 0px 10px rgba(0, 0, 0, 0.5)" : "0px 4px 12px rgba(255, 255, 2555)",
           },
         }}
       >
@@ -34,8 +33,8 @@ const NotificationItem = ({ truckId, createdAt, type, message, isRead, onClose }
             border: "2px solid rgba(0, 0, 0, 0.15)",
             backgroundColor,
             borderRadius: "50%",
-            width: "45px",
-            height: "45px",
+            width: "40px",
+            height: "40px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -48,20 +47,20 @@ const NotificationItem = ({ truckId, createdAt, type, message, isRead, onClose }
             variant="body2"
             sx={{
               color: "rgba(34, 34, 34, 1)",
-              fontSize: "15px",
+              fontSize: "12px",
               fontWeight: 600,
               mb: 0.5,
             }}
           >
             {String(type)?.toUpperCase()}
           </Typography>
-          <Typography sx={{ color: "rgba(50, 50, 50, 0.9)", fontSize: "13px", fontWeight: 500 }}>
+          <Typography sx={{ color: "rgba(50, 50, 50, 0.9)", fontSize: "10px", fontWeight: 500 }}>
             {message}
           </Typography>
           <Typography
             sx={{
               color: "rgba(110, 110, 110, 1)",
-              fontSize: "12px",
+              fontSize: "10px",
               fontWeight: 400,
               textAlign: "right",
               mt: 0.3,

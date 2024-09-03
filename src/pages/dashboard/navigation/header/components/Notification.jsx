@@ -3,12 +3,9 @@ import { Box, styled } from "@mui/material";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import NotificationIcon from "../../../../../assets/svgs/NotifictionIcon";
-import {
-  getAllNotificationsAction,
-  readAllNotificationsAction,
-} from "../../../../../redux/actions/notification.actions";
-import NotificationContent from "./NotificationContent";
 import { adminDashboardDetailsAction } from "../../../../../redux/actions/admin.actions";
+import { getAllNotificationsAction } from "../../../../../redux/actions/notification.actions";
+import NotificationContent from "./NotificationContent";
 
 const Notification = ({ length }) => {
   const dispatch = useDispatch();
@@ -22,13 +19,12 @@ const Notification = ({ length }) => {
 
   const handleNotificationClose = async () => {
     setNotificationOpen(null);
-    await dispatch(readAllNotificationsAction());
   };
 
   return (
     <>
       <NotificationBox onClick={handleNotificationOpen}>
-        <NotificationIcon />
+        <NotificationIcon length={length} />
         {length > 0 && <NotificationNumbers>{length}</NotificationNumbers>}
       </NotificationBox>
       {notificationOpen && (

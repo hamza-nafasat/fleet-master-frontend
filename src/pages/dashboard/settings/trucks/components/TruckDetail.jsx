@@ -367,10 +367,9 @@ const SingleTruckDetail = ({ handleOpenMapModal, handleOpenVideoModal, truck }) 
             src={truck?.image?.url}
             alt="truck image"
             style={{
-              objectFit: "cover",
+              objectFit: "contain",
               width: "200px",
               height: "200px",
-              borderRadius: "50%",
             }}
           />
         </Box>

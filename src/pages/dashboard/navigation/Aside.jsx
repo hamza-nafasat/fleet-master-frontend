@@ -1,15 +1,12 @@
 /* eslint-disable react/prop-types */
-import { Box, Button, Stack, Typography, styled } from "@mui/material";
+import { Box, Stack, Typography, styled } from "@mui/material";
 import Collapse from "@mui/material/Collapse";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import AsideTruckBgImg from "../../../assets/images/asidetrucksec.png";
-import AsideTruckIcon from "../../../assets/svgs/AsideTruckIcon";
 import ChevronIcon from "../../../assets/svgs/ChevronIcon";
 import ChevronIconUp from "../../../assets/svgs/ChevronIconUp";
-import ChevronRightIcon from "../../../assets/svgs/ChevronRightIcon";
 import DashboardIcon from "../../../assets/svgs/DashboardIcon";
 import GeofenceIcon from "../../../assets/svgs/geofence/GeofenceIcon";
 import HomeIcon from "../../../assets/svgs/HomeIcon";
@@ -22,21 +19,17 @@ import ReportNestedIcon from "../../../assets/svgs/ReportNestedIcon";
 import ReportsIcon from "../../../assets/svgs/ReportsIcon";
 import SettingIcon from "../../../assets/svgs/SettingIcon";
 import SettingNestedIcon from "../../../assets/svgs/SettingNestedIcon";
-import { logoutUserAction } from "../../../redux/actions/user.actions";
 import { clearUserError, clearUserMessage } from "../../../redux/slices/user.slice";
 
 const Aside = ({ toggleNav }) => {
-  const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
+  const { message, error } = useSelector((state) => state.user);
   let urlArr = location.pathname.split("/");
   let path = urlArr[2];
+
   const [openPage, setOpenPage] = useState(null);
   const [isActivePage, setIsActivePage] = useState(path);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const { message, error } = useSelector((state) => state.user);
-
-  const dispatch = useDispatch();
 
   const handlePages = (page) => {
     if (page.subPages) {
@@ -45,13 +38,6 @@ const Aside = ({ toggleNav }) => {
       setOpenPage(openPage === page ? null : page);
     }
     setIsActivePage(page);
-  };
-
-  const handleLogout = () => {
-    setIsLoading(true);
-    dispatch(logoutUserAction());
-    navigate("/login");
-    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -95,7 +81,6 @@ const Aside = ({ toggleNav }) => {
     {
       icon: <ReportsIcon isActivePage={isActivePage} />,
       title: "Reports",
-      // route: '/dashboard/reports/truckreport',
       page: "reports",
       subPages: [
         {
@@ -127,7 +112,6 @@ const Aside = ({ toggleNav }) => {
     {
       icon: <SettingIcon isActivePage={isActivePage} />,
       title: "Settings",
-      //   route: '/dashboard/setting/alert',
       page: "settings",
       subPages: [
         {
@@ -187,13 +171,13 @@ const Aside = ({ toggleNav }) => {
     <>
       <Asidemain>
         <Stack
-          justifyContent="space-between"
           sx={{
             gap: {
               sm: "1rem",
               md: "4rem",
             },
             width: "100%",
+            height: "100%",
           }}
         >
           <ImageContainer>
@@ -302,18 +286,6 @@ const Aside = ({ toggleNav }) => {
             ))}
           </Box>
         </Stack>
-        <Box sx={{ display: "flex", flexDirection: "column", width: "100%", gap: "1rem" }}>
-          <Button
-            size="large"
-            sx={{
-              color: "#fff",
-            }}
-            onClick={handleLogout}
-            disabled={isLoading}
-          >
-            {isLoading ? "Logging out..." : "Logout"}
-          </Button>
-        </Box>
       </Asidemain>
     </>
   );
@@ -323,11 +295,11 @@ export default Aside;
 
 const Asidemain = styled(Box)({
   display: "flex",
+  height: "100%",
   flexDirection: "column",
   alignItems: "flex-start",
   justifyContent: "space-between",
   padding: "16px 8px",
-  gap: "3rem",
   background: "linear-gradient(180deg, #006BCB 0%, #004A8B 100%)",
   "@media (min-width:991px)": {
     padding: "28px 14px 40px",

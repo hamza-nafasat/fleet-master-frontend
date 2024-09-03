@@ -1,89 +1,90 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: "Poppins", sans-serif !important;
+  font-family: "Poppins", sans-serif !important;
 }
 a {
-    text-decoration: none !important;
+  text-decoration: none !important;
 }
 
 .MuiDataGrid-root {
-    border: 0 !important;
-    border-radius: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
 }
 
 .leaflet-popup-content {
   margin: 0 !important;
 }
-.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
   background: rgba(0, 107, 206, 1) !important;
 }
 .leaflet-popup-content p {
-    margin: 0 !important;
-    border-radius: 12px !important;
+  margin: 0 !important;
+  border-radius: 12px !important;
 }
 
 .react-confirm-alert-body {
-    background: rgba(0, 107, 206, 1) !important;
-    color: #fff !important;
+  background: rgba(0, 107, 206, 1) !important;
+  color: #fff !important;
 }
 
 .geofencePopup .leaflet-popup-content {
-    margin: 0 !important;
-    width: unset !important;
+  margin: 0 !important;
+  width: unset !important;
 }
 
 .pulse {
-    animation: pulse-animation 1.8s infinite;
-    border-radius: 50%;
-    position: absolute;
-    top: 50%;
-    left:0%;
-    transform: translate(-10%,-50%);
-    width: 40px;
-    height: 40px;
+  animation: pulse-animation 1.5s infinite linear;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  transform: translate(-10%, -50%);
+  width: 40px;
+  height: 40px;
+}
+
+@keyframes pulse-animation {
+  0% {
+    box-shadow: 0 0 0 2px rgba(0, 65, 125, 0);
   }
-  
-  @keyframes pulse-animation {
-    0% {
-      box-shadow: 0 0 0 2px rgba(0, 65, 125, 0);
-    }
-    20% {
-      box-shadow: 0 0 0 4px rgba(0, 65, 125, 0.021);
-    }
-    40% {
-      box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.067);
-    }
-    70% {
-      box-shadow: 0 0 0 12px rgba(255, 255, 255, 0.134);
-    }
-    100% {
-      box-shadow: 0 0 0 20px rgba(255, 255, 255, 0);
-    }
+  20% {
+    box-shadow: 0 0 0 4px rgba(0, 65, 125, 0.5);
+  }
+  40% {
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.46);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(255, 255, 255, 0.24);
+  }
+  100% {
+    box-shadow: 0 0 0 20px rgba(255, 255, 255, 0);
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    transform: translateY(20vh);
+    opacity: 0;
   }
 
-  @keyframes fadeInUp {
-    0% {
-      transform: translateY(20vh);
-      opacity: 0;
-    }
+  50% {
+    opacity: 0.5;
+  }
 
-    50% {
-      opacity: 0.5;
-    }
-  
-    100% {
-      transform: translateY(0);
-      opacity: 1;
-    }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
   }
-  
-  .fadeInUp {
-    animation: fadeInUp 1s ease forwards;
-  }
+}
+
+.fadeInUp {
+  animation: fadeInUp 1s ease forwards;
+}

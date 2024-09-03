@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import './App.css'
+import "./App.css";
 import GlobalLoader from "./components/loader/Loader";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import NotVerified from "./components/verification/NotVerified";
@@ -16,11 +16,11 @@ import ForgetPassword from "./pages/auth/forget-password/ForgetPassword";
 import Otp from "./pages/auth/otp/Otp";
 import ResetPassword from "./pages/auth/reset-password/ResetPassword";
 import Dashboard from "./pages/dashboard";
+import { adminDashboardDetailsAction } from "./redux/actions/admin.actions";
 import { getDeviceDataAction } from "./redux/actions/device.actions";
-import { getAllNotificationsAction, getNewNotificationsAction } from "./redux/actions/notification.actions";
+import { getAllNotificationsAction } from "./redux/actions/notification.actions";
 import { getMyProfileAction } from "./redux/actions/user.actions";
 import { clearUserError, clearUserMessage } from "./redux/slices/user.slice";
-import { adminDashboardDetailsAction } from "./redux/actions/admin.actions";
 
 const Login = lazy(() => import("./pages/auth/login"));
 const Home = lazy(() => import("./pages/dashboard/Home/Home"));
@@ -60,14 +60,13 @@ function App() {
     socket.on(socketEvent.NOTIFICATIONS, async (data) => {
       console.log("i am called");
       await dispatch(adminDashboardDetailsAction());
-      await dispatch(getNewNotificationsAction());
+      await dispatch(getAllNotificationsAction());
     });
   }, [dispatch]);
 
   useEffect(() => {
     dispatch(getMyProfileAction());
     dispatch(getAllNotificationsAction());
-    dispatch(getNewNotificationsAction());
   }, [dispatch]);
 
   // show message and error
@@ -124,7 +123,7 @@ function App() {
               </Route>
             </Route>
           </Routes>
-          <ToastContainer />
+          <ToastContainer autoClose={2000} />
         </Suspense>
       </Router>
     </Elements>

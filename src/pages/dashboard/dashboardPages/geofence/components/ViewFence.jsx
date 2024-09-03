@@ -9,6 +9,7 @@ import { calculatePolygonArea } from "../../../../../utils/features";
 import truckicon from "../../../../../assets/images/truck.png";
 import { useDispatch, useSelector } from "react-redux";
 import { getSingleGeofenceAction } from "../../../../../redux/actions/geofence.action";
+import { TruckPopup } from "../../RealTimeMap/components/map/Map";
 
 const ViewFence = ({ onClose, editModal, fence }) => {
   const dispatch = useDispatch();
@@ -48,6 +49,7 @@ const ViewFence = ({ onClose, editModal, fence }) => {
             return [
               ...prev,
               {
+                ...truck,
                 id: truck._id,
                 name: truck.truckName,
                 position: [truck.latitude, truck.longitude],
@@ -92,7 +94,7 @@ const ViewFence = ({ onClose, editModal, fence }) => {
       {truckPositions?.map((truck) => (
         <Marker key={truck?.id} position={truck?.position} icon={truckIcon}>
           <Popup>
-            {truck.name} is here: <pre>{JSON.stringify(truck.position, null, 2)}</pre>
+            <TruckPopup truck={truck} />
           </Popup>
         </Marker>
       ))}

@@ -1,21 +1,27 @@
 import { Box, Drawer, Menu, MenuItem, Typography, styled } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HeaderBgImg from "../../../../assets/images/header-bg-img.png";
 import profilePic from "../../../../assets/images/settings/driver-profile.png";
 import { MenuRounded } from "@mui/icons-material";
 import Aside from "../Aside";
 import Notification from "./components/Notification";
-import { useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUserAction } from "../../../../redux/actions/user.actions";
+import { getAllNotificationsAction } from "../../../../redux/actions/notification.actions";
 
 const Header = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [openNav, setOpenNav] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [newNotificationLength, setNewNotificationLength] = useState(0);
   const location = useLocation();
   let urlArr = location.pathname.split("/");
-  const { newNotifications } = useSelector((state) => state.notification);
+  const { notifications } = useSelector((state) => state.notification);
   let pageTitle = urlArr[urlArr.length - 1].replaceAll("-", " ");
-  const {user} = useSelector((state) => state.user)
+  const { user } = useSelector((state) => state.user);
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -25,9 +31,28 @@ const Header = () => {
     setAnchorEl(null);
   };
 
+  const handleLogout = async () => {
+    setIsLoading(true);
+    await dispatch(logoutUserAction());
+    navigate("/login");
+    handleClose();
+    setIsLoading(false);
+  };
   const toggleNav = (newOpen) => {
     setOpenNav(newOpen);
   };
+
+  useEffect(() => {
+    if (notifications) {
+      const unreadNotifications = notifications?.filter((notification) => !notification?.isRead);
+      console.log("unreadNotifications", unreadNotifications);
+      setNewNotificationLength(unreadNotifications?.length);
+    }
+  }, [notifications]);
+
+  useEffect(() => {
+    dispatch(getAllNotificationsAction());
+  }, [dispatch]);
 
   return (
     <>
@@ -61,14 +86,20 @@ const Header = () => {
           {pageTitle}
         </Typography>
         <Box>
-          <Notification length={newNotifications?.length} />
+          <Notification length={newNotificationLength} />
           <Box
             onClick={handleClick}
-            sx={{ cursor: "pointer", display: "inline-block", position:'absolute', top:'25px', right:'20px' }}
+            sx={{
+              cursor: "pointer",
+              display: "inline-block",
+              position: "absolute",
+              top: "25px",
+              right: "20px",
+            }}
           >
             <img
               src={user?.image?.url || profilePic}
-              alt="Saudi Arabia Logo"
+              alt={user?.firstName}
               style={{
                 width: "45px",
                 height: "45px",
@@ -94,20 +125,12 @@ const Header = () => {
               },
             }}
           >
-            {/* <MenuItem
-              sx={{
-                fontSize: "14px",
-                fontWeight: "500",
-              }}
-              onClick={handleClose}
-            >
-              My Profile
-            </MenuItem> */}
             <MenuItem
-              sx={{ fontSize: "14px", fontWeight: "500" }}
-              onClick={handleClose}
+              sx={{ fontSize: "14px", fontWeight: "500", background: "#fff" }}
+              disabled={isLoading}
+              onClick={handleLogout}
             >
-              Logout
+              {isLoading ? "Logging out..." : "Logout"}
             </MenuItem>
           </Menu>
         </Box>

@@ -1,10 +1,10 @@
+/* eslint-disable react/prop-types */
 import { Box, Divider, Typography } from "@mui/material";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { useSelector } from "react-redux";
 import TruckIcon from "../../../../../../assets/images/truck.png";
-import SosIcon from "../../../../../../assets/images/sos-icon.png";
 
 const truckIcon = new L.Icon({
   iconUrl: TruckIcon,
@@ -27,14 +27,9 @@ const Map = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         {trucks.map((truck, index) => (
-          <Marker
-            key={index}
-            position={[truck.latitude, truck.longitude]}
-            icon={truckIcon}
-          >
+          <Marker key={index} position={[truck.latitude, truck.longitude]} icon={truckIcon}>
             <Popup>
-              {/* Truck is here: <pre>{JSON.stringify([truck.latitude, truck.longitude])}</pre> */}
-              <TruckPopup />
+              <TruckPopup truck={truck} />
             </Popup>
           </Marker>
         ))}
@@ -45,7 +40,10 @@ const Map = () => {
 
 export default Map;
 
-const TruckPopup = ({ data }) => {
+export const TruckPopup = ({ truck }) => {
+  console.log("truck", truck);
+  const mapDeviceId = truck?.devices?.find((device) => device.type == "gps")._id || "Not Available";
+  console.log("map device id", mapDeviceId);
   return (
     <Box sx={{ width: "240px" }}>
       <Typography
@@ -57,7 +55,7 @@ const TruckPopup = ({ data }) => {
           color: "#fff",
         }}
       >
-        1234atr
+        {truck.truckName}
       </Typography>
       <Box
         sx={{
@@ -67,68 +65,32 @@ const TruckPopup = ({ data }) => {
           borderRadius: "0 0 12px 12px",
         }}
       >
-        <Box
-          sx={{ display: "flex", alignItems: "center", gap: "0.5rem", mb: 1 }}
-        >
-          <Box
-            sx={{
-              width: "12px",
-              height: "12px",
-              background: "rgba(150, 150, 150, 1)",
-              borderRadius: "50%",
-            }}
-          ></Box>
-          <Typography sx={{ fontSize: "12px", color: "#000" }}>Idle</Typography>
-        </Box>
-        {truckData.map((data, i) => (
-          <Box key={i}>
-            <PopupList title="Plate Number" value={data.plateNumber} />
-            <PopupList title="Device ID" value={data.deviceId} />
-            <PopupList title="Driver" value={data.driver} />
-            <PopupList title="Latitude" value={data.lat} />
-            <PopupList title="Longitude" value={data.lng} />
-          </Box>
-        ))}
-        <Box
-          sx={{ display: "flex", alignItems: "center", gap: "0.5rem", mb: 1 }}
-        >
-          <Typography
-            sx={{
-              fontSize: "12px",
-              color: "rgba(0, 107, 206, 1)",
-              textDecoration: "underline",
-            }}
-          >
-            SOS of Emergency
-          </Typography>
-          <img src={SosIcon} alt="image" />
+        <Box>
+          <PopupList title="Plate Number" value={truck?.plateNumber} />
+          <PopupList size={"10px"} title="Device ID" value={mapDeviceId} />
+          <PopupList
+            title="Driver"
+            value={truck?.assignedTo?.firstName + " " + truck?.assignedTo?.lastName}
+          />
+          <PopupList title="Latitude" value={truck?.latitude} />
+          <PopupList title="Longitude" value={truck?.latitude} />
         </Box>
         <Divider />
-        <Typography sx={{ fontSize: "12px", fontWeight:500, color: "#000", pt:1 }}>
-          Last Update On: 26-10-2023 2:28:45
+
+        <Typography sx={{ fontSize: "12px", fontWeight: 500, color: "#000", pt: 1 }}>
+          {` Last Update: ${truck?.updatedAt?.split("T")[0]?.split("-").reverse().join("-")}${"  "}
+          ${truck.updatedAt?.split("T")[1].split(".")[0]}`}
         </Typography>
       </Box>
     </Box>
   );
 };
 
-const PopupList = ({ title, value }) => {
+const PopupList = ({ title, value, size = "12px" }) => {
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: "0.5rem", mb: 1 }}>
       <Typography sx={{ fontSize: "12px", color: "#000" }}>{title}:</Typography>
-      <Typography sx={{ fontSize: "12px", color: "rgba(17, 17, 17, 0.6)" }}>
-        {value}
-      </Typography>
+      <Typography sx={{ fontSize: size, color: "rgba(17, 17, 17, 0.6)" }}>{value}</Typography>
     </Box>
   );
 };
-
-var truckData = [
-  {
-    plateNumber: "1234atr",
-    deviceId: "868711060015479",
-    driver: "123456789",
-    lat: "27.6242769",
-    lng: "27.6242769",
-  },
-];
