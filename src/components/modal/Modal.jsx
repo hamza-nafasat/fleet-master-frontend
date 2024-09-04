@@ -31,7 +31,6 @@ const Modal = ({ children, onClose, zIndex = 1000 }) => {
     </Fragment>,
     document.body
   );
-
 };
 
 const ModalOuter = styled("div")({

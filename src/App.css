@@ -23,7 +23,8 @@ a {
 }
 .leaflet-popup-content-wrapper,
 .leaflet-popup-tip {
-  background: rgba(0, 107, 206, 1) !important;
+  background: transparent !important;
+  padding: 0 !important;
 }
 .leaflet-popup-content p {
   margin: 0 !important;
@@ -38,6 +39,10 @@ a {
 .geofencePopup .leaflet-popup-content {
   margin: 0 !important;
   width: unset !important;
+}
+
+.leaflet-popup-close-button {
+  display:none;
 }
 
 .pulse {
