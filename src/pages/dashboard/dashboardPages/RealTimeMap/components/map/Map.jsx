@@ -12,7 +12,7 @@ const truckIcon = new L.Icon({
   iconSize: [45, 45],
 });
 
-const Map = () => {
+const Map = ({ realTime = false }) => {
   const { trucks } = useSelector((state) => state.truck);
 
   return (
@@ -28,15 +28,8 @@ const Map = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         {trucks.map((truck, index) => (
-          <Marker
-            key={index}
-            position={[truck.latitude, truck.longitude]}
-            icon={truckIcon}
-          >
-            <Popup>
-              {/* <TruckPopup truck={truck} /> */}
-              <AnotherTruckPopup truck={truck} />
-            </Popup>
+          <Marker key={index} position={[truck.latitude, truck.longitude]} icon={truckIcon}>
+            <Popup>{realTime ? <AnotherTruckPopup truck={truck} /> : <TruckPopup truck={truck} />}</Popup>
           </Marker>
         ))}
       </MapContainer>
@@ -48,9 +41,7 @@ export default Map;
 
 export const TruckPopup = ({ truck }) => {
   console.log("truck", truck);
-  const mapDeviceId =
-    truck?.devices?.find((device) => device.type == "gps")._id ||
-    "Not Available";
+  const mapDeviceId = truck?.devices?.find((device) => device.type == "gps")._id || "Not Available";
   console.log("map device id", mapDeviceId);
   return (
     <Box sx={{ width: "240px" }}>
@@ -78,18 +69,14 @@ export const TruckPopup = ({ truck }) => {
           <PopupList size={"10px"} title="Device ID" value={mapDeviceId} />
           <PopupList
             title="Driver"
-            value={
-              truck?.assignedTo?.firstName + " " + truck?.assignedTo?.lastName
-            }
+            value={truck?.assignedTo?.firstName + " " + truck?.assignedTo?.lastName}
           />
           <PopupList title="Latitude" value={truck?.latitude} />
           <PopupList title="Longitude" value={truck?.latitude} />
         </Box>
         <Divider />
 
-        <Typography
-          sx={{ fontSize: "12px", fontWeight: 500, color: "#000", pt: 1 }}
-        >
+        <Typography sx={{ fontSize: "12px", fontWeight: 500, color: "#000", pt: 1 }}>
           {` Last Update: ${truck?.updatedAt?.split("T")[0]?.split("-").reverse().join("-")}${"  "}
           ${truck.updatedAt?.split("T")[1].split(".")[0]}`}
         </Typography>
@@ -102,9 +89,7 @@ const PopupList = ({ title, value, size = "12px" }) => {
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: "0.5rem", mb: 1 }}>
       <Typography sx={{ fontSize: "12px", color: "#000" }}>{title}:</Typography>
-      <Typography sx={{ fontSize: size, color: "rgba(17, 17, 17, 0.6)" }}>
-        {value}
-      </Typography>
+      <Typography sx={{ fontSize: size, color: "rgba(17, 17, 17, 0.6)" }}>{value}</Typography>
     </Box>
   );
 };
@@ -124,7 +109,7 @@ const AnotherTruckPopup = ({ truck }) => {
           borderRadius: "12px 12px 0 0",
         }}
       >
-        1234atr
+        {truck?.truckName}
       </Typography>
       <Box
         sx={{
@@ -141,11 +126,10 @@ const AnotherTruckPopup = ({ truck }) => {
               height: "114px",
               borderRadius: "10px",
               border: "3px solid #fff",
-              padding: "5px",
             }}
           >
             <Avatar
-              src={LongTruckIcon}
+              src={truck?.image?.url}
               sx={{
                 width: "100%",
                 height: "100%",
@@ -158,28 +142,25 @@ const AnotherTruckPopup = ({ truck }) => {
             <Box sx={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
               <Box
                 sx={{
-                  background: "rgba(0, 255, 70, 1)",
+                  background: truck?.status == "connected" ? "rgba(0, 255, 70, 1)" : "rgba(255, 0, 0, 1)",
                   width: "12px",
                   height: "12px",
                   borderRadius: "50%",
                 }}
               ></Box>
-              <Typography sx={{ fontSize: "14px", fontWeight: 600 }}>
-                KDX 903 T
-              </Typography>
+              <Typography sx={{ fontSize: "14px", fontWeight: 600 }}>{truck?.plateNumber}</Typography>
             </Box>
-            <Typography sx={{ fontSize: "10px" }}>
-              Mercedes Benz.S-Class S580 Sedan
-            </Typography>
-            <Typography sx={{ fontSize: "10px" }}>Blue</Typography>
+            <Typography
+              sx={{ fontSize: "10px" }}
+            >{`${truck?.truckName} ${truck?.plateNumber} ${truck?.fleetNumber}`}</Typography>
           </Box>
         </Box>
         {/* truck detail */}
         <Box sx={{ display: "flex", gap: "0.5rem" }}>
           <TruckDetail>
-            <TruckDetailList title="Plate Number" value="1234atr" />
-            <TruckDetailList title="Speed" value="868711060015479" />
-            <TruckDetailList title="Mileage" value="3.7km" />
+            <TruckDetailList title="Plate Number" value={truck?.plateNumber} />
+            <TruckDetailList title="FleetNumber" value={truck?.fleetNumber} />
+            <TruckDetailList title="Status" value={truck?.status} />
             <Divider />
             <Typography
               sx={{
@@ -189,13 +170,16 @@ const AnotherTruckPopup = ({ truck }) => {
                 textAlign: "center",
               }}
             >
-              Created At: 26-10-2023 2:28:45
+              Created At: {truck?.createdAt?.split("T")[0]?.split("-").reverse().join("-")}
             </Typography>
           </TruckDetail>
           <TruckDetail>
-            <TruckDetailList title="Driver" value="12335324" />
-            <TruckDetailList title="Latitude" value="27.23343" />
-            <TruckDetailList title="Longitude" value="27.23232" />
+            <TruckDetailList
+              title="Driver"
+              value={truck?.assignedTo?.firstName + " " + truck?.assignedTo?.lastName}
+            />
+            <TruckDetailList title="Latitude" value={truck?.latitude} />
+            <TruckDetailList title="Longitude" value={truck?.longitude} />
             <Divider />
             <Typography
               sx={{
@@ -205,7 +189,7 @@ const AnotherTruckPopup = ({ truck }) => {
                 textAlign: "center",
               }}
             >
-              Last Update On: 26-10-2023 2:28:45
+              Updated At: {truck?.updatedAt?.split("T")[0]?.split("-").reverse().join("-")}
             </Typography>
           </TruckDetail>
         </Box>
@@ -233,12 +217,8 @@ const TruckDetail = ({ children }) => {
 const TruckDetailList = ({ title, value }) => {
   return (
     <Box sx={{ my: 1 }}>
-      <Typography sx={{ color: "#000", fontSize: "12px", lineHeight: "12px" }}>
-        {title}
-      </Typography>
-      <Typography sx={{ color: "#11111199", fontSize: "10px" }}>
-        {value}
-      </Typography>
+      <Typography sx={{ color: "#000", fontSize: "12px", lineHeight: "12px" }}>{title}</Typography>
+      <Typography sx={{ color: "#11111199", fontSize: "10px" }}>{value}</Typography>
     </Box>
   );
 };

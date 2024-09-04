@@ -23,7 +23,7 @@ const RealTimeMap = () => {
             borderRadius: "16px",
           }}
         >
-          <Map />
+          <Map realTime />
         </Box>
       </Grid>
       <Grid item xs={12} md={4} sx={{ pl: "0 !important" }}>

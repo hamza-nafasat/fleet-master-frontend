@@ -5,12 +5,26 @@ import FatigueIcon from "../../../../../assets/svgs/notification/FatigueIcon";
 import GeoFencingIcon from "../../../../../assets/svgs/notification/GeoFencingIcon";
 import InFenceIcon from "../../../../../assets/svgs/notification/InFence";
 import { timeAgo } from "../../../../../utils/features";
+import { useDispatch } from "react-redux";
+import {
+  getAllNotificationsAction,
+  readNotificationAction,
+} from "../../../../../redux/actions/notification.actions";
+import { adminDashboardDetailsAction } from "../../../../../redux/actions/admin.actions";
 
-const NotificationItem = ({ truckId, createdAt, type, message, isRead, onClose }) => {
+const NotificationItem = ({ id, truckId, createdAt, type, message, isRead, onClose }) => {
+  const dispatch = useDispatch();
   const { backgroundColor, icon } = getNotificationDetails(type);
 
+  const openNotification = async () => {
+    onClose();
+    await dispatch(readNotificationAction(id));
+    await dispatch(getAllNotificationsAction());
+    await dispatch(adminDashboardDetailsAction());
+  };
+
   return (
-    <Link onClick={onClose} to={`/dashboard/truck-detail/${truckId}`}>
+    <Link onClick={openNotification} to={`/dashboard/truck-detail/${truckId}`}>
       <Box
         sx={{
           display: "flex",

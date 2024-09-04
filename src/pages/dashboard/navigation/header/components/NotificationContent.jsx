@@ -70,6 +70,7 @@ const NotificationInnerContent = ({ handleNotificationClose }) => {
         {notifications?.map((notification, index) => (
           <NotificationItem
             key={index}
+            id={notification?._id}
             truckId={notification?.truckId}
             type={notification?.type}
             message={notification?.message}

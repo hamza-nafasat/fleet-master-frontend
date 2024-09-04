@@ -20,10 +20,10 @@ const createAlertActions = ({ platform, severity, type }) => {
     dispatch(createAlertStart());
     try {
       const response = await customAxios.post("/alert/create", { platform, severity, type });
-      console.log("create alert api response ", response);
+      // console.log("create alert api response ", response);
       dispatch(createAlertSuccess(response.data));
     } catch (error) {
-      console.log("create alert api error", error);
+      // console.log("create alert api error", error);
       dispatch(createAlertFailure(error?.response?.data?.message || "Error ocurred while creating alert"));
     }
   };
@@ -34,10 +34,10 @@ const getAllAlertsActions = () => async (dispatch) => {
   try {
     dispatch(getAllAlertsStart());
     const response = await customAxios.get("/alert/all");
-    console.log("alert get all api response ", response);
+    // console.log("alert get all api response ", response);
     dispatch(getAllAlertsSuccess(response.data));
   } catch (error) {
-    console.log("alert get all api error", error);
+    // console.log("alert get all api error", error);
     dispatch(getAllAlertsFailure(error?.response?.data?.message || "Error ocurred while getting alerts"));
   }
 };
@@ -54,11 +54,11 @@ const updateAlertAction =
         type,
         status,
       });
-      console.log("update alert api response ", response);
+      // console.log("update alert api response ", response);
       dispatch(updateAlertSuccess(response.data));
     } catch (error) {
       updateAlertFailure(error?.response?.data?.message || "Error ocurred while updating alert");
-      console.log("update alert api error", error);
+      // console.log("update alert api error", error);
     }
   };
 
@@ -67,10 +67,10 @@ const deleteAlertAction = (alertId) => async (dispatch) => {
   try {
     dispatch(deleteAlertStart());
     const response = await customAxios.delete(`/alert/single/${alertId}`);
-    console.log("delete alert api response ", response);
+    // console.log("delete alert api response ", response);
     dispatch(deleteAlertSuccess(response.data));
   } catch (error) {
-    console.log("delete alert api error", error);
+    // console.log("delete alert api error", error);
     dispatch(deleteAlertFailure(error?.response?.data?.message || "Error ocurred while deleting alert"));
   }
 };

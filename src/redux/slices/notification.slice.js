@@ -76,6 +76,7 @@ const notificationSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+
     // clear error and message
     // ------------------------
     clearNotificationMessage: (state) => {
