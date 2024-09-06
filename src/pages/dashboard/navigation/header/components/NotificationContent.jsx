@@ -16,7 +16,6 @@ const NotificationContent = ({ notificationOpen, handleNotificationClose }) => {
           height: "396px",
           borderRadius: "6px",
           boxShadow: "2px 2px 8px 0px rgba(0, 0, 0, 0.32), -2px 2px 8px 0px rgba(0, 0, 0, 0.32)",
-          // overflow: "hidden",
           "&::-webkit-scrollbar": {
             width: "6px",
           },
@@ -45,7 +44,6 @@ const NotificationInnerContent = ({ handleNotificationClose }) => {
         sx={{
           display: "flex",
           gap: "1.3rem",
-          p: 2,
         }}
       >
         <Typography
@@ -64,7 +62,6 @@ const NotificationInnerContent = ({ handleNotificationClose }) => {
         sx={{
           height: "100%",
           width: "100%",
-          overflow: "auto",
         }}
       >
         {notifications?.map((notification, index) => (
@@ -85,7 +82,7 @@ const NotificationInnerContent = ({ handleNotificationClose }) => {
         onClick={handleNotificationClose}
         to="notification"
         style={{
-          position: "absolute",
+          position: "sticky",
           bottom: 0,
           left: 0,
           padding: "12px 0",
@@ -96,7 +93,6 @@ const NotificationInnerContent = ({ handleNotificationClose }) => {
           backgroundColor: "rgba(255, 255, 255, 1)",
           fontSize: "12px",
           fontWeight: 500,
-          p: 2,
           cursor: "pointer",
         }}
       >
