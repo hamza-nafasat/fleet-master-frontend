@@ -44,6 +44,7 @@ const Notification = lazy(
   () => import("./pages/dashboard/navigation/header/components/NotificationDetail")
 );
 const Register = lazy(() => import("./pages/auth/register/Register"));
+const ConfigurationSettings = lazy(() => import('./pages/dashboard/settings/configuration/ConfigurationSettings'))
 
 function App() {
   const { user, message, error, loading } = useSelector((state) => state.user);
@@ -98,7 +99,7 @@ function App() {
             <Route
               path="/verify-email"
               element={<NotVerified user={user} isVerified={user?.isVerified} />}
-            />
+            /> 
             <Route path="/reset-password/:reset-token" element={<ResetPassword />} />
             <Route path="/" element={<Navigate replace to="/login" />} />
             <Route element={<ProtectedRoute user={user} isLogin={user ? true : false} />}>
@@ -114,6 +115,7 @@ function App() {
                 <Route path="setting/trucks" element={<Trucks />} />
                 <Route path="setting/devices" element={<Devices />} />
                 <Route path="setting/employees" element={<Employees />} />
+                <Route path="settings/configuration-settings" element={<ConfigurationSettings />} />
                 <Route path="real-time-map" element={<RealTimeMap />} />
                 <Route path="geofence" element={<GeoFence />} />
                 <Route path="plans/subscription-plan" element={<SubscriptionPlan />} />

@@ -144,6 +144,12 @@ const Aside = ({ toggleNav }) => {
           route: "/dashboard/setting/employees",
           page: "employees",
         },
+        {
+          icon: <SettingNestedIcon />,
+          title: "Configuration",
+          route: "/dashboard/settings/configuration-settings",
+          page: "configuration-settings",
+        },
       ],
     },
     {
@@ -295,7 +301,7 @@ export default Aside;
 
 const Asidemain = styled(Box)({
   display: "flex",
-  height: "100%",
+  height: "auto",
   flexDirection: "column",
   alignItems: "flex-start",
   justifyContent: "space-between",
