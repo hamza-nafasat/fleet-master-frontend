@@ -1,16 +1,15 @@
 import {
-  Avatar,
-  Box,
-  Button,
-  Grid,
-  styled,
-  TextField,
-  Typography,
+    Avatar,
+    Box,
+    Button,
+    Grid,
+    styled,
+    TextField,
+    Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import profilePic from "../../../assets/images/asif.png";
-import SaveIcon from "../../../assets/svgs/settings/SaveIcon";
 import { useSelector } from "react-redux";
+import SaveIcon from "../../../assets/svgs/settings/SaveIcon";
 
 const Profile = () => {
   const [profilePicture, setProfilePicture] = useState("");
