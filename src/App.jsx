@@ -17,7 +17,7 @@ import Otp from "./pages/auth/otp/Otp";
 import ResetPassword from "./pages/auth/reset-password/ResetPassword";
 import Dashboard from "./pages/dashboard";
 import { adminDashboardDetailsAction } from "./redux/actions/admin.actions";
-import { getDeviceDataAction } from "./redux/actions/device.actions";
+import { getDeviceDataAction, getMyAllSensorsDataAction } from "./redux/actions/device.actions";
 import { getAllNotificationsAction } from "./redux/actions/notification.actions";
 import { getMyProfileAction } from "./redux/actions/user.actions";
 import { clearUserError, clearUserMessage } from "./redux/slices/user.slice";
@@ -44,33 +44,39 @@ const Notification = lazy(
   () => import("./pages/dashboard/navigation/header/components/NotificationDetail")
 );
 const Register = lazy(() => import("./pages/auth/register/Register"));
-const ConfigurationSettings = lazy(() => import('./pages/dashboard/settings/configuration/ConfigurationSettings'))
+const ConfigurationSettings = lazy(
+  () => import("./pages/dashboard/settings/configuration/ConfigurationSettings")
+);
 
 function App() {
+  const dispatch = useDispatch();
   const { user, message, error, loading } = useSelector((state) => state.user);
 
-  const dispatch = useDispatch();
+  // use effect for socket
+  // -------------------
   useEffect(() => {
     socket.on("connect", () => {
-      console.log(socket.id);
+      // console.log(socket.id);
     });
     socket.on(socketEvent.SENSORS_DATA, (data) => {
-      console.log("trucks data coming from server ", data);
+      // console.log("trucks data coming from server ", data);
       dispatch(getDeviceDataAction(data));
     });
     socket.on(socketEvent.NOTIFICATIONS, async (data) => {
-      console.log("i am called");
+      // console.log("i am called");
       await dispatch(adminDashboardDetailsAction());
       await dispatch(getAllNotificationsAction());
     });
   }, [dispatch]);
-
+  // use effect for get profile and all notification in first time
+  // ------------------------------------------------------------
   useEffect(() => {
     dispatch(getMyProfileAction());
     dispatch(getAllNotificationsAction());
   }, [dispatch]);
 
   // show message and error
+  // ------------------------
   useEffect(() => {
     if (message) {
       toast.success(message);
@@ -81,6 +87,14 @@ function App() {
       dispatch(clearUserError());
     }
   }, [message, error, dispatch]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // dispatch(getMyAllSensorsDataAction());
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [dispatch]);
+
   return (
     <Elements stripe={stripeLoad}>
       <Router>
@@ -99,7 +113,7 @@ function App() {
             <Route
               path="/verify-email"
               element={<NotVerified user={user} isVerified={user?.isVerified} />}
-            /> 
+            />
             <Route path="/reset-password/:reset-token" element={<ResetPassword />} />
             <Route path="/" element={<Navigate replace to="/login" />} />
             <Route element={<ProtectedRoute user={user} isLogin={user ? true : false} />}>
