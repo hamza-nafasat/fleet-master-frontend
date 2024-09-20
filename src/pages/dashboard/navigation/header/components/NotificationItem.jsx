@@ -1,22 +1,22 @@
 /* eslint-disable react/prop-types */
 import { Box, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
-import { timeAgo } from "../../../../../utils/features";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import AlertIcon from "../../../../../assets/svgs/notification/AlertIcon";
+import CheckIcon from "../../../../../assets/svgs/notification/CheckIcon";
+import DamageSensorIcon from "../../../../../assets/svgs/notification/DamageSensorIcon";
+import DangerIcon from "../../../../../assets/svgs/notification/DangerIcon";
+import GeoFencingIcon from "../../../../../assets/svgs/notification/GeofencingIcon";
+import InfenceIcon from "../../../../../assets/svgs/notification/InfenceIcon";
+import LikeIcon from "../../../../../assets/svgs/notification/LikeIcon";
+import OutfenceIcon from "../../../../../assets/svgs/notification/OutfenceIcon";
+import OverspeedIcon from "../../../../../assets/svgs/notification/OverspeedIcon";
+import { adminDashboardDetailsAction } from "../../../../../redux/actions/admin.actions";
 import {
   getAllNotificationsAction,
   readNotificationAction,
 } from "../../../../../redux/actions/notification.actions";
-import { adminDashboardDetailsAction } from "../../../../../redux/actions/admin.actions";
-import OverspeedIcon from "../../../../../assets/svgs/notification/OverspeedIcon";
-import DamageSensorIcon from "../../../../../assets/svgs/notification/DamageSensorIcon";
-import OutfenceIcon from "../../../../../assets/svgs/notification/OutfenceIcon";
-import GeoFencingIcon from "../../../../../assets/svgs/notification/GeofencingIcon";
-import InfenceIcon from "../../../../../assets/svgs/notification/InfenceIcon";
-import AlertIcon from "../../../../../assets/svgs/notification/AlertIcon";
-import DangerIcon from "../../../../../assets/svgs/notification/DangerIcon";
-import CheckIcon from "../../../../../assets/svgs/notification/CheckIcon";
-import LikeIcon from "../../../../../assets/svgs/notification/LikeIcon";
+import { timeAgo } from "../../../../../utils/features";
 
 const NotificationItem = ({
   id,

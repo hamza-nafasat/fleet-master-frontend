@@ -98,6 +98,7 @@ const Profile = () => {
               value={user?.email}
               maxLength="30"
               name="email"
+              InputLabelProps={styled}
             />
           </Grid>
           <Grid item xs={12} lg={8}>
