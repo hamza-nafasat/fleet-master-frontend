@@ -6,7 +6,6 @@ import AlertIcon from "../../../../../assets/svgs/notification/AlertIcon";
 import CheckIcon from "../../../../../assets/svgs/notification/CheckIcon";
 import DamageSensorIcon from "../../../../../assets/svgs/notification/DamageSensorIcon";
 import DangerIcon from "../../../../../assets/svgs/notification/DangerIcon";
-import GeoFencingIcon from "../../../../../assets/svgs/notification/GeofencingIcon";
 import InfenceIcon from "../../../../../assets/svgs/notification/InfenceIcon";
 import LikeIcon from "../../../../../assets/svgs/notification/LikeIcon";
 import OutfenceIcon from "../../../../../assets/svgs/notification/OutfenceIcon";
@@ -27,11 +26,10 @@ const NotificationItem = ({
   isRead,
   onClose,
 }) => {
-
   const dispatch = useDispatch();
   const { icon, miniIcon } = getNotificationDetails(type);
   const helo = getNotificationDetails(type);
-  console.log(id,type,helo)
+  console.log(id, type, helo);
 
   const openNotification = async () => {
     onClose();
@@ -127,7 +125,7 @@ const getNotificationDetails = (type) => {
       };
     case "geo-fencing":
       return {
-        icon: <GeoFencingIcon />,
+        icon: <DamageSensorIcon />,
         miniIcon: <CheckIcon />,
       };
     case "infence":
@@ -145,5 +143,3 @@ const getNotificationDetails = (type) => {
       return { icon: null };
   }
 };
-
-
