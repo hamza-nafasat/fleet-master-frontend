@@ -247,7 +247,7 @@ const DatabaseChangeModal = ({ onClose, changeDatabase, selectedDatabase }) => {
         }}
       >
         {selectedDatabase === "remote-cloud-database" &&
-          "Do you want to store your data in a local database?"}
+          "Do you want   store your data in a local database?"}
         {selectedDatabase === "local-database" &&
           "Do you want to store your data in a remote (cloud) database?"}
       </Typography>

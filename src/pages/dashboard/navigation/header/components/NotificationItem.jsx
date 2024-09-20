@@ -1,9 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Box, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-import FatigueIcon from "../../../../../assets/svgs/notification/FatigueIcon";
-import GeoFencingIcon from "../../../../../assets/svgs/notification/GeoFencingIcon";
-import InFenceIcon from "../../../../../assets/svgs/notification/InFence";
 import { timeAgo } from "../../../../../utils/features";
 import { useDispatch } from "react-redux";
 import {
@@ -11,10 +8,30 @@ import {
   readNotificationAction,
 } from "../../../../../redux/actions/notification.actions";
 import { adminDashboardDetailsAction } from "../../../../../redux/actions/admin.actions";
+import OverspeedIcon from "../../../../../assets/svgs/notification/OverspeedIcon";
+import DamageSensorIcon from "../../../../../assets/svgs/notification/DamageSensorIcon";
+import OutfenceIcon from "../../../../../assets/svgs/notification/OutfenceIcon";
+import GeoFencingIcon from "../../../../../assets/svgs/notification/GeofencingIcon";
+import InfenceIcon from "../../../../../assets/svgs/notification/InfenceIcon";
+import AlertIcon from "../../../../../assets/svgs/notification/AlertIcon";
+import DangerIcon from "../../../../../assets/svgs/notification/DangerIcon";
+import CheckIcon from "../../../../../assets/svgs/notification/CheckIcon";
+import LikeIcon from "../../../../../assets/svgs/notification/LikeIcon";
 
-const NotificationItem = ({ id, truckId, createdAt, type, message, isRead, onClose }) => {
+const NotificationItem = ({
+  id,
+  truckId,
+  createdAt,
+  type,
+  message,
+  isRead,
+  onClose,
+}) => {
+
   const dispatch = useDispatch();
-  const { backgroundColor, icon } = getNotificationDetails(type);
+  const { icon, miniIcon } = getNotificationDetails(type);
+  const helo = getNotificationDetails(type);
+  console.log(id,type,helo)
 
   const openNotification = async () => {
     onClose();
@@ -29,23 +46,20 @@ const NotificationItem = ({ id, truckId, createdAt, type, message, isRead, onClo
         sx={{
           display: "flex",
           alignItems: "center",
-          gap: "1rem",
+          justifyContent: "space-between",
+          gap: "0.5rem",
           p: 1.5,
-          backgroundColor: isRead ? "rgba(255, 255, 255, 1)" : "lightgray",
-          borderRadius: "12px",
-          boxShadow: isRead ? "0px 4px 12px rgba(0, 0, 0, 0.1)" : "0px 2px 7px rgba(0, 0, 0, 0.1)",
-          transition: "transform 0.2s ease, box-shadow 0.2s ease",
+          backgroundColor: isRead ? "rgba(255, 255, 255, 1)" : "#96cdff",
+          borderBottom: "1px solid #0000001c",
+          transition: "all 0.2s ease",
           "&:hover": {
             cursor: "pointer",
-            transform: "scale(1 , 1.1)",
-            boxShadow: isRead ? "0px 0px 10px rgba(0, 0, 0, 0.5)" : "0px 4px 12px rgba(255, 255, 2555)",
+            background: "#d9edff",
           },
         }}
       >
         <Box
           sx={{
-            border: "2px solid rgba(0, 0, 0, 0.15)",
-            backgroundColor,
             borderRadius: "50%",
             width: "40px",
             height: "40px",
@@ -57,32 +71,41 @@ const NotificationItem = ({ id, truckId, createdAt, type, message, isRead, onClo
           {icon}
         </Box>
         <Box sx={{ flex: 1 }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: "4px" }}>
+            {miniIcon}
+            <Typography
+              variant="body2"
+              sx={{
+                color: "rgba(34, 34, 34, 1)",
+                fontSize: "12px",
+                fontWeight: 600,
+                textTransform: "capitalize",
+              }}
+            >
+              {String(type)}
+            </Typography>
+          </Box>
           <Typography
-            variant="body2"
             sx={{
-              color: "rgba(34, 34, 34, 1)",
-              fontSize: "12px",
-              fontWeight: 600,
-              mb: 0.5,
+              color: "rgba(50, 50, 50, 0.9)",
+              fontSize: "10px",
+              fontWeight: 500,
             }}
           >
-            {String(type)?.toUpperCase()}
-          </Typography>
-          <Typography sx={{ color: "rgba(50, 50, 50, 0.9)", fontSize: "10px", fontWeight: 500 }}>
             {message}
           </Typography>
-          <Typography
-            sx={{
-              color: "rgba(110, 110, 110, 1)",
-              fontSize: "10px",
-              fontWeight: 400,
-              textAlign: "right",
-              mt: 0.3,
-            }}
-          >
-            {timeAgo(createdAt)}
-          </Typography>
         </Box>
+        <Typography
+          sx={{
+            color: "rgba(110, 110, 110, 1)",
+            fontSize: "10px",
+            fontWeight: 400,
+            textAlign: "right",
+            mt: 0.3,
+          }}
+        >
+          {timeAgo(createdAt)}
+        </Typography>
       </Box>
     </Link>
   );
@@ -93,13 +116,34 @@ export default NotificationItem;
 const getNotificationDetails = (type) => {
   switch (type) {
     case "speed":
-      return { backgroundColor: "rgba(255, 107, 107, 1)", icon: <FatigueIcon /> };
-    case "outfence":
-      return { backgroundColor: "rgba(100, 221, 23, 1)", icon: <GeoFencingIcon /> };
+      return {
+        icon: <OverspeedIcon />,
+        miniIcon: <AlertIcon />,
+      };
+    case "damage-sensor":
+      return {
+        icon: <DamageSensorIcon />,
+        miniIcon: <DangerIcon />,
+      };
+    case "geo-fencing":
+      return {
+        icon: <GeoFencingIcon />,
+        miniIcon: <CheckIcon />,
+      };
     case "infence":
-      return { backgroundColor: "rgba(255, 171, 64, 1)", icon: <InFenceIcon /> };
+      return {
+        icon: <InfenceIcon />,
+        miniIcon: <LikeIcon />,
+      };
+    case "outfence":
+      return {
+        icon: <OutfenceIcon />,
+        miniIcon: <AlertIcon />,
+      };
 
     default:
-      return { backgroundColor: "#e0e0e0", icon: null };
+      return { icon: null };
   }
 };
+
+

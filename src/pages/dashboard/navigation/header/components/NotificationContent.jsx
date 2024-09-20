@@ -13,7 +13,8 @@ const NotificationContent = ({ notificationOpen, handleNotificationClose }) => {
       PaperProps={{
         sx: {
           width: "300px",
-          height: "396px",
+          height: 'auto',
+          maxHeight: "396px",
           borderRadius: "6px",
           boxShadow: "2px 2px 8px 0px rgba(0, 0, 0, 0.32), -2px 2px 8px 0px rgba(0, 0, 0, 0.32)",
           "&::-webkit-scrollbar": {

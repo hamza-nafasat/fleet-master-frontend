@@ -47,6 +47,7 @@ const Register = lazy(() => import("./pages/auth/register/Register"));
 const ConfigurationSettings = lazy(
   () => import("./pages/dashboard/settings/configuration/ConfigurationSettings")
 );
+const MyProfile = lazy(() => import('./pages/dashboard/navigation/Profile'))
 
 function App() {
   const dispatch = useDispatch();
@@ -120,6 +121,7 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />}>
                 <Route index element={<Navigate replace to="home" />} />
                 <Route path="home" element={<Home />} />
+                <Route path="profile" element={<MyProfile />} />
                 <Route path="reports/truck-report" element={<TruckReport />} />
                 <Route path="reports/operations" element={<DailyOperations />} />
                 <Route path="reports/sos" element={<SOS />} />

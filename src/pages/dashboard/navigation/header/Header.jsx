@@ -5,7 +5,7 @@ import profilePic from "../../../../assets/images/settings/driver-profile.png";
 import { MenuRounded } from "@mui/icons-material";
 import Aside from "../Aside";
 import Notification from "./components/Notification";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUserAction } from "../../../../redux/actions/user.actions";
 import { getAllNotificationsAction } from "../../../../redux/actions/notification.actions";
@@ -44,7 +44,9 @@ const Header = () => {
 
   useEffect(() => {
     if (notifications) {
-      const unreadNotifications = notifications?.filter((notification) => !notification?.isRead);
+      const unreadNotifications = notifications?.filter(
+        (notification) => !notification?.isRead
+      );
       console.log("unreadNotifications", unreadNotifications);
       setNewNotificationLength(unreadNotifications?.length);
     }
@@ -125,6 +127,14 @@ const Header = () => {
               },
             }}
           >
+            <Link to="/dashboard/profile">
+              <MenuItem
+                sx={{ fontSize: "14px", fontWeight: "500", background: "#fff", color: '#000', borderBottom: '1px solid #0000001c' }}
+                disabled={isLoading}
+              >
+                My Profile
+              </MenuItem>
+            </Link>
             <MenuItem
               sx={{ fontSize: "14px", fontWeight: "500", background: "#fff" }}
               disabled={isLoading}
