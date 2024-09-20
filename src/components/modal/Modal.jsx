@@ -3,7 +3,7 @@ import { styled } from "@mui/material";
 import { Fragment } from "react";
 import ReactDOM from 'react-dom';
 
-const Modal = ({ children, onClose, zIndex = 1000 }) => {
+const Modal = ({ children, onClose, zIndex = 1000, width }) => {
   return ReactDOM.createPortal(
     <Fragment>
       <ModalOuter onClick={onClose} sx={{ zIndex: zIndex }}>
@@ -14,15 +14,17 @@ const Modal = ({ children, onClose, zIndex = 1000 }) => {
               xs: "1rem",
               md: "1.2rem",
             },
-            width: {
+            width: width ? width : {
               xs: "300px",
               sm: "600px",
               lg: "900px",
               xl: "1000px",
             },
-            "@media (max-height:1000px)": {
-              height: "100%",
-            },
+            height: 'auto',
+            maxHeight: '100%',
+            // "@media (max-height:1000px)": {
+            //   height: "100%",
+            // },
           }}
         >
           {children}
