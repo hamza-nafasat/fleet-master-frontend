@@ -4,18 +4,19 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import AlertIcon from "../../../../../assets/svgs/notification/AlertIcon";
 import CheckIcon from "../../../../../assets/svgs/notification/CheckIcon";
-import DamageSensorIcon from "../../../../../assets/svgs/notification/DamageSensorIcon";
 import DangerIcon from "../../../../../assets/svgs/notification/DangerIcon";
-import InfenceIcon from "../../../../../assets/svgs/notification/InfenceIcon";
 import LikeIcon from "../../../../../assets/svgs/notification/LikeIcon";
-import OutfenceIcon from "../../../../../assets/svgs/notification/OutfenceIcon";
-import OverspeedIcon from "../../../../../assets/svgs/notification/OverspeedIcon";
 import { adminDashboardDetailsAction } from "../../../../../redux/actions/admin.actions";
 import {
   getAllNotificationsAction,
   readNotificationAction,
 } from "../../../../../redux/actions/notification.actions";
 import { timeAgo } from "../../../../../utils/features";
+import overspeedImg from '../../../../../assets/images/notifications/overspeed.png'
+import geofencingImg from '../../../../../assets/images/notifications/geo-fencing.png'
+import infenceImg from '../../../../../assets/images/notifications/infence.png'
+import outfenceImg from '../../../../../assets/images/notifications/outfence.png'
+import damageSensorImg from '../../../../../assets/images/notifications/damage-sensor.png'
 
 const NotificationItem = ({
   id,
@@ -66,7 +67,7 @@ const NotificationItem = ({
             justifyContent: "center",
           }}
         >
-          {icon}
+          <img src={icon} alt="icon" />
         </Box>
         <Box sx={{ flex: 1 }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: "4px" }}>
@@ -115,27 +116,27 @@ const getNotificationDetails = (type) => {
   switch (type) {
     case "speed":
       return {
-        icon: <OverspeedIcon />,
+        icon: overspeedImg,
         miniIcon: <AlertIcon />,
       };
     case "damage-sensor":
       return {
-        icon: <DamageSensorIcon />,
+        icon: damageSensorImg,
         miniIcon: <DangerIcon />,
       };
     case "geo-fencing":
       return {
-        icon: <DamageSensorIcon />,
+        icon: geofencingImg,
         miniIcon: <CheckIcon />,
       };
     case "infence":
       return {
-        icon: <InfenceIcon />,
+        icon: infenceImg,
         miniIcon: <LikeIcon />,
       };
     case "outfence":
       return {
-        icon: <OutfenceIcon />,
+        icon: outfenceImg,
         miniIcon: <AlertIcon />,
       };
 

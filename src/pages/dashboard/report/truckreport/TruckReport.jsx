@@ -1,4 +1,13 @@
-import { Box, Button, CircularProgress, MenuItem, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  MenuItem,
+  Modal,
+  styled,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,10 +17,29 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 
 import logo from "../../../../assets/images/logo.png";
+import CameraIcon from "../../../../assets/svgs/modal/CameraIcon";
 const columns = [
-  { field: "plateNumber", headerName: "PLATE NUMBER", headerAlign: "center", align: "center", width: 100 },
-  { field: "driverName", headerName: "DRIVER", headerAlign: "center", align: "center", width: 200 },
-  { field: "deviceId", headerName: "DEVICE ID", headerAlign: "center", align: "center", width: 280 },
+  {
+    field: "plateNumber",
+    headerName: "PLATE NUMBER",
+    headerAlign: "center",
+    align: "center",
+    width: 100,
+  },
+  {
+    field: "driverName",
+    headerName: "DRIVER",
+    headerAlign: "center",
+    align: "center",
+    width: 200,
+  },
+  {
+    field: "deviceId",
+    headerName: "DEVICE ID",
+    headerAlign: "center",
+    align: "center",
+    width: 280,
+  },
   {
     field: "speed",
     headerName: "SPEED",
@@ -71,6 +99,10 @@ const TruckReport = () => {
   const [filteredRows, setFilteredRows] = useState([]);
   const [plateNumbers, setPlateNumbers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [profile, setProfile] = useState("");
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const { trucks } = useSelector((state) => state.truck);
   const { singleTruckReport } = useSelector((state) => state.admin);
@@ -81,219 +113,121 @@ const TruckReport = () => {
     setIsLoading(false);
   };
 
-  // const downloadPDF = async (data) => {
-  //   const doc = new jsPDF();
-  //   let yOffset = 15;
+  const handleImageSrc = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfile(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
-  //   // Centered Text Function
-  //   const centerText = (text, y, fontSize = 16, color = [0, 0, 0]) => {
-  //     doc.setFontSize(fontSize);
-  //     doc.setTextColor(...color);
-  //     const textWidth = doc.getTextWidth(text);
-  //     const x = (doc.internal.pageSize.getWidth() - textWidth) / 2;
-  //     doc.text(text, x, y);
-  //   };
-
-  //   // Add Date and Time in Upper Left Corner
-  //   const addDateAndTime = () => {
-  //     const now = new Date();
-  //     const formattedDate = now.toLocaleDateString();
-  //     const formattedTime = now.toLocaleTimeString();
-  //     doc.setFontSize(8); // Smaller font size
-  //     doc.setTextColor(150, 150, 150); // Light gray color for the date and time
-  //     doc.text(`Generated on: ${formattedDate} ${formattedTime}`, 8, 5);
-  //   };
-
-  //   // Add Truck Data Table with Heading
-  //   const addTruckTable = () => {
-  //     const truckData = data.map((truck, index) => [
-  //       index + 1,
-  //       truck.plateNumber,
-  //       truck.driverName,
-  //       truck.truckStatus.toUpperCase(),
-  //       truck.latitude.toFixed(4),
-  //       truck.longitude.toFixed(4),
-  //       truck.speed.toFixed(2),
-  //       new Date(truck.createdAt).toLocaleString(),
-  //     ]);
-
-  //     // Add Table Heading
-  //     centerText("Truck Report", yOffset, 18, [63, 81, 181]);
-  //     yOffset += 10;
-
-  //     // Add Truck Data Table
-  //     doc.autoTable({
-  //       head: [
-  //         [
-  //           "#",
-  //           "Plate Number",
-  //           "Driver Name",
-  //           "Truck Status",
-  //           "Latitude",
-  //           "Longitude",
-  //           "Speed",
-  //           "Created At",
-  //         ],
-  //       ],
-  //       body: truckData,
-  //       startY: yOffset,
-  //       styles: {
-  //         halign: "center",
-  //         valign: "middle",
-  //         fontSize: 10,
-  //         cellPadding: 4,
-  //         lineColor: [200, 200, 200],
-  //         lineWidth: 0.5,
-  //       },
-  //       headStyles: {
-  //         fillColor: [33, 150, 243],
-  //         textcolor: [255, 255, 255],
-  //       },
-  //       alternateRowStyles: {
-  //         fillColor: [240, 240, 240],
-  //       },
-  //     });
-  //   };
-
-  //   addDateAndTime();
-  //   addTruckTable();
-
-  //   // Save the PDF
-  //   doc.save("truck-report.pdf");
-  // };
-
-  const downloadPDF = async (data, userLogo = null) => {
+  const downloadPDF = async () => {
     const doc = new jsPDF();
     let yOffset = 30;
 
-    // Add Company Logo with Blue Background
-    const addCompanyLogo = () => {
-      const img = new Image();
-      img.src = logo; // Replace with the path to your company logo
-      doc.setFillColor(33, 150, 243); // Blue background color
-      doc.rect(10, 5, 50, 20, "F"); // Position and size of the blue background rectangle
-      doc.addImage(img, "PNG", 15, 8, 40, 15); // Position and size of the logo
-    };
+    // Function to add company logo
+    const addCompanyLogo = async (userLogo) => {
+      return new Promise((resolve, reject) => {
+        const img = new window.Image();
+        img.src = userLogo || logo;
 
-    // Add User Logo (if provided)
-    const addUserLogo = () => {
-      if (userLogo) {
-        const img = new Image();
-        img.src = userLogo;
-        doc.addImage(img, "PNG", 170, 5, 30, 20); // Position and size of the user logo
-      }
-    };
+        img.onload = () => {
+          const logoX = (doc.internal.pageSize.getWidth() - 30) / 2; // Center logo
+          doc.addImage(img, "PNG", logoX + 5, 8, 30, 30); // Logo positioning
+          resolve();
+        };
 
-    // Centered Text Function
-    const centerText = (text, y, fontSize = 16, color = [0, 0, 0], bold = false) => {
-      doc.setFontSize(fontSize);
-      doc.setTextColor(...color);
-      if (bold) {
-        doc.setFont("helvetica", "bold");
-      } else {
-        doc.setFont("helvetica", "normal");
-      }
-      const textWidth = doc.getTextWidth(text);
-      const x = (doc.internal.pageSize.getWidth() - textWidth) / 2;
-      doc.text(text, x, y);
-    };
-
-    // Add Date and Time in Upper Right Corner
-    const addDateAndTime = () => {
-      const now = new Date();
-      const formattedDate = now.toLocaleDateString();
-      const formattedTime = now.toLocaleTimeString();
-      doc.setFontSize(10);
-      doc.setTextColor(100, 100, 100);
-      doc.text(
-        `Generated on: ${formattedDate} ${formattedTime}`,
-        doc.internal.pageSize.getWidth() - 60,
-        25
-      );
-    };
-
-    // Add Header
-    const addHeader = () => {
-      addCompanyLogo();
-      addUserLogo();
-      centerText("Truck Report", yOffset, 22, [33, 150, 243], true);
-      yOffset += 10;
-      centerText("Fleet Management", yOffset, 14, [63, 81, 181]);
-      yOffset += 20;
-    };
-
-    // Add Truck Data Table with Heading
-    const addTruckTable = () => {
-      const truckData = data.map((truck, index) => [
-        index + 1,
-        truck.plateNumber,
-        truck.driverName,
-        truck.truckStatus.toUpperCase(),
-        truck.latitude.toFixed(4),
-        truck.longitude.toFixed(4),
-        truck.speed.toFixed(2),
-        new Date(truck.createdAt).toLocaleString(),
-      ]);
-
-      // Add Truck Data Table
-      doc.autoTable({
-        head: [
-          [
-            "#",
-            "Plate Number",
-            "Driver Name",
-            "Truck Status",
-            "Latitude",
-            "Longitude",
-            "Speed",
-            "Created At",
-          ],
-        ],
-        body: truckData,
-        startY: yOffset,
-        theme: "grid",
-        styles: {
-          halign: "center",
-          valign: "middle",
-          fontSize: 10,
-          cellPadding: 4,
-          lineColor: [200, 200, 200],
-          lineWidth: 0.5,
-        },
-        headStyles: {
-          fillColor: [63, 81, 181],
-          textColor: [255, 255, 255],
-          fontStyle: "bold",
-        },
-        alternateRowStyles: {
-          fillColor: [245, 245, 245],
-        },
-        tableLineColor: [200, 200, 200],
-        tableLineWidth: 0.5,
+        img.onerror = () => {
+          console.error("Failed to load logo image.");
+          reject(new Error("Image loading failed"));
+        };
       });
     };
 
-    addHeader();
-    addDateAndTime();
-    addTruckTable();
-
-    // Add Footer
-    const addFooter = () => {
-      doc.setFontSize(10);
-      doc.setTextColor(150, 150, 150);
-      doc.text(
-        "Company Name | Company Address | Phone: (123) 456-7890",
-        doc.internal.pageSize.getWidth() / 2,
-        doc.internal.pageSize.getHeight() - 10,
-        { align: "center" }
-      );
+    // Center text function
+    const centerText = (text, y, fontSize, color, bold = false) => {
+      doc.setFontSize(fontSize);
+      if (Array.isArray(color) && color.length === 3) {
+        doc.setTextColor(color[0], color[1], color[2]);
+      } else {
+        console.error("Invalid color format", color);
+      }
+      doc.setFont("helvetica", bold ? "bold" : "normal");
+      doc.text(text, doc.internal.pageSize.getWidth() / 2, y, {
+        align: "center",
+      });
     };
 
-    addFooter();
+    // Add Date in top left corner
+    const date = new Date();
+    const formattedDate = date.toLocaleString();
+    doc.setFontSize(9);
+    doc.text(`Date: ${formattedDate}`, 10, 10);
+    yOffset += 15; // Adjust yOffset for logo
+
+    // Add Header
+    await addCompanyLogo(profile); // Add the logo
+    // yOffset += 10; // Adjust yOffset for logo
+    doc.setFontSize(15);
+    doc.setFont("helvetica", "normal");
+    doc.text("Fleet Master Truck Report", (doc.internal.pageSize.getWidth() - 50) / 2, yOffset,); // Left align
+    yOffset += 10;
+
+    const tableColumn = [
+      "Plate Number",
+      "Driver",
+      "Device ID",
+      "Speed",
+      "Status",
+      "Longitude",
+      "Latitude",
+      "Date",
+    ];
+
+    const tableRows = filteredRows.map((row) => [
+      row.plateNumber,
+      row.driverName,
+      row.deviceId,
+      `${Math.round(row.speed)} km/h`,
+      row.truckStatus,
+      row.longitude,
+      row.latitude,
+      new Date(row.createdAt).toLocaleString(),
+    ]);
+
+    const remainingPageHeight = doc.internal.pageSize.height - yOffset - 20; // Space left on the page
+
+    if (remainingPageHeight < 40) {
+      doc.addPage();
+      yOffset = 10;
+    }
+
+    doc.autoTable({
+      head: [tableColumn],
+      body: tableRows,
+      startY: yOffset,
+      theme: "grid",
+      styles: { cellPadding: 2 },
+      headStyles: { fillColor: [52, 152, 219] },
+      bodyStyles: { valign: "middle" },
+      columnStyles: { 0: { halign: "center" } },
+      pageBreak: "auto",
+    });
+
+    yOffset = doc.lastAutoTable.finalY + 10; // Update position after table
+
+    // Add Footer
+    const footerText = "Generated by Fleet Management System";
+    doc.text(footerText, 10, doc.internal.pageSize.height - 10);
 
     // Save the PDF
     doc.save("truck-report.pdf");
-  };
+    handleClose();
+};
+
 
   useEffect(() => {
     dispatch(getSingleTruckReportsAction());
@@ -304,8 +238,12 @@ const TruckReport = () => {
       const flattenedData = singleTruckReport.map((report) => ({
         ...report,
         plateNumber: report.truck?.plateNumber || "",
-        driverName: `${report.truck?.assignedTo?.firstName} ${report.truck?.assignedTo?.lastName}` || "",
-        deviceId: report.truck?.devices?.find((device) => device.type == "gps")?._id || "",
+        driverName:
+          `${report.truck?.assignedTo?.firstName} ${report.truck?.assignedTo?.lastName}` ||
+          "",
+        deviceId:
+          report.truck?.devices?.find((device) => device.type == "gps")?._id ||
+          "",
         truckStatus: report.truck?.status || "",
         fleetNumber: report.truck?.fleetnumber || "",
         createdAt: report.createdAt,
@@ -433,7 +371,9 @@ const TruckReport = () => {
             },
           }}
         >
-          {isLoading ? <CircularProgress sx={{ color: "#ffffff", mx: 2 }} size={24} /> : null}
+          {isLoading ? (
+            <CircularProgress sx={{ color: "#ffffff", mx: 2 }} size={24} />
+          ) : null}
           {isLoading ? "Loading..." : "Get Reports"}
         </Button>
       </Box>
@@ -444,7 +384,7 @@ const TruckReport = () => {
           padding: "16px",
         }}
       >
-        <DownloadIcon onClick={() => downloadPDF(filteredRows)} />
+        <DownloadIcon onClick={handleOpen} />
       </Box>
       <DataGrid
         rows={filteredRows}
@@ -509,8 +449,112 @@ const TruckReport = () => {
           },
         }}
       />
+      <Modal
+        open={open}
+        onClose={handleClose}
+        sx={{ display: "grid", placeItems: "center" }}
+      >
+        <Box
+          sx={{
+            padding: "20px",
+            background: "#fff",
+            width: { xs: "300px", md: "500px" },
+            height: "auto",
+            borderRadius: "12px",
+          }}
+        >
+          <ModalContent
+            onChange={handleImageSrc}
+            profile={profile}
+            generatePdf={() => downloadPDF(filteredRows)}
+          />
+        </Box>
+      </Modal>
     </Box>
   );
 };
 
 export default TruckReport;
+
+const ModalContent = ({ onChange, profile, generatePdf }) => {
+  return (
+    <Box>
+      <Box
+        sx={{
+          width: "100%",
+          height: "255px",
+          border: "1px solid #0000004f",
+          borderRadius: "12px",
+          mb: 2,
+        }}
+      >
+        {profile ? (
+          <Image src={profile} alt="image"></Image>
+        ) : (
+          <Typography
+            sx={{ display: "grid", placeItems: "center", height: "100%" }}
+          >
+            Upload your logo
+          </Typography>
+        )}
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: "1rem",
+          flexWrap: "wrap",
+        }}
+      >
+        <ChangeButton startIcon={<CameraIcon />}>
+          Upload Photos
+          <FileInput type="file" onChange={onChange} />
+        </ChangeButton>
+        <Button
+          sx={{
+            color: "#fff",
+            borderRadius: "16px",
+            flex: 1,
+            padding: "16px",
+          }}
+          onClick={generatePdf}
+        >
+          Generate PDF
+        </Button>
+      </Box>
+    </Box>
+  );
+};
+
+const Image = styled("img")({
+  maxWidth: "100%",
+  width: "100%",
+  height: "255px",
+  "@media (max-width:768px)": {
+    width: "100%",
+  },
+  borderRadius: "12px",
+  objectFit: "cover",
+});
+
+const ChangeButton = styled(Button)({
+  border: "1px solid rgba(0, 107, 206, 1)",
+  borderRadius: "14px",
+  position: "relative",
+  background: "transparent",
+  padding: "0.8rem",
+  flex: 1,
+  "@media (max-width:768px)": {
+    width: "100%",
+  },
+  "&:hover": {
+    background: "transparent",
+  },
+});
+
+const FileInput = styled("input")({
+  position: "absolute",
+  inset: 0,
+  opacity: "0",
+  cursor: "pointer",
+});
