@@ -41,7 +41,7 @@ const Home = () => {
     <Fragment>
       <Box
         sx={{
-          marginTop: "-5rem",
+          marginTop: "-3.5rem",
           width: "100%",
         }}
       >

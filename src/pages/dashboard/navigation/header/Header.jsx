@@ -189,9 +189,9 @@ export default Header;
 
 const HeaderBg = styled(Box)({
   background: `url(${HeaderBgImg}) no-repeat center / cover`,
-  padding: "92px 34px 149px 34px",
+  padding: "80px 34px 80px 34px",
   "@media (min-width: 960px)": {
-    padding: "92px 34px 149px 34px",
+    padding: "72px 34px 80px 34px",
   },
   position: "relative",
 });

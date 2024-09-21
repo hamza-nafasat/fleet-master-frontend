@@ -3,7 +3,7 @@ import ListOfTrucks from "./components/lists/ListOfTrucks";
 import Map from "./components/map/Map";
 const RealTimeMap = () => {
   return (
-    <Grid container spacing={3} sx={{ margin: 0 }}>
+    <Grid container sx={{ margin: 0 }}>
       <Grid
         item
         xs={12}
@@ -11,7 +11,7 @@ const RealTimeMap = () => {
         sx={{
           paddingLeft: {
             xs: "0 !important",
-            md: "24px !important",
+            // md: "24px !important",
           },
           paddingRight: "24px",
         }}

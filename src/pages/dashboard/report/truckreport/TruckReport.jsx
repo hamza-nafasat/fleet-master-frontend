@@ -136,6 +136,8 @@ const TruckReport = () => {
 
         img.onload = () => {
           const logoX = (doc.internal.pageSize.getWidth() - 30) / 2; // Center logo
+          doc.setFillColor(33, 150, 243);
+          // doc.rect(logoX,5,40, 35, "F"); 
           doc.addImage(img, "PNG", logoX + 5, 8, 30, 30); // Logo positioning
           resolve();
         };
