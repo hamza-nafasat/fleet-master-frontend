@@ -1,197 +1,172 @@
-/* eslint-disable react/prop-types */
+import PropTypes from "prop-types";
 import fleetIcon from "../../../../assets/images/cards/your-fleet-truck.png";
 import assignIcon from "../../../../assets/images/cards/vehicle-assignment-truck.png";
 import issuesIcon from "../../../../assets/images/cards/issues-truck.png";
 import alarmsIcon from "../../../../assets/images/cards/alarms-vehicle.png";
-import { Box, Stack, Typography, styled } from "@mui/material";
+import { Box, Grid, Stack, Typography, styled } from "@mui/material";
 
-const Card = ({ dashboardDate }) => {
+const Card = ({ dashboardData }) => {
   const cardsData = [
     {
       title: "Your Fleet",
       subtitleOneTxt: "Vehicles",
-      subtitleOneValue: dashboardDate?.totalTrucks,
+      subtitleOneValue: dashboardData?.totalTrucks || 0,
       subtitleTwoTxt: "Drivers",
-      subtitleTwoValue: dashboardDate?.totalDrivers,
+      subtitleTwoValue: dashboardData?.totalDrivers || 0,
       Icon: fleetIcon,
     },
     {
       title: "Vehicle Assignment",
       subtitleOneTxt: "Assigned",
-      subtitleOneValue: dashboardDate?.totalAssignedTrucks,
+      subtitleOneValue: dashboardData?.totalAssignedTrucks || 0,
       subtitleTwoTxt: "Unassigned",
-      subtitleTwoValue: dashboardDate?.totalUnAssignedTrucks,
+      subtitleTwoValue: dashboardData?.totalUnAssignedTrucks || 0,
       Icon: assignIcon,
     },
     {
       title: "Devices & Employees",
       subtitleOneTxt: "Devices",
-      subtitleOneValue: dashboardDate?.totalDevices,
+      subtitleOneValue: dashboardData?.totalDevices || 0,
       subtitleTwoTxt: "Employees",
-      subtitleTwoValue: dashboardDate?.totalEmployees,
+      subtitleTwoValue: dashboardData?.totalEmployees || 0,
       Icon: issuesIcon,
     },
     {
       title: "Alarms",
-      // subtitleOneTxt: "Critical",
-      subtitleOneValue: dashboardDate?.totalAlarms || 0,
+      subtitleOneValue: dashboardData?.totalAlarms || 0,
       Icon: alarmsIcon,
     },
   ];
 
   return (
-    <Stack
-      direction={{
-        xs: "column",
-        md: "row",
-      }}
-      justifyContent="space-between"
-      flexWrap="wrap"
-      sx={{ gap: "1.5rem" }}
-    >
-      {cardsData.map((card, i) => (
-        <InnerCard key={i}>
-          <Stack justifyContent="space-between" sx={{ gap: "3rem" }}>
-            <Typography
-              variant="h2"
-              sx={{
-                fontSize: {
-                  xs: "18px",
-                  md: "20px",
-                },
-                fontWeight: "600",
-                color: "#000",
-              }}
-            >
-              {card.title}
-            </Typography>
-            <Stack
-              direction="row"
-              alignItems="center"
-              sx={{
-                gap: {
-                  xs: "1rem",
-                  md: "4rem",
-                },
-              }}
-            >
-              <Stack sx={{ gap: "2px" }}>
-                <Typography
-                  variant="h6"
-                  sx={{
-                    fontSize: {
-                      xs: "30px",
-                      md: "40px",
-                    },
-                    fontWeight: "500",
-                    lineHeight: "24px",
-                    color: "rgba(0, 107, 206, 1)",
-                  }}
-                >
-                  {card.subtitleOneValue}
-                </Typography>
-                <Stack direction="row" alignItems="center" sx={{ gap: "4px" }}>
-                  {card.subtitleOneTxt === "Critical" && (
-                    <Box
-                      sx={{
-                        width: "8px",
-                        height: "8px",
-                        borderRadius: "50%",
-                        background: "#ff6454",
-                      }}
-                    ></Box>
-                  )}
-                  {card.subtitleOneTxt === "Idle" && (
-                    <Box
-                      sx={{
-                        width: "8px",
-                        height: "8px",
-                        borderRadius: "50%",
-                        background: "#969696",
-                      }}
-                    ></Box>
-                  )}
+    <Grid container spacing={2} justifyContent="space-between">
+      {cardsData.map((card, index) => (
+        <Grid item sm={12} md={6} lg={3} key={index}>
+          <InnerCard>
+            <Stack justifyContent="space-between" spacing={4}>
+              {/* Card Title */}
+              <Typography variant="h6" fontWeight="600" color="#000">
+                {card.title}
+              </Typography>
+
+              {/* Card Content */}
+              <Stack direction="row" alignItems="center" spacing={5}>
+                <Stack spacing={1}>
+                  {/* First Subtitle Value */}
                   <Typography
-                    variant="h6"
-                    sx={{
-                      fontSize: "16px",
-                      fontWeight: "400",
-                      color: "rgba(17, 17, 17, 0.6)",
-                      marginTop: "0 !important",
-                    }}
+                    variant="h4"
+                    fontWeight="500"
+                    color="rgba(0, 107, 206, 1)"
                   >
-                    {card?.subtitleOneTxt}
+                    {card.subtitleOneValue}
                   </Typography>
+                  {/* First Subtitle Text */}
+                  {card.subtitleOneTxt && (
+                    <SubtitleText text={card.subtitleOneTxt} />
+                  )}
                 </Stack>
-              </Stack>
-              <Stack sx={{ gap: "2px" }}>
-                <Typography
-                  variant="h6"
-                  sx={{
-                    fontSize: {
-                      xs: "30px",
-                      md: "40px",
-                    },
-                    fontWeight: "500",
-                    lineHeight: "24px",
-                    color: "rgba(0, 107, 206, 1)",
-                  }}
-                >
-                  {card?.subtitleTwoValue}
-                </Typography>
-                <Stack direction="row" alignItems="center" sx={{ gap: "4px" }}>
-                  {card.subtitleTwoTxt === "Overdue" && (
-                    <Box
-                      sx={{
-                        width: "8px",
-                        height: "8px",
-                        borderRadius: "50%",
-                        background: "#edec0b",
-                      }}
-                    ></Box>
+
+                <Stack spacing={1}>
+                  {/* Second Subtitle Value */}
+                  {card.subtitleTwoValue !== undefined && (
+                    <Typography
+                      variant="h4"
+                      fontWeight="500"
+                      color="rgba(0, 107, 206, 1)"
+                    >
+                      {card.subtitleTwoValue}
+                    </Typography>
                   )}
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      fontSize: "16px",
-                      fontWeight: "400",
-                      color: "rgba(17, 17, 17, 0.6)",
-                      marginTop: "0 !important",
-                    }}
-                  >
-                    {card?.subtitleTwoTxt}
-                  </Typography>
+                  {/* Second Subtitle Text */}
+                  {card.subtitleTwoTxt && (
+                    <SubtitleText text={card.subtitleTwoTxt} />
+                  )}
                 </Stack>
               </Stack>
             </Stack>
-          </Stack>
-          <Box>
-            <img src={card.Icon} alt="truck image" />
-          </Box>
-        </InnerCard>
+
+            {/* Card Icon */}
+            <Box>
+              <img src={card.Icon} alt={`${card.title} icon`} />
+            </Box>
+          </InnerCard>
+        </Grid>
       ))}
+    </Grid>
+  );
+};
+
+// SubtitleText Component for conditional rendering of text with optional colored dots
+const SubtitleText = ({ text }) => {
+  const getDotColor = (text) => {
+    switch (text) {
+      case "Critical":
+        return "#ff6454";
+      case "Idle":
+        return "#969696";
+      case "Overdue":
+        return "#edec0b";
+      default:
+        return null;
+    }
+  };
+
+  const dotColor = getDotColor(text);
+
+  return (
+    <Stack direction="row" alignItems="center" spacing={1}>
+      {dotColor && (
+        <Box
+          sx={{
+            width: "8px",
+            height: "8px",
+            borderRadius: "50%",
+            backgroundColor: dotColor,
+          }}
+        />
+      )}
+      <Typography
+        variant="body2"
+        color="rgba(17, 17, 17, 0.6)"
+        sx={{ marginTop: 0 }}
+      >
+        {text}
+      </Typography>
     </Stack>
   );
 };
 
-export default Card;
+SubtitleText.propTypes = {
+  text: PropTypes.string.isRequired,
+};
 
-const InnerCard = styled("Box")(({ theme }) => ({
+// Styling for the inner card
+const InnerCard = styled(Box)(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  gap: "0",
-  width: "100%",
-  minWidth: "290px",
-  overflow: "hidden",
-  [theme.breakpoints.up("sm")]: {
-    gap: "2rem",
-    width: "unset",
-  },
+  padding: "16px",
   minHeight: "180px",
   borderRadius: "16px",
-  boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-  padding: "16px",
-  flexGrow: 1,
-  background: "#fff",
+  boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+  backgroundColor: "#fff",
+  [theme.breakpoints.up("sm")]: {
+    gap: "2rem",
+  },
+  height: "100%",
 }));
+
+// PropTypes for validation
+Card.propTypes = {
+  dashboardData: PropTypes.shape({
+    totalTrucks: PropTypes.number,
+    totalDrivers: PropTypes.number,
+    totalAssignedTrucks: PropTypes.number,
+    totalUnAssignedTrucks: PropTypes.number,
+    totalDevices: PropTypes.number,
+    totalEmployees: PropTypes.number,
+    totalAlarms: PropTypes.number,
+  }),
+};
+
+export default Card;

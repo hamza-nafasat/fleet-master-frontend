@@ -29,9 +29,13 @@ const Home = () => {
       setDashboardDate((prevState) => ({
         totalTrucks: dashboardDetails.totalTrucks || prevState.totalTrucks,
         totalDrivers: dashboardDetails.totalDrivers || prevState.totalDrivers,
-        totalAssignedTrucks: dashboardDetails.totalAssignedTrucks || prevState.totalAssignedTrucks,
-        totalUnAssignedTrucks: dashboardDetails.totalUnAssignedTrucks || prevState.totalUnAssignedTrucks,
-        totalEmployees: dashboardDetails.totalEmployees || prevState.totalEmployees,
+        totalAssignedTrucks:
+          dashboardDetails.totalAssignedTrucks || prevState.totalAssignedTrucks,
+        totalUnAssignedTrucks:
+          dashboardDetails.totalUnAssignedTrucks ||
+          prevState.totalUnAssignedTrucks,
+        totalEmployees:
+          dashboardDetails.totalEmployees || prevState.totalEmployees,
         totalDevices: dashboardDetails.totalDevices || prevState.totalDevices,
         totalAlarms: dashboardDetails.totalAlarms || prevState.totalAlarms,
       }));
