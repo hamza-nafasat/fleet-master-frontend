@@ -6,10 +6,12 @@ import { toast } from "react-toastify";
 import PinIcon from "../../../../../assets/svgs/plans/PinIcon";
 import { customAxios } from "../../../../../utils/customAxios";
 import CardInfo from "./CardInfo";
+import { useSelector } from "react-redux";
 
 const ReviewCard = ({ card }) => {
   const [loading, setLoading] = useState(false);
   const stripe = useStripe();
+  const { user } = useSelector((state) => state.user);
   const totalAmount = parseFloat(card.price.replace("$", ""));
   const taxAmount = totalAmount * (30 / 100);
   const flooredTax = Math.floor(taxAmount * 100) / 100;
@@ -67,9 +69,7 @@ const ReviewCard = ({ card }) => {
             <PinIcon />
             <TypographyOne>Billing Address:</TypographyOne>
           </Box>
-          <TypographyOne sx={{ fontWeight: 600, margin: "16px 0" }}>
-            5678 Maple Avenue, Anytown, CA, 90210, USA
-          </TypographyOne>
+          <TypographyOne sx={{ fontWeight: 600, margin: "16px 0" }}>{user?.address}</TypographyOne>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <TypographyOne>Plan Selected:</TypographyOne>
             <TypographyOne sx={{ fontWeight: 600 }}>{card.title}</TypographyOne>
@@ -118,7 +118,9 @@ const ReviewCard = ({ card }) => {
           }}
         >
           {loading ? <CircularProgress size={24} sx={{ mx: 2, color: "#fff" }} /> : ""}
-          CONTINUE & SUBSCRIBE
+          {user?.subscriptionId && user?.subscriptionId?.plan == card?.type
+            ? "Cancel Subscription"
+            : "Subscribe"}
         </Button>
       </Box>
     </Box>
