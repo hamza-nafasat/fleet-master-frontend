@@ -8,20 +8,22 @@ const PlanCard = ({ bg, title, type, price, featuresList, description, btnBg, on
             <Card
                 // key={key}
                 sx={{
-                    background: bg,
+                    background: 'white',
                     padding: {
                         xs: "16px 16px 40px",
-                        lg: "34px 24px 90px",
+                        lg: "34px 24px 60px",
                     },
+                    boxShadow: '0px 0px 6px 0px rgba(0, 0, 0, 0.25)',
+                    borderTop: `6px solid ${bg}`
                 }}
             >
                 <Typography
                     variant="h2"
                     sx={{
-                        color: "#fff",
+                        color: "#000",
                         fontSize: {
                             xs: "18px",
-                            md: "26px",
+                            md: "22px",
                         },
                         fontWeight: 700,
                     }}
@@ -32,9 +34,10 @@ const PlanCard = ({ bg, title, type, price, featuresList, description, btnBg, on
                     sx={{
                         fontSize: {
                             xs: "16px",
-                            md: "24px",
+                            md: "18px",
                         },
                         fontWeight: 600,
+                        color:'#006BCB'
                     }}
                 >
                     {price}
@@ -43,7 +46,7 @@ const PlanCard = ({ bg, title, type, price, featuresList, description, btnBg, on
                     </Typography>
                 </Typography>
                 {/* Features list */}
-                <Typography sx={{ marginTop: "24px", fontSize: "12px" }}>Features</Typography>
+                <Typography sx={{ marginTop: "24px", fontSize: "12px", color:'#414141B2' }}>Features</Typography>
                 <Box
                     sx={{
                         marginTop: "20px",
@@ -57,7 +60,8 @@ const PlanCard = ({ bg, title, type, price, featuresList, description, btnBg, on
                             <CheckIcon />
                             <Typography
                                 sx={{
-                                    fontSize: "16px",
+                                    fontSize: "14px",
+                                    color:'#000'
                                 }}
                             >
                                 {list}
@@ -65,8 +69,8 @@ const PlanCard = ({ bg, title, type, price, featuresList, description, btnBg, on
                         </Box>
                     ))}
                 </Box>
-                <Typography sx={{ marginTop: "24px", fontSize: "12px" }}>Description</Typography>
-                <Typography sx={{ fontSize: "14px", marginTop: "10px" }}>{description}</Typography>
+                <Typography sx={{ marginTop: "24px", fontSize: "12px",color:'#414141B2' }}>Description</Typography>
+                <Typography sx={{ fontSize: "14px", marginTop: "10px", color:'#000' }}>{description}</Typography>
                 <CustomBtn onClick={onClick} variant="contained" sx={{ background: btnBg }}>
                     Subscribe Now
                 </CustomBtn>
@@ -87,10 +91,10 @@ const Card = styled(Box)({
 
 const CustomBtn = styled(Button)({
     width: "200px",
-    height: "70px",
+    height: "50px",
     borderRadius: "10px",
     position: "absolute",
-    bottom: "-2rem",
+    bottom: "-1.5rem",
     left: "50%",
     transform: "translate(-50%, 0)",
 });

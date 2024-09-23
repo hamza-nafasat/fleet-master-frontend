@@ -302,7 +302,7 @@ export const planCards = [
     ],
     description:
       "Perfect for individuals looking to explore our content without committing to a higher tier. Enjoy standard quality streaming and a variety of basic features.",
-    bg: "linear-gradient(180deg, #3AA357 0%, #257300 100%)",
+    bg: "#3AA357",
     btnBg: "linear-gradient(180deg, #00FF46 0%, #0D742A 165.71%)",
   },
   {
@@ -318,7 +318,7 @@ export const planCards = [
     ],
     description:
       "Perfect for individuals looking to explore our content without committing to a higher tier. Enjoy standard quality streaming and a variety of basic features.",
-    bg: "linear-gradient(180deg, #40C8A1 0%, #195F9D 100%)",
+    bg: "#40C8A1",
     btnBg: "linear-gradient(180deg, #3DC1A1 0%, #1A639D 100%)",
   },
   {
@@ -334,7 +334,7 @@ export const planCards = [
     ],
     description:
       "Perfect for individuals looking to explore our content without committing to a higher tier. Enjoy standard quality streaming and a variety of basic features.",
-    bg: "linear-gradient(180deg, #FFB827 0%, #EE4967 100%)",
+    bg: "#FFB827",
     btnBg: "linear-gradient(180deg, #FFC24A 0%, #EF4C66 161.43%)",
   },
 ];

@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import CameraIcon from "../../../assets/svgs/modal/CameraIcon";
 import { registerUserAction } from "../../../redux/actions/user.actions";
 import { registerSchema } from "../../../schemas";
+import placeholderImg from '../../../assets/images/login/placeholder-img.jpeg'
 
 const Form = () => {
   const navigate = useNavigate();
@@ -191,16 +192,15 @@ const Form = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} display="flex" alignItems="center" justifyContent="space-between">
+            <Grid item xs={12}>
               <Typography sx={{ color: "#1976d2", fontSize: "18px", fontWeight: 600 }}>
-                Trial Period
+                With 7 Days Trial Period
               </Typography>
-              <Typography sx={{ color: "#1976d2", fontSize: "18px", fontWeight: 600 }}>7 Days</Typography>
             </Grid>
           </Grid>
         </Grid>
         <Grid item xs={12} md={3} display="flex" alignItems="center" flexDirection="column">
-          <Image src={profile} />
+          <Image src={profile || placeholderImg} />
           <ChangeButton startIcon={<CameraIcon />}>
             Upload
             <FileInput type="file" onChange={handleImageSrc} />

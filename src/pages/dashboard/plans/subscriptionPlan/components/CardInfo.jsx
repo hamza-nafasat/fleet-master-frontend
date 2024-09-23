@@ -6,14 +6,15 @@ const CardInfo = ({ card }) => {
     return (
         <Card
             sx={{
-                background: card.bg,
+                background: "#fff",
                 padding: "24px 16px",
+                boxShadow: '0px 0px 6px 0px rgba(0, 0, 0, 0.25)'
             }}
         >
             <Typography
                 variant="h2"
                 sx={{
-                    color: "#fff",
+                    color: "#000",
                     textAlign: "center",
                     fontSize: "16px",
                 }}
@@ -25,6 +26,7 @@ const CardInfo = ({ card }) => {
                     textAlign: "center",
                     fontSize: "16px",
                     fontWeight: 600,
+                    color: '#006BCB'
                 }}
             >
                 {card.price}
@@ -33,7 +35,7 @@ const CardInfo = ({ card }) => {
                 </Typography>
             </Typography>
             {/* Features list */}
-            <Typography sx={{ marginTop: "12px", fontSize: "8px" }}>Features</Typography>
+            <Typography sx={{ marginTop: "12px", fontSize: "8px", color:'#414141B2' }}>Features</Typography>
             <Box
                 sx={{
                     marginTop: "11px",
@@ -48,6 +50,7 @@ const CardInfo = ({ card }) => {
                         <Typography
                             sx={{
                                 fontSize: "9px",
+                                color: '#000'
                             }}
                         >
                             {list}
@@ -55,8 +58,8 @@ const CardInfo = ({ card }) => {
                     </Box>
                 ))}
             </Box>
-            <Typography sx={{ marginTop: "12px", fontSize: "8px" }}>Description</Typography>
-            <Typography sx={{ fontSize: "8px", marginTop: "11px" }}>{card.description}</Typography>
+            <Typography sx={{ marginTop: "12px", fontSize: "8px",color:'#414141B2' }}>Description</Typography>
+            <Typography sx={{ fontSize: "8px", marginTop: "11px", color: '#000' }}>{card.description}</Typography>
         </Card>
     );
 };
