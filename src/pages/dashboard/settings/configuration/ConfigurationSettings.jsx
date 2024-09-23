@@ -13,21 +13,22 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Modal from "../../../../components/modal/Modal";
 import { updateMyProfileAction } from "../../../../redux/actions/user.actions";
 
 const ConfigurationSettings = () => {
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
   const [selectedDatabase, setSelectedDatabase] = useState("remote-cloud-database");
   const [modal, setModal] = useState(false);
   const [newDatabase, setNewDatabase] = useState(null);
   const [intervalValue, setIntervalValue] = useState("30");
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log("selected database", selectedDatabase);
+  // console.log("selected database", selectedDatabase);
 
   const closeModalHandler = () => setModal(false);
   const openModalHandler = () => {
@@ -60,6 +61,12 @@ const ConfigurationSettings = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      setIntervalValue(user.interval);
+    }
+  }, [dispatch, user]);
 
   return (
     <Box
@@ -98,8 +105,10 @@ const ConfigurationSettings = () => {
                 <MenuItem value="30">30 Seconds</MenuItem>
                 <MenuItem value="40">40 Seconds</MenuItem>
                 <MenuItem value="60">60 Seconds</MenuItem>
-                <MenuItem value="80">1.2 minute</MenuItem>
-                <MenuItem value="100">1.5 minute</MenuItem>
+                <MenuItem value="90">1.5 minute</MenuItem>
+                <MenuItem value="120">2 minute</MenuItem>
+                <MenuItem value="150">2.5 minute</MenuItem>
+                <MenuItem value="180">3 minute</MenuItem>
               </Select>
             </FormControl>
           </Box>

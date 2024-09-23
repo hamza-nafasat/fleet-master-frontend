@@ -46,7 +46,7 @@ const Header = () => {
   useEffect(() => {
     if (notifications) {
       const unreadNotifications = notifications?.filter((notification) => !notification?.isRead);
-      console.log("unreadNotifications", unreadNotifications);
+      // console.log("unreadNotifications", unreadNotifications);
       setNewNotificationLength(unreadNotifications?.length);
     }
   }, [notifications]);

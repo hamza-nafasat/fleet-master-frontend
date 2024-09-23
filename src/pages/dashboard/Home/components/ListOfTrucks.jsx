@@ -30,7 +30,7 @@ const ListOfTrucks = () => {
   const [modalType, setModalType] = useState(null);
   const dispatch = useDispatch();
   const { trucks } = useSelector((state) => state.truck);
-  console.log("all trucks in truck list", trucks);
+  // console.log("all trucks in truck list", trucks);
 
   const handleOpenMapModal = (truck) => {
     setSelectedTruck(truck);

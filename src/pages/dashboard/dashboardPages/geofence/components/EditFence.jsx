@@ -16,7 +16,10 @@ import { useDispatch, useSelector } from "react-redux";
 import BackIcon from "../../../../../assets/svgs/modal/BackIcon";
 import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
 import { socket, socketEvent } from "../../../../../constants/constants";
-import { getSingleGeofenceAction, updateGeofenceAction } from "../../../../../redux/actions/geofence.action";
+import {
+  getSingleGeofenceAction,
+  updateGeofenceAction,
+} from "../../../../../redux/actions/geofence.action";
 import EditMap from "./EditMap";
 import TruckList from "./TruckList";
 import { isTruckInPolygon } from "../../../../../utils/isTruckInPolygon";
@@ -57,7 +60,7 @@ const EditFence = ({ onClose, editSelectedRow }) => {
   // useEffect for socket event
   useEffect(() => {
     socket.on(socketEvent.GEOFENCE_TRUCKS_DATA, (data) => {
-      console.log(data);
+      // console.log(data);
       dispatch(getSingleGeofenceAction(editSelectedRow?._id));
     });
   }, [dispatch, editSelectedRow?._id]);
@@ -69,9 +72,9 @@ const EditFence = ({ onClose, editSelectedRow }) => {
         const { truckName, latitude, longitude } = truck;
         const isInside = isTruckInPolygon([latitude, longitude], area?.coordinates);
         if (!isInside && alert === "outfence") {
-          console.log(`Truck ${truckName} is out of the polygon.`);
+          //  console.log(`Truck ${truckName} is out of the polygon.`);
         } else if (isInside && alert === "infence") {
-          console.log(`Truck ${truckName} is inside the polygon`);
+          // console.log(`Truck ${truckName} is inside the polygon`);
         }
       });
     }
@@ -218,7 +221,11 @@ const EditFence = ({ onClose, editSelectedRow }) => {
         <EditMap gettedTrucks={trucks} area={area} setArea={setArea} geofenceId={geofence?._id} />
       </Box>
       {/* List */}
-      <Typography mt={6} variant="h3" sx={{ color: "#000", fontSize: "20px", fontWeight: 700 }}></Typography>
+      <Typography
+        mt={6}
+        variant="h3"
+        sx={{ color: "#000", fontSize: "20px", fontWeight: 700 }}
+      ></Typography>
       <Typography mt={2} variant="h3" sx={{ color: "#000", fontSize: "20px", fontWeight: 700 }}>
         Truck List
       </Typography>

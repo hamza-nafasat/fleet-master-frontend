@@ -1,10 +1,9 @@
 /* eslint-disable react/prop-types */
 import { Box, Stack, Typography, styled } from "@mui/material";
 import Collapse from "@mui/material/Collapse";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
-import { toast } from "react-toastify";
 import ChevronIcon from "../../../assets/svgs/ChevronIcon";
 import ChevronIconUp from "../../../assets/svgs/ChevronIconUp";
 import DashboardIcon from "../../../assets/svgs/DashboardIcon";
@@ -19,7 +18,6 @@ import ReportNestedIcon from "../../../assets/svgs/ReportNestedIcon";
 import ReportsIcon from "../../../assets/svgs/ReportsIcon";
 import SettingIcon from "../../../assets/svgs/SettingIcon";
 import SettingNestedIcon from "../../../assets/svgs/SettingNestedIcon";
-import { clearUserError, clearUserMessage } from "../../../redux/slices/user.slice";
 
 const Aside = ({ toggleNav }) => {
   const location = useLocation();
@@ -32,24 +30,21 @@ const Aside = ({ toggleNav }) => {
   const [isActivePage, setIsActivePage] = useState(path);
 
   const handlePages = (page) => {
-    if (page.subPages) {
-      setOpenPage(page.page);
-    } else {
-      setOpenPage(openPage === page ? null : page);
-    }
+    if (page.subPages) setOpenPage(page.page);
+    else setOpenPage(openPage === page ? null : page);
     setIsActivePage(page);
   };
 
-  useEffect(() => {
-    if (message) {
-      toast.success(message);
-      dispatch(clearUserMessage());
-    }
-    if (error) {
-      toast.error(error);
-      dispatch(clearUserError());
-    }
-  }, [message, error, dispatch]);
+  // useEffect(() => {
+  //   if (message) {
+  //     toast.success(message);
+  //     dispatch(clearUserMessage());
+  //   }
+  //   if (error) {
+  //     toast.error(error);
+  //     dispatch(clearUserError());
+  //   }
+  // }, [message, error, dispatch]);
 
   const pages = [
     {

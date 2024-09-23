@@ -231,7 +231,7 @@ const DeviceCard = ({ device, truck }) => {
           onClick: async () => {
             if (!deviceId) return toast.info("Device not found", { autoClose: 2000 });
             if (!truckId) return toast.info("Truck not found", { autoClose: 2000 });
-            console.log("device id", deviceId, "truck id", truckId);
+            //console.log("device id", deviceId, "truck id", truckId);
             await dispatch(detachDeviceFromTruckAction(truckId, deviceId));
             await dispatch(getSingleTruckAction(truckId));
           },

@@ -40,9 +40,9 @@ const Map = ({ realTime = false }) => {
 export default Map;
 
 export const TruckPopup = ({ truck }) => {
-  console.log("truck", truck);
+  // console.log("truck", truck);
   const mapDeviceId = truck?.devices?.find((device) => device.type == "gps")._id || "Not Available";
-  console.log("map device id", mapDeviceId);
+  // console.log("map device id", mapDeviceId);
   return (
     <Box sx={{ width: "240px" }}>
       <Typography

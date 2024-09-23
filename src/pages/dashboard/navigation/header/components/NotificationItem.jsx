@@ -12,25 +12,17 @@ import {
   readNotificationAction,
 } from "../../../../../redux/actions/notification.actions";
 import { timeAgo } from "../../../../../utils/features";
-import overspeedImg from '../../../../../assets/images/notifications/overspeed.png'
-import geofencingImg from '../../../../../assets/images/notifications/geo-fencing.png'
-import infenceImg from '../../../../../assets/images/notifications/infence.png'
-import outfenceImg from '../../../../../assets/images/notifications/outfence.png'
-import damageSensorImg from '../../../../../assets/images/notifications/damage-sensor.png'
+import overspeedImg from "../../../../../assets/images/notifications/overspeed.png";
+import geofencingImg from "../../../../../assets/images/notifications/geo-fencing.png";
+import infenceImg from "../../../../../assets/images/notifications/infence.png";
+import outfenceImg from "../../../../../assets/images/notifications/outfence.png";
+import damageSensorImg from "../../../../../assets/images/notifications/damage-sensor.png";
 
-const NotificationItem = ({
-  id,
-  truckId,
-  createdAt,
-  type,
-  message,
-  isRead,
-  onClose,
-}) => {
+const NotificationItem = ({ id, truckId, createdAt, type, message, isRead, onClose }) => {
   const dispatch = useDispatch();
   const { icon, miniIcon } = getNotificationDetails(type);
   const helo = getNotificationDetails(type);
-  console.log(id, type, helo);
+  // console.log(id, type, helo);
 
   const openNotification = async () => {
     onClose();

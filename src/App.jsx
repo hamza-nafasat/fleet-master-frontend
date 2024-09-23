@@ -90,12 +90,15 @@ function App() {
   }, [message, error, dispatch]);
 
   useEffect(() => {
-    const interval = setInterval(
-      () => {
-        // dispatch(getMyAllSensorsDataAction());
-      },
-      user?.interval ? user.interval * 1000 : 30000
-    );
+    let interval;
+    if (user?.interval) {
+      interval = setInterval(
+        () => {
+          dispatch(getMyAllSensorsDataAction());
+        },
+        Number(user?.interval || 30) * 1000
+      );
+    }
     return () => clearInterval(interval);
   }, [dispatch, user?.interval]);
 

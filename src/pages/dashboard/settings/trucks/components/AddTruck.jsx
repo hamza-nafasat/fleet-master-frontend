@@ -28,7 +28,6 @@ const AddTruck = ({ onClose }) => {
     initialValues,
     validationSchema: truckSchema,
     onSubmit: async (values, { resetForm }) => {
-      console.log("hello");
       setIsLoading(true);
       const formData = new FormData();
       formData.append("truckName", values.truckName);

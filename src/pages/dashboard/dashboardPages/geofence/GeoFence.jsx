@@ -27,7 +27,7 @@ const GeoFence = () => {
     setModalType("add");
   };
   const handleViewModal = (row) => {
-    console.log("viewed row", row);
+    // console.log("viewed row", row);
     setSelectedFence(row);
     setModalType("view");
   };
