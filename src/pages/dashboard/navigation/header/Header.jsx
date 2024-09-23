@@ -175,6 +175,7 @@ const Header = () => {
                 width: 0,
                 height: 0,
               },
+              background: "linear-gradient(180deg, #006BCB 0%, #004A8B 100%)",
             },
           }}
         >

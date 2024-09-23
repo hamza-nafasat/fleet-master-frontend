@@ -306,12 +306,11 @@ const Asidemain = styled(Box)({
   alignItems: "flex-start",
   justifyContent: "space-between",
   padding: "16px 8px",
-  background: "linear-gradient(180deg, #006BCB 0%, #004A8B 100%)",
   "@media (min-width:991px)": {
     padding: "28px 14px 40px",
   },
   "@media (min-height:800px)": {
-    height: "100%",
+    height: "auto",
   },
 });
 

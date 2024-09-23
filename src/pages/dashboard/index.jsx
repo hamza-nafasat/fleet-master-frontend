@@ -27,6 +27,7 @@ const Dashboard = () => {
                   xs: "none",
                   xl: "block",
                 },
+                background: "linear-gradient(180deg, #006BCB 0%, #004A8B 100%)",
               }}
             >
               <Aside />
