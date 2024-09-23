@@ -15,6 +15,7 @@ import {
   getNewNotificationsAction,
   readAllNotificationsAction,
 } from "../../../../../redux/actions/notification.actions";
+import NoData from '../../../../../components/noData/NoData'
 
 const NotificationDetail = () => {
   const dispatch = useDispatch();
@@ -143,74 +144,79 @@ const NotificationDetail = () => {
       >
         <DownloadIcon />
       </Box>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5, 10, 20]}
-        headerClassName={() => {
-          return "MuiDataGrid-colCell-center";
-        }}
-        cellClassName={() => {
-          return "MuiDataGrid-cell-center";
-        }}
-        sx={{
-          "& .MuiDataGrid-row.even-row": {
-            backgroundColor: "#fafafa",
-          },
-          "& .MuiDataGrid-columnHeader .MuiDataGrid-columnHeaderTitle": {
-            fontSize: {
-              xs: "14px",
-              md: "16px",
+      {notifications.length > 0 ? (
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          pageSize={5}
+          rowsPerPageOptions={[5, 10, 20]}
+          headerClassName={() => {
+            return "MuiDataGrid-colCell-center";
+          }}
+          cellClassName={() => {
+            return "MuiDataGrid-cell-center";
+          }}
+          sx={{
+            "& .MuiDataGrid-row.even-row": {
+              backgroundColor: "#fafafa",
             },
-            fontWeight: 600,
-            color: "#111111",
-          },
-          "& .MuiDataGrid-row .MuiDataGrid-cell": {
-            fontSize: {
-              xs: "14px",
-              md: "16px",
+            "& .MuiDataGrid-columnHeader .MuiDataGrid-columnHeaderTitle": {
+              fontSize: {
+                xs: "14px",
+                md: "16px",
+              },
+              fontWeight: 600,
+              color: "#111111",
             },
-            background: "#fafafa",
-            fontWeight: 400,
-            color: "rgba(17, 17, 17, 0.6)",
-          },
-          "& .MuiDataGrid-root": {
-            borderTopLeftRadius: "24px !important",
-            borderTopRightRadius: "24px !important",
-            border: "0 !important",
-            overflow: "hidden",
-            width: "100%",
-          },
-          "& .MuiDataGrid-main": {
-            borderTopLeftRadius: "24px",
-            borderTopRightRadius: "24px",
-            width: "100%",
-            padding: "0 10px",
-          },
-          "& .MuiDataGrid-overlay": {
-            borderTopLeftRadius: "24px",
-            borderTopRightRadius: "24px",
-          },
-          "& .MuiDataGrid-footerContainer": {
-            display: "none",
-          },
-          "& .MuiDataGrid-scrollbar": {
-            "&::-webkit-scrollbar": {
-              width: "6px",
-              height: "6px",
+            "& .MuiDataGrid-row .MuiDataGrid-cell": {
+              fontSize: {
+                xs: "14px",
+                md: "16px",
+              },
+              background: "#fafafa",
+              fontWeight: 400,
+              color: "rgba(17, 17, 17, 0.6)",
             },
-            "&::-webkit-scrollbar-track": {
-              background: "#00193333",
-              borderRadius: "6px",
+            "& .MuiDataGrid-root": {
+              borderTopLeftRadius: "24px !important",
+              borderTopRightRadius: "24px !important",
+              border: "0 !important",
+              overflow: "hidden",
+              width: "100%",
             },
-            "&::-webkit-scrollbar-thumb": {
-              background: "#006bce",
-              borderRadius: "10px",
+            "& .MuiDataGrid-main": {
+              borderTopLeftRadius: "24px",
+              borderTopRightRadius: "24px",
+              width: "100%",
+              padding: "0 10px",
             },
-          },
-        }}
-      />
+            "& .MuiDataGrid-overlay": {
+              borderTopLeftRadius: "24px",
+              borderTopRightRadius: "24px",
+            },
+            "& .MuiDataGrid-footerContainer": {
+              display: "none",
+            },
+            "& .MuiDataGrid-scrollbar": {
+              "&::-webkit-scrollbar": {
+                width: "6px",
+                height: "6px",
+              },
+              "&::-webkit-scrollbar-track": {
+                background: "#00193333",
+                borderRadius: "6px",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                background: "#006bce",
+                borderRadius: "10px",
+              },
+            },
+          }}
+        />
+
+      ):(
+        <NoData />
+      )}
     </Box>
   );
 };

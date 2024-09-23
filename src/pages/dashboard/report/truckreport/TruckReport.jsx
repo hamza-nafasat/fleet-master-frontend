@@ -15,9 +15,11 @@ import DownloadIcon from "../../../../assets/svgs/reports/DownloadIcon";
 import { getSingleTruckReportsAction } from "../../../../redux/actions/admin.actions";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-
+import { IoCloudUploadOutline } from "react-icons/io5";
 import logo from "../../../../assets/images/logo.png";
 import CameraIcon from "../../../../assets/svgs/modal/CameraIcon";
+import NoData from "../../../../components/noData/NoData";
+
 const columns = [
   {
     field: "plateNumber",
@@ -137,7 +139,7 @@ const TruckReport = () => {
         img.onload = () => {
           const logoX = (doc.internal.pageSize.getWidth() - 30) / 2; // Center logo
           doc.setFillColor(33, 150, 243);
-          // doc.rect(logoX,5,40, 35, "F"); 
+          // doc.rect(logoX,5,40, 35, "F");
           doc.addImage(img, "PNG", logoX + 5, 8, 30, 30); // Logo positioning
           resolve();
         };
@@ -175,7 +177,11 @@ const TruckReport = () => {
     // yOffset += 10; // Adjust yOffset for logo
     doc.setFontSize(15);
     doc.setFont("helvetica", "normal");
-    doc.text("Fleet Master Truck Report", (doc.internal.pageSize.getWidth() - 50) / 2, yOffset,); // Left align
+    doc.text(
+      "Fleet Master Truck Report",
+      (doc.internal.pageSize.getWidth() - 50) / 2,
+      yOffset
+    ); // Left align
     yOffset += 10;
 
     const tableColumn = [
@@ -228,8 +234,7 @@ const TruckReport = () => {
     // Save the PDF
     doc.save("truck-report.pdf");
     handleClose();
-};
-
+  };
 
   useEffect(() => {
     dispatch(getSingleTruckReportsAction());
@@ -388,69 +393,73 @@ const TruckReport = () => {
       >
         <DownloadIcon onClick={handleOpen} />
       </Box>
-      <DataGrid
-        rows={filteredRows}
-        getRowId={(row) => row._id}
-        columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5, 10, 20]}
-        sx={{
-          "& .MuiDataGrid-row.even-row": {
-            backgroundColor: "#fafafa",
-          },
-          "& .MuiDataGrid-columnHeader .MuiDataGrid-columnHeaderTitle": {
-            fontSize: {
-              xs: "14px",
-              md: "16px",
+      {singleTruckReport.length > 0 ? (
+        <DataGrid
+          rows={filteredRows}
+          getRowId={(row) => row._id}
+          columns={columns}
+          pageSize={5}
+          rowsPerPageOptions={[5, 10, 20]}
+          sx={{
+            "& .MuiDataGrid-row.even-row": {
+              backgroundColor: "#fafafa",
             },
-            fontWeight: 600,
-            color: "#111111",
-          },
-          "& .MuiDataGrid-row .MuiDataGrid-cell": {
-            fontSize: {
-              xs: "14px",
-              md: "16px",
+            "& .MuiDataGrid-columnHeader .MuiDataGrid-columnHeaderTitle": {
+              fontSize: {
+                xs: "14px",
+                md: "16px",
+              },
+              fontWeight: 600,
+              color: "#111111",
             },
-            background: "#fafafa",
-            fontWeight: 400,
-            color: "rgba(17, 17, 17, 0.6)",
-          },
-          "& .MuiDataGrid-root": {
-            borderTopLeftRadius: "24px !important",
-            borderTopRightRadius: "24px !important",
-            border: "0 !important",
-            overflow: "hidden",
-            width: "100%",
-          },
-          "& .MuiDataGrid-main": {
-            borderTopLeftRadius: "24px",
-            borderTopRightRadius: "24px",
-            width: "100%",
-            padding: "0 10px",
-          },
-          "& .MuiDataGrid-overlay": {
-            borderTopLeftRadius: "24px",
-            borderTopRightRadius: "24px",
-          },
-          "& .MuiDataGrid-footerContainer": {
-            display: "none",
-          },
-          "& .MuiDataGrid-scrollbar": {
-            "&::-webkit-scrollbar": {
-              width: "6px",
-              height: "6px",
+            "& .MuiDataGrid-row .MuiDataGrid-cell": {
+              fontSize: {
+                xs: "14px",
+                md: "16px",
+              },
+              background: "#fafafa",
+              fontWeight: 400,
+              color: "rgba(17, 17, 17, 0.6)",
             },
-            "&::-webkit-scrollbar-track": {
-              background: "#00193333",
-              borderRadius: "6px",
+            "& .MuiDataGrid-root": {
+              borderTopLeftRadius: "24px !important",
+              borderTopRightRadius: "24px !important",
+              border: "0 !important",
+              overflow: "hidden",
+              width: "100%",
             },
-            "&::-webkit-scrollbar-thumb": {
-              background: "#006bce",
-              borderRadius: "10px",
+            "& .MuiDataGrid-main": {
+              borderTopLeftRadius: "24px",
+              borderTopRightRadius: "24px",
+              width: "100%",
+              padding: "0 10px",
             },
-          },
-        }}
-      />
+            "& .MuiDataGrid-overlay": {
+              borderTopLeftRadius: "24px",
+              borderTopRightRadius: "24px",
+            },
+            "& .MuiDataGrid-footerContainer": {
+              display: "none",
+            },
+            "& .MuiDataGrid-scrollbar": {
+              "&::-webkit-scrollbar": {
+                width: "6px",
+                height: "6px",
+              },
+              "&::-webkit-scrollbar-track": {
+                background: "#00193333",
+                borderRadius: "6px",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                background: "#006bce",
+                borderRadius: "10px",
+              },
+            },
+          }}
+        />
+      ) : (
+        <NoData />
+      )}
       <Modal
         open={open}
         onClose={handleClose}
@@ -493,11 +502,9 @@ const ModalContent = ({ onChange, profile, generatePdf }) => {
         {profile ? (
           <Image src={profile} alt="image"></Image>
         ) : (
-          <Typography
-            sx={{ display: "grid", placeItems: "center", height: "100%" }}
-          >
-            Upload your logo
-          </Typography>
+          <Box sx={{ display: "grid", placeItems: "center", height: "100%" }}>
+            <IoCloudUploadOutline fontSize={40} color="#006bce" />
+          </Box>
         )}
       </Box>
       <Box

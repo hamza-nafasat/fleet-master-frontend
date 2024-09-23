@@ -14,10 +14,17 @@ import LowIcon from "../../../../assets/svgs/settings/LowIcon";
 import MediumIcon from "../../../../assets/svgs/settings/MediumIcon";
 import OutfenceIcon from "../../../../assets/svgs/settings/OutfenceIcon";
 import Modal from "../../../../components/modal/Modal";
-import { deleteAlertAction, getAllAlertsActions } from "../../../../redux/actions/alert.actions";
-import { clearAlertError, clearAlertMessage } from "../../../../redux/slices/alert.slice";
+import {
+  deleteAlertAction,
+  getAllAlertsActions,
+} from "../../../../redux/actions/alert.actions";
+import {
+  clearAlertError,
+  clearAlertMessage,
+} from "../../../../redux/slices/alert.slice";
 import AddAlert from "./components/AddAlert";
 import EditAlert from "./components/EditAlert";
+import NoData from "../../../../components/noData/NoData";
 
 const AlertType = () => {
   const dispatch = useDispatch();
@@ -43,7 +50,8 @@ const AlertType = () => {
         {
           label: "Yes",
           onClick: async () => {
-            if (!id) return toast.info("Alert Id not found", { autoClose: 2000 });
+            if (!id)
+              return toast.info("Alert Id not found", { autoClose: 2000 });
             await dispatch(deleteAlertAction(id));
             await dispatch(getAllAlertsActions());
           },
@@ -198,8 +206,15 @@ const AlertType = () => {
             height: "100%",
           }}
         >
-          <Typography sx={{ color: "#000", fontSize: { xs: "14px", sm: "16px" } }}>{params.value}</Typography>
-          <FormControlLabel control={<Switch readOnly checked={params.value === "enable"} />} label="" />
+          <Typography
+            sx={{ color: "#000", fontSize: { xs: "14px", sm: "16px" } }}
+          >
+            {params.value}
+          </Typography>
+          <FormControlLabel
+            control={<Switch readOnly checked={params.value === "enable"} />}
+            label=""
+          />
         </Box>
       ),
     },
@@ -230,7 +245,9 @@ const AlertType = () => {
             }}
             onClick={() => deleteAlertHandler(params?.row?._id)}
           >
-            <DeleteForeverIcon style={{ fontSize: "28px", color: "rgba(255, 70, 70, 1)" }} />
+            <DeleteForeverIcon
+              style={{ fontSize: "28px", color: "rgba(255, 70, 70, 1)" }}
+            />
           </button>
         </Box>
       ),
@@ -260,75 +277,79 @@ const AlertType = () => {
             <AddIcon />
           </Box>
         </Box>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          pageSize={5}
-          getRowId={(row) => row._id}
-          rowsPerPageOptions={[5, 10, 20]}
-          headerClassName={() => {
-            return "MuiDataGrid-colCell-center";
-          }}
-          cellClassName={() => {
-            return "MuiDataGrid-cell-center";
-          }}
-          sx={{
-            "& .MuiDataGrid-row.even-row": {
-              backgroundColor: "#fafafa",
-            },
-            "& .MuiDataGrid-columnHeader .MuiDataGrid-columnHeaderTitle": {
-              fontSize: {
-                xs: "14px",
-                md: "16px",
+        {alerts.length > 0 ? (
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            pageSize={5}
+            getRowId={(row) => row._id}
+            rowsPerPageOptions={[5, 10, 20]}
+            headerClassName={() => {
+              return "MuiDataGrid-colCell-center";
+            }}
+            cellClassName={() => {
+              return "MuiDataGrid-cell-center";
+            }}
+            sx={{
+              "& .MuiDataGrid-row.even-row": {
+                backgroundColor: "#fafafa",
               },
-              fontWeight: 600,
-              color: "#111111",
-            },
-            "& .MuiDataGrid-row .MuiDataGrid-cell": {
-              fontSize: {
-                xs: "14px",
-                md: "16px",
+              "& .MuiDataGrid-columnHeader .MuiDataGrid-columnHeaderTitle": {
+                fontSize: {
+                  xs: "14px",
+                  md: "16px",
+                },
+                fontWeight: 600,
+                color: "#111111",
               },
-              background: "#fafafa",
-              fontWeight: 400,
-              color: "rgba(17, 17, 17, 0.6)",
-            },
-            "& .MuiDataGrid-root": {
-              borderTopLeftRadius: "24px !important",
-              borderTopRightRadius: "24px !important",
-              border: "0 !important",
-              overflow: "hidden",
-              width: "100%",
-            },
-            "& .MuiDataGrid-main": {
-              borderTopLeftRadius: "24px",
-              borderTopRightRadius: "24px",
-              width: "100%",
-              padding: "0 10px",
-            },
-            "& .MuiDataGrid-overlay": {
-              borderTopLeftRadius: "24px",
-              borderTopRightRadius: "24px",
-            },
-            "& .MuiDataGrid-footerContainer": {
-              display: "none",
-            },
-            "& .MuiDataGrid-scrollbar": {
-              "&::-webkit-scrollbar": {
-                width: "6px",
-                height: "6px",
+              "& .MuiDataGrid-row .MuiDataGrid-cell": {
+                fontSize: {
+                  xs: "14px",
+                  md: "16px",
+                },
+                background: "#fafafa",
+                fontWeight: 400,
+                color: "rgba(17, 17, 17, 0.6)",
               },
-              "&::-webkit-scrollbar-track": {
-                background: "#00193333",
-                borderRadius: "6px",
+              "& .MuiDataGrid-root": {
+                borderTopLeftRadius: "24px !important",
+                borderTopRightRadius: "24px !important",
+                border: "0 !important",
+                overflow: "hidden",
+                width: "100%",
               },
-              "&::-webkit-scrollbar-thumb": {
-                background: "#006bce",
-                borderRadius: "10px",
+              "& .MuiDataGrid-main": {
+                borderTopLeftRadius: "24px",
+                borderTopRightRadius: "24px",
+                width: "100%",
+                padding: "0 10px",
               },
-            },
-          }}
-        />
+              "& .MuiDataGrid-overlay": {
+                borderTopLeftRadius: "24px",
+                borderTopRightRadius: "24px",
+              },
+              "& .MuiDataGrid-footerContainer": {
+                display: "none",
+              },
+              "& .MuiDataGrid-scrollbar": {
+                "&::-webkit-scrollbar": {
+                  width: "6px",
+                  height: "6px",
+                },
+                "&::-webkit-scrollbar-track": {
+                  background: "#00193333",
+                  borderRadius: "6px",
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  background: "#006bce",
+                  borderRadius: "10px",
+                },
+              },
+            }}
+          />
+        ) : (
+          <NoData />
+        )}
       </Box>
       {modalType === "edit" && (
         <Modal onClose={handleCloseModal}>
