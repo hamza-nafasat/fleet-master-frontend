@@ -21,6 +21,9 @@ import {
   resetPasswordFailure,
   resetPasswordStart,
   resetPasswordSuccess,
+  updateMyProfileFailure,
+  updateMyProfileStart,
+  updateMyProfileSuccess,
 } from "../slices/user.slice";
 
 // login Action
@@ -84,6 +87,21 @@ const getMyProfileAction = () => async (dispatch) => {
     );
   }
 };
+// update my profile
+// --------------
+const updateMyProfileAction = (formData) => async (dispatch) => {
+  dispatch(updateMyProfileStart());
+  try {
+    const response = await customFormAxios.put("/user/profile", formData);
+    // console.log("get my profile api response ", response);
+    dispatch(updateMyProfileSuccess(response.data));
+  } catch (error) {
+    // console.log(error);
+    dispatch(
+      updateMyProfileFailure(error?.response?.data?.message || "Error ocurred while getting my profile")
+    );
+  }
+};
 
 // forget password
 // ---------------
@@ -139,4 +157,5 @@ export {
   resetPasswordAction,
   logoutUserAction,
   getMyProfileAction,
+  updateMyProfileAction,
 };

@@ -13,15 +13,16 @@ import { getAllNotificationsAction } from "../../../../redux/actions/notificatio
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.user);
+  const { notifications } = useSelector((state) => state.notification);
   const [openNav, setOpenNav] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [newNotificationLength, setNewNotificationLength] = useState(0);
   const location = useLocation();
+
   let urlArr = location.pathname.split("/");
-  const { notifications } = useSelector((state) => state.notification);
   let pageTitle = urlArr[urlArr.length - 1].replaceAll("-", " ");
-  const { user } = useSelector((state) => state.user);
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -44,9 +45,7 @@ const Header = () => {
 
   useEffect(() => {
     if (notifications) {
-      const unreadNotifications = notifications?.filter(
-        (notification) => !notification?.isRead
-      );
+      const unreadNotifications = notifications?.filter((notification) => !notification?.isRead);
       console.log("unreadNotifications", unreadNotifications);
       setNewNotificationLength(unreadNotifications?.length);
     }
@@ -127,9 +126,15 @@ const Header = () => {
               },
             }}
           >
-            <Link to="/dashboard/profile">
+            <Link to="/dashboard/profile" onClick={handleClose}>
               <MenuItem
-                sx={{ fontSize: "14px", fontWeight: "500", background: "#fff", color: '#000', borderBottom: '1px solid #0000001c' }}
+                sx={{
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  background: "#fff",
+                  color: "#000",
+                  borderBottom: "1px solid #0000001c",
+                }}
                 disabled={isLoading}
               >
                 My Profile

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import {
   Box,
   Button,
@@ -12,15 +13,19 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 import Modal from "../../../../components/modal/Modal";
+import { updateMyProfileAction } from "../../../../redux/actions/user.actions";
 
 const ConfigurationSettings = () => {
-  const [selectedDatabase, setSelectedDatabase] = useState(
-    "remote-cloud-database"
-  );
+  const dispatch = useDispatch();
+  const [selectedDatabase, setSelectedDatabase] = useState("remote-cloud-database");
   const [modal, setModal] = useState(false);
   const [newDatabase, setNewDatabase] = useState(null);
+  const [intervalValue, setIntervalValue] = useState("30");
+  const [isLoading, setIsLoading] = useState(false);
 
   console.log("selected database", selectedDatabase);
 
@@ -40,6 +45,20 @@ const ConfigurationSettings = () => {
     const newDatabase = e.target.value;
     openModalHandler();
     setNewDatabase(newDatabase);
+  };
+
+  const saveConfigrationHandler = async () => {
+    setIsLoading(true);
+    try {
+      if (!intervalValue) toast.error("Please select time interval");
+      const formData = new FormData();
+      formData.append("interval", intervalValue);
+      await dispatch(updateMyProfileAction(formData));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -71,14 +90,16 @@ const ConfigurationSettings = () => {
                 id="timeInterval"
                 name="timeInterval"
                 placeholder="Select"
+                value={intervalValue}
+                onChange={(e) => setIntervalValue(e.target.value)}
               >
-                <MenuItem value="10-seconds">10 Seconds</MenuItem>
-                <MenuItem value="20-seconds">20 Seconds</MenuItem>
-                <MenuItem value="30-seconds">30 Seconds</MenuItem>
-                <MenuItem value="40-seconds">40 Seconds</MenuItem>
-                <MenuItem value="60-seconds">60 Seconds</MenuItem>
-                <MenuItem value="80-seconds">1.2 minute</MenuItem>
-                <MenuItem value="100-seconds">1.5 minute</MenuItem>
+                <MenuItem value="10">10 Seconds</MenuItem>
+                <MenuItem value="20">20 Seconds</MenuItem>
+                <MenuItem value="30">30 Seconds</MenuItem>
+                <MenuItem value="40">40 Seconds</MenuItem>
+                <MenuItem value="60">60 Seconds</MenuItem>
+                <MenuItem value="80">1.2 minute</MenuItem>
+                <MenuItem value="100">1.5 minute</MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -96,11 +117,7 @@ const ConfigurationSettings = () => {
                   control={<Radio />}
                   label="Remote Cloud Database"
                 />
-                <FormControlLabel
-                  value="local-database"
-                  control={<Radio />}
-                  label="Local Database"
-                />
+                <FormControlLabel value="local-database" control={<Radio />} label="Local Database" />
               </RadioGroup>
             </FormControl>
             {selectedDatabase === "remote-cloud-database" && (
@@ -163,6 +180,7 @@ const ConfigurationSettings = () => {
         </Grid>
         <Grid xs={12} display="flex" justifyContent="flex-end" mt={3}>
           <Button
+            onClick={saveConfigrationHandler}
             type="submit"
             sx={{
               color: "#fff",
@@ -175,9 +193,9 @@ const ConfigurationSettings = () => {
                 cursor: "not-allowed",
               },
             }}
-            // disabled={isLoading}
+            disabled={isLoading}
           >
-            {/* {isLoading ? "Saving..." : "SAVE"} */}
+            {isLoading ? "Saving..." : "SAVE"}
             SAVE
           </Button>
         </Grid>
@@ -229,13 +247,9 @@ const Label = ({ label }) => {
 const DatabaseChangeModal = ({ onClose, changeDatabase, selectedDatabase }) => {
   return (
     <Box>
-      <Typography
-        sx={{ fontSize: { xs: "18px", md: "22px" }, fontWeight: 600 }}
-      >
-        {selectedDatabase === "remote-cloud-database" &&
-          "Local Database Storage Confirmation"}
-        {selectedDatabase === "local-database" &&
-          "Remote Database Storage Confirmation"}
+      <Typography sx={{ fontSize: { xs: "18px", md: "22px" }, fontWeight: 600 }}>
+        {selectedDatabase === "remote-cloud-database" && "Local Database Storage Confirmation"}
+        {selectedDatabase === "local-database" && "Remote Database Storage Confirmation"}
       </Typography>
       <Typography
         sx={{

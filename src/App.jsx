@@ -47,7 +47,7 @@ const Register = lazy(() => import("./pages/auth/register/Register"));
 const ConfigurationSettings = lazy(
   () => import("./pages/dashboard/settings/configuration/ConfigurationSettings")
 );
-const MyProfile = lazy(() => import('./pages/dashboard/navigation/Profile'))
+const MyProfile = lazy(() => import("./pages/dashboard/navigation/Profile"));
 
 function App() {
   const dispatch = useDispatch();
@@ -90,13 +90,18 @@ function App() {
   }, [message, error, dispatch]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      // dispatch(getMyAllSensorsDataAction());
-    }, 10000);
+    const interval = setInterval(
+      () => {
+        // dispatch(getMyAllSensorsDataAction());
+      },
+      user?.interval ? user.interval * 1000 : 30000
+    );
     return () => clearInterval(interval);
-  }, [dispatch]);
+  }, [dispatch, user?.interval]);
 
-  return (
+  return loading ? (
+    <GlobalLoader />
+  ) : (
     <Elements stripe={stripeLoad}>
       <Router>
         <Suspense fallback={<GlobalLoader />}>
