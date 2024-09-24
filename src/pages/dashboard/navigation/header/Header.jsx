@@ -72,6 +72,16 @@ const Header = () => {
         >
           Fleet Management Transportation
         </Typography>
+        {user?.subscriptionId && user.subscriptionId.subscriptionStatus === "trialing" && (
+          <Typography
+            sx={{
+              zIndex: "10",
+              color: "#ffffff",
+            }}
+          >
+            {`You are on trial mode. and your trial will end on ${user?.subscriptionId?.subscriptionEndDate?.split("T")[0]?.split("-").reverse().join("-")}`}
+          </Typography>
+        )}
         <Typography
           sx={{
             fontSize: {
