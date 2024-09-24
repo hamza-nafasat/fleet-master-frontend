@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Tooltip } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { confirmAlert } from "react-confirm-alert";
@@ -9,8 +9,14 @@ import EditIcon from "../../../../assets/svgs/geofence/EditIcon";
 import ViewIcon from "../../../../assets/svgs/geofence/ViewIcon";
 import AddIcon from "../../../../assets/svgs/settings/AddIcon";
 import Modal from "../../../../components/modal/Modal";
-import { deleteGeofenceAction, getAllGeofenceAction } from "../../../../redux/actions/geofence.action";
-import { clearGeofenceError, clearGeofenceMessage } from "../../../../redux/slices/geofence.slice";
+import {
+  deleteGeofenceAction,
+  getAllGeofenceAction,
+} from "../../../../redux/actions/geofence.action";
+import {
+  clearGeofenceError,
+  clearGeofenceMessage,
+} from "../../../../redux/slices/geofence.slice";
 import AddFence from "./components/AddFence";
 import EditFence from "./components/EditFence";
 import ViewFence from "./components/ViewFence";
@@ -52,7 +58,8 @@ const GeoFence = () => {
         },
         {
           label: "No",
-          onClick: () => toast.info("Delete action cancelled", { autoClose: 2000 }),
+          onClick: () =>
+            toast.info("Delete action cancelled", { autoClose: 2000 }),
         },
       ],
     });
@@ -111,20 +118,77 @@ const GeoFence = () => {
             marginTop: "7px",
           }}
         >
-          <Box sx={{ cursor: "pointer" }} onClick={() => handleViewModal(params.row)}>
-            <ViewIcon />
-          </Box>
-          <Box sx={{ cursor: "pointer" }} onClick={() => handleEditModal(params.row)}>
-            <EditIcon />
-          </Box>
-          <Box
-            sx={{
-              cursor: isDelLoading ? "not-allowed" : "pointer",
+          <Tooltip
+            title="View Fence"
+            placement="top-start"
+            slotProps={{
+              popper: {
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [-26, -17],
+                    },
+                  },
+                ],
+              },
             }}
-            onClick={() => handleDeleteModal(params.row)}
           >
-            <DeleteIcon />
-          </Box>
+            <Box
+              sx={{ cursor: "pointer" }}
+              onClick={() => handleViewModal(params.row)}
+            >
+              <ViewIcon />
+            </Box>
+          </Tooltip>
+          <Tooltip
+            title="Edit Fence"
+            placement="top-start"
+            slotProps={{
+              popper: {
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [-26, -17],
+                    },
+                  },
+                ],
+              },
+            }}
+          >
+            <Box
+              sx={{ cursor: "pointer" }}
+              onClick={() => handleEditModal(params.row)}
+            >
+              <EditIcon />
+            </Box>
+          </Tooltip>
+          <Tooltip
+            title="Delete Fence"
+            placement="top-start"
+            slotProps={{
+              popper: {
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [-30, -17],
+                    },
+                  },
+                ],
+              },
+            }}
+          >
+            <Box
+              sx={{
+                cursor: isDelLoading ? "not-allowed" : "pointer",
+              }}
+              onClick={() => handleDeleteModal(params.row)}
+            >
+              <DeleteIcon />
+            </Box>
+          </Tooltip>
         </Box>
       ),
     },
@@ -239,12 +303,19 @@ const GeoFence = () => {
       )}
       {modalType === "view" && (
         <Modal onClose={handleCloseModal}>
-          <ViewFence fence={selectedFence} onClose={handleCloseModal} editModal={handleEditModal} />
+          <ViewFence
+            fence={selectedFence}
+            onClose={handleCloseModal}
+            editModal={handleEditModal}
+          />
         </Modal>
       )}
       {modalType === "edit" && (
         <Modal onClose={handleCloseModal}>
-          <EditFence editSelectedRow={editSelectedRow} onClose={handleCloseModal} />
+          <EditFence
+            editSelectedRow={editSelectedRow}
+            onClose={handleCloseModal}
+          />
         </Modal>
       )}
     </Box>
