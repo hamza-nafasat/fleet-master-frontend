@@ -97,6 +97,7 @@ const EditMap = ({ gettedTrucks, area, setArea, geofenceId }) => {
     <React.Fragment>
       <MapContainer
         center={[25.276987, 55.296249]}
+        scrollWheelZoom={false}
         zoom={6}
         style={{ height: "400px", width: "100%", zIndex: 0, borderRadius: "20px" }}
         attributionControl={false}
@@ -144,7 +145,7 @@ const EditMap = ({ gettedTrucks, area, setArea, geofenceId }) => {
       <Button
         onClick={openAddTruckModal}
         variant="contained"
-        sx={{ width: "100%", alignSelf: "end", margin: "10px" }}
+        sx={{ width: "100%", alignSelf: "end", margin: "10px 0" }}
       >
         Add Trucks
       </Button>

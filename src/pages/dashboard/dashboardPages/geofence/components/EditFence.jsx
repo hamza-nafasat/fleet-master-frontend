@@ -31,8 +31,12 @@ const EditFence = ({ onClose, editSelectedRow }) => {
   const [name, setName] = useState(geofence?.name || "");
   const [alert, setAlert] = useState(geofence?.alert || "");
   const [status, setStatus] = useState(geofence?.status || "");
-  const [startDate, setStartDate] = useState(geofence?.startDate?.split("T")[0] || "");
-  const [endDate, setEndDate] = useState(geofence?.endDate?.split("T")[0] || "");
+  const [startDate, setStartDate] = useState(
+    geofence?.startDate?.split("T")[0] || ""
+  );
+  const [endDate, setEndDate] = useState(
+    geofence?.endDate?.split("T")[0] || ""
+  );
   const [trucks, setTrucks] = useState(geofence?.trucks || []);
   const [updateGeofenceLoading, setUpdateGeofenceLoading] = useState(false);
 
@@ -70,7 +74,10 @@ const EditFence = ({ onClose, editSelectedRow }) => {
     if (trucks && area) {
       trucks.forEach((truck) => {
         const { truckName, latitude, longitude } = truck;
-        const isInside = isTruckInPolygon([latitude, longitude], area?.coordinates);
+        const isInside = isTruckInPolygon(
+          [latitude, longitude],
+          area?.coordinates
+        );
         if (!isInside && alert === "outfence") {
           //  console.log(`Truck ${truckName} is out of the polygon.`);
         } else if (isInside && alert === "infence") {
@@ -123,7 +130,10 @@ const EditFence = ({ onClose, editSelectedRow }) => {
           <CloseIcon onClick={onClose} />
         </Box>
       </Box>
-      <Typography variant="h3" sx={{ color: "#000", fontSize: "20px", fontWeight: 700 }}>
+      <Typography
+        variant="h3"
+        sx={{ color: "#000", fontSize: "20px", fontWeight: 700 }}
+      >
         Info
       </Typography>
       <Grid container spacing="14" mt={1}>
@@ -153,7 +163,7 @@ const EditFence = ({ onClose, editSelectedRow }) => {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
           <FormControl fullWidth>
             <InputLabel id="select-fence">Select Fence</InputLabel>
             <Select
@@ -169,7 +179,7 @@ const EditFence = ({ onClose, editSelectedRow }) => {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs="12" lg="6">
+        <Grid item xs="12" lg="4">
           <TextField
             type="date"
             label="startDate"
@@ -183,7 +193,7 @@ const EditFence = ({ onClose, editSelectedRow }) => {
             }}
           />
         </Grid>
-        <Grid item xs="12" lg="6">
+        <Grid item xs="12" lg="4">
           <TextField
             type="date"
             label="endDate"
@@ -197,28 +207,22 @@ const EditFence = ({ onClose, editSelectedRow }) => {
             }}
           />
         </Grid>
-        <Grid item xs="12" lg="6">
-          <Button
-            onClick={updateGeofenceHandler}
-            sx={{
-              width: "100%",
-              color: "#fff",
-              height: "100%",
-              "&:disabled": { color: "white", cursor: "not-allowed" },
-            }}
-            disabled={updateGeofenceLoading}
-          >
-            {updateGeofenceLoading && <CircularProgress sx={{ mx: "10px", color: "white" }} size={25} />}
-            Update Geofence
-          </Button>
-        </Grid>
       </Grid>
       {/* Map */}
-      <Typography mt={2} variant="h3" sx={{ color: "#000", fontSize: "20px", fontWeight: 700 }}>
+      <Typography
+        mt={2}
+        variant="h3"
+        sx={{ color: "#000", fontSize: "20px", fontWeight: 700 }}
+      >
         Location
       </Typography>
       <Box mt={2} sx={{ width: "100%", height: "400px" }}>
-        <EditMap gettedTrucks={trucks} area={area} setArea={setArea} geofenceId={geofence?._id} />
+        <EditMap
+          gettedTrucks={trucks}
+          area={area}
+          setArea={setArea}
+          geofenceId={geofence?._id}
+        />
       </Box>
       {/* List */}
       <Typography
@@ -226,7 +230,27 @@ const EditFence = ({ onClose, editSelectedRow }) => {
         variant="h3"
         sx={{ color: "#000", fontSize: "20px", fontWeight: 700 }}
       ></Typography>
-      <Typography mt={2} variant="h3" sx={{ color: "#000", fontSize: "20px", fontWeight: 700 }}>
+      <Button
+        onClick={updateGeofenceHandler}
+        sx={{
+          margin: '8px 0',
+          width: "100%",
+          color: "#fff",
+          height: "100%",
+          "&:disabled": { color: "white", cursor: "not-allowed" },
+        }}
+        disabled={updateGeofenceLoading}
+      >
+        {updateGeofenceLoading && (
+          <CircularProgress sx={{ mx: "10px", color: "white" }} size={25} />
+        )}
+        Update Geofence
+      </Button>
+      <Typography
+        mt={2}
+        variant="h3"
+        sx={{ color: "#000", fontSize: "20px", fontWeight: 700 }}
+      >
         Truck List
       </Typography>
       {/* truck list component  */}

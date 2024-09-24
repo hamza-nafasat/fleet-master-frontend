@@ -37,6 +37,10 @@ a {
   color: #fff !important;
 }
 
+.react-confirm-alert-overlay {
+  z-index: 1001 !important;
+}
+
 .geofencePopup .leaflet-popup-content {
   margin: 0 !important;
   width: unset !important;

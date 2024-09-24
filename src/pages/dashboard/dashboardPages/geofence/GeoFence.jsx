@@ -28,6 +28,7 @@ const GeoFence = () => {
   const [editSelectedRow, setEditSelectedRow] = useState();
   const [selectedFence, setSelectedFence] = useState(null);
   const { message, error, geofences } = useSelector((state) => state.geofence);
+  console.log("genfencoes", geofences);
 
   const handleAddModal = () => {
     setModalType("add");
@@ -239,10 +240,18 @@ const GeoFence = () => {
         pageSize={5}
         getRowId={(row) => row._id}
         rowsPerPageOptions={[5, 10, 20]}
+        getRowClassName={(params) => {
+          const isInactive = params.row.status === "inactive";
+          const endDate = params.row.endDate
+            ? new Date(params.row.endDate)
+            : null;
+          const currentDate = new Date();
+          const isExpired = endDate && endDate < currentDate;
+
+          // Assign a class based on row status or expiration date
+          return isInactive || isExpired ? "red-cell" : "default-cell";
+        }}
         sx={{
-          "& .MuiDataGrid-row.even-row": {
-            backgroundColor: "#fafafa",
-          },
           "& .MuiDataGrid-columnHeader .MuiDataGrid-columnHeaderTitle": {
             fontSize: {
               xs: "14px",
@@ -251,12 +260,17 @@ const GeoFence = () => {
             fontWeight: 600,
             color: "#111111",
           },
+          "& .MuiDataGrid-row.default-cell .MuiDataGrid-cell": {
+            backgroundColor: "#fafafa",
+          },
+          "& .MuiDataGrid-row.red-cell .MuiDataGrid-cell": {
+            backgroundColor: "#ffcccc",
+          },
           "& .MuiDataGrid-row .MuiDataGrid-cell": {
             fontSize: {
               xs: "14px",
               md: "16px",
             },
-            background: "#fafafa",
             fontWeight: 400,
             color: "rgba(17, 17, 17, 0.6)",
           },
