@@ -41,17 +41,22 @@ const Card = ({ dashboardData }) => {
   return (
     <Grid container spacing={2} justifyContent="space-between">
       {cardsData.map((card, index) => (
-        <Grid item sm={12} md={6} lg={3} key={index}>
+        <Grid item xs={12} lg={6} xl={3} key={index}>
           <InnerCard>
             <Stack justifyContent="space-between" spacing={4}>
               {/* Card Title */}
-              <Typography variant="h6" fontWeight="600" color="#000">
+              <Typography
+                variant="h6"
+                fontSize={16}
+                fontWeight="600"
+                color="#000"
+              >
                 {card.title}
               </Typography>
 
               {/* Card Content */}
-              <Stack direction="row" alignItems="center" spacing={5}>
-                <Stack spacing={1}>
+              <Stack direction="row" alignItems="center" spacing={2}>
+                <Stack>
                   {/* First Subtitle Value */}
                   <Typography
                     variant="h4"
@@ -66,7 +71,7 @@ const Card = ({ dashboardData }) => {
                   )}
                 </Stack>
 
-                <Stack spacing={1}>
+                <Stack>
                   {/* Second Subtitle Value */}
                   {card.subtitleTwoValue !== undefined && (
                     <Typography
@@ -79,7 +84,9 @@ const Card = ({ dashboardData }) => {
                   )}
                   {/* Second Subtitle Text */}
                   {card.subtitleTwoTxt && (
-                    <SubtitleText text={card.subtitleTwoTxt} />
+                    <Typography>
+                      <SubtitleText text={card.subtitleTwoTxt} />
+                    </Typography>
                   )}
                 </Stack>
               </Stack>
@@ -129,6 +136,7 @@ const SubtitleText = ({ text }) => {
         variant="body2"
         color="rgba(17, 17, 17, 0.6)"
         sx={{ marginTop: 0 }}
+        fontSize={14}
       >
         {text}
       </Typography>
@@ -144,6 +152,10 @@ SubtitleText.propTypes = {
 const InnerCard = styled(Box)(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between",
+  [theme.breakpoints.between(1500, 1600)]: {
+    flexWrap: "wrap",
+  },
+
   alignItems: "center",
   padding: "16px",
   minHeight: "180px",
@@ -151,7 +163,7 @@ const InnerCard = styled(Box)(({ theme }) => ({
   boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
   backgroundColor: "#fff",
   [theme.breakpoints.up("sm")]: {
-    gap: "2rem",
+    gap: "1rem",
   },
   height: "100%",
 }));
