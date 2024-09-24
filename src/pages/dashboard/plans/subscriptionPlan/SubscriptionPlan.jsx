@@ -90,8 +90,7 @@ const SubscriptionPlan = () => {
               type={card.type}
               btnBg={card.btnBg}
               key={i}
-              subscribed={user?.subscriptionId ? true : false}
-              subscribedPlan={user?.subscriptionId?.plan}
+              subscription={user?.subscriptionId}
               onClick={() => handleCardClick(card)}
             />
           ))}

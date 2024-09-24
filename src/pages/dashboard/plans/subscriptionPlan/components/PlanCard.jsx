@@ -2,18 +2,7 @@
 import { Box, Button, Grid, Typography, styled } from "@mui/material";
 import CheckIcon from "../../../../../assets/svgs/plans/CheckIcon";
 
-const PlanCard = ({
-  bg,
-  title,
-  type,
-  price,
-  featuresList,
-  description,
-  btnBg,
-  onClick,
-  subscribed,
-  subscribedPlan,
-}) => {
+const PlanCard = ({ bg, title, type, price, featuresList, description, btnBg, onClick, subscription }) => {
   return (
     <Grid item xs={12} md={6} lg={4}>
       <Card
@@ -41,21 +30,30 @@ const PlanCard = ({
           >
             {title}
           </Typography>
-          {subscribed && subscribedPlan === type && (
+          {subscription && subscription.plan === type && subscription.subscriptionStatus === "active" && (
             <Typography
-              variant="h2"
               sx={{
                 color: "lime",
                 fontWeight: 700,
                 padding: "5px 12px",
                 borderRadius: "5px",
-                fontSize: {
-                  xs: "18px",
-                  md: "26px",
-                },
+                fontSize: "18px",
               }}
             >
               Active
+            </Typography>
+          )}
+          {subscription && subscription.plan === type && subscription.subscriptionStatus === "trialing" && (
+            <Typography
+              sx={{
+                color: "lime",
+                fontWeight: 700,
+                padding: "5px 12px",
+                borderRadius: "5px",
+                fontSize: "18px",
+              }}
+            >
+              Trial
             </Typography>
           )}
         </Box>
@@ -102,7 +100,7 @@ const PlanCard = ({
           Description
         </Typography>
         <Typography sx={{ fontSize: "14px", marginTop: "10px", color: "#000" }}>{description}</Typography>
-        {subscribed && subscribedPlan == type ? (
+        {subscription && subscription.plan === type && subscription.subscriptionStatus === "active" ? (
           <CustomBtn onClick={onClick} variant="contained" sx={{ background: btnBg }}>
             Cancel Now
           </CustomBtn>
