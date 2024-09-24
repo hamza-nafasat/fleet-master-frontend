@@ -26,12 +26,11 @@ const ReviewCard = ({ card }) => {
       if (!plan) return toast.error("Please select a plan");
       const response = await customAxios.post("/subscription/create-session", { plan });
       const data = response.data;
-      // console.log("response data getted", data);
-      //   dispatch(createStripeSessionSuccess(data));
+      console.log("subscription data", data);
       const sessionId = data.sessionId;
       const redirectUrl = data.redirect_url;
       if (redirectUrl) window.location.href = redirectUrl;
-      if (sessionId) await redirectToCheckout(sessionId, stripe);
+      else if (sessionId) await redirectToCheckout(sessionId, stripe);
       setLoading(false);
     } catch (error) {
       setLoading(false);
