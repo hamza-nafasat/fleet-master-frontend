@@ -6,6 +6,7 @@ import alarmsIcon from "../../../../assets/images/cards/alarms-vehicle.png";
 import { Box, Grid, Stack, Typography, styled } from "@mui/material";
 
 const Card = ({ dashboardData }) => {
+  console.log("dashboard data", dashboardData);
   const cardsData = [
     {
       title: "Your Fleet",
@@ -45,12 +46,7 @@ const Card = ({ dashboardData }) => {
           <InnerCard>
             <Stack justifyContent="space-between" spacing={4}>
               {/* Card Title */}
-              <Typography
-                variant="h6"
-                fontSize={16}
-                fontWeight="600"
-                color="#000"
-              >
+              <Typography variant="h6" fontSize={16} fontWeight="600" color="#000">
                 {card.title}
               </Typography>
 
@@ -58,27 +54,17 @@ const Card = ({ dashboardData }) => {
               <Stack direction="row" alignItems="center" spacing={2}>
                 <Stack>
                   {/* First Subtitle Value */}
-                  <Typography
-                    variant="h4"
-                    fontWeight="500"
-                    color="rgba(0, 107, 206, 1)"
-                  >
+                  <Typography variant="h4" fontWeight="500" color="rgba(0, 107, 206, 1)">
                     {card.subtitleOneValue}
                   </Typography>
                   {/* First Subtitle Text */}
-                  {card.subtitleOneTxt && (
-                    <SubtitleText text={card.subtitleOneTxt} />
-                  )}
+                  {card.subtitleOneTxt && <SubtitleText text={card.subtitleOneTxt} />}
                 </Stack>
 
                 <Stack>
                   {/* Second Subtitle Value */}
                   {card.subtitleTwoValue !== undefined && (
-                    <Typography
-                      variant="h4"
-                      fontWeight="500"
-                      color="rgba(0, 107, 206, 1)"
-                    >
+                    <Typography variant="h4" fontWeight="500" color="rgba(0, 107, 206, 1)">
                       {card.subtitleTwoValue}
                     </Typography>
                   )}
@@ -132,12 +118,7 @@ const SubtitleText = ({ text }) => {
           }}
         />
       )}
-      <Typography
-        variant="body2"
-        color="rgba(17, 17, 17, 0.6)"
-        sx={{ marginTop: 0 }}
-        fontSize={14}
-      >
+      <Typography variant="body2" color="rgba(17, 17, 17, 0.6)" sx={{ marginTop: 0 }} fontSize={14}>
         {text}
       </Typography>
     </Stack>

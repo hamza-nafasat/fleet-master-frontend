@@ -10,7 +10,7 @@ import Map from "../dashboardPages/RealTimeMap/components/map/Map";
 const Home = () => {
   const dispatch = useDispatch();
   const { dashboardDetails } = useSelector((state) => state.admin);
-  const [dashboardDate, setDashboardDate] = useState({
+  const [dashboardData, setDashboardData] = useState({
     totalTrucks: 0,
     totalDrivers: 0,
     totalAssignedTrucks: 0,
@@ -23,21 +23,19 @@ const Home = () => {
   useEffect(() => {
     dispatch(adminDashboardDetailsAction());
   }, [dispatch]);
+  console.log("dashboard details", dashboardData);
 
   useEffect(() => {
     if (dashboardDetails) {
-      setDashboardDate((prevState) => ({
-        totalTrucks: dashboardDetails.totalTrucks || prevState.totalTrucks,
-        totalDrivers: dashboardDetails.totalDrivers || prevState.totalDrivers,
-        totalAssignedTrucks:
-          dashboardDetails.totalAssignedTrucks || prevState.totalAssignedTrucks,
-        totalUnAssignedTrucks:
-          dashboardDetails.totalUnAssignedTrucks ||
-          prevState.totalUnAssignedTrucks,
-        totalEmployees:
-          dashboardDetails.totalEmployees || prevState.totalEmployees,
-        totalDevices: dashboardDetails.totalDevices || prevState.totalDevices,
-        totalAlarms: dashboardDetails.totalAlarms || prevState.totalAlarms,
+      setDashboardData((prevState) => ({
+        ...prevState,
+        totalTrucks: dashboardDetails.totalTrucks ?? prevState.totalTrucks,
+        totalDrivers: dashboardDetails.totalDrivers ?? prevState.totalDrivers,
+        totalAssignedTrucks: dashboardDetails.totalAssignedTrucks ?? prevState.totalAssignedTrucks,
+        totalUnAssignedTrucks: dashboardDetails.totalUnAssignedTrucks ?? prevState.totalUnAssignedTrucks,
+        totalEmployees: dashboardDetails.totalEmployees ?? prevState.totalEmployees,
+        totalDevices: dashboardDetails.totalDevices ?? prevState.totalDevices,
+        totalAlarms: dashboardDetails.totalAlarms ?? prevState.totalAlarms,
       }));
     }
   }, [dashboardDetails]);
@@ -49,7 +47,7 @@ const Home = () => {
           width: "100%",
         }}
       >
-        <Card dashboardDate={dashboardDate} />
+        <Card dashboardData={dashboardData} />
       </Box>
       <Grid container spacing={3} sx={{ margin: 0 }}>
         <Grid item xs={12} md={4} sx={{ pl: "0 !important" }}>
