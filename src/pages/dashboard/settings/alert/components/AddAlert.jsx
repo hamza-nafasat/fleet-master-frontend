@@ -17,7 +17,7 @@ import BackIcon from "../../../../../assets/svgs/modal/BackIcon";
 import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
 import { createAlertActions, getAllAlertsActions } from "../../../../../redux/actions/alert.actions";
 
-const alertType = [{ type: "infence" }, { type: "outfence" }, { type: "speed" }];
+const alertType = [{ type: "infence" }, { type: "outfence" }, { type: "speed" }, { type: "sensor-damage" }];
 const severityType = [{ type: "high" }, { type: "medium" }, { type: "low" }];
 
 const AddAlert = ({ onClose }) => {

@@ -15,7 +15,8 @@ import { useDispatch, useSelector } from "react-redux";
 import BackIcon from "../../../../../assets/svgs/modal/BackIcon";
 import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
 import { getAllAlertsActions, updateAlertAction } from "../../../../../redux/actions/alert.actions";
-const alertType = [{ type: "infence" }, { type: "outfence" }, { type: "speed" }];
+
+const alertType = [{ type: "infence" }, { type: "outfence" }, { type: "speed" }, { type: "sensor-damage" }];
 const severityType = [{ type: "high" }, { type: "medium" }, { type: "low" }];
 const status = [{ type: "enable" }, { type: "disable" }];
 
