@@ -17,6 +17,7 @@ import BackIcon from "../../../../../assets/svgs/modal/BackIcon";
 import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
 import { socket, socketEvent } from "../../../../../constants/constants";
 import {
+  getAllGeofenceAction,
   getSingleGeofenceAction,
   updateGeofenceAction,
 } from "../../../../../redux/actions/geofence.action";
@@ -31,12 +32,8 @@ const EditFence = ({ onClose, editSelectedRow }) => {
   const [name, setName] = useState(geofence?.name || "");
   const [alert, setAlert] = useState(geofence?.alert || "");
   const [status, setStatus] = useState(geofence?.status || "");
-  const [startDate, setStartDate] = useState(
-    geofence?.startDate?.split("T")[0] || ""
-  );
-  const [endDate, setEndDate] = useState(
-    geofence?.endDate?.split("T")[0] || ""
-  );
+  const [startDate, setStartDate] = useState(geofence?.startDate?.split("T")[0] || "");
+  const [endDate, setEndDate] = useState(geofence?.endDate?.split("T")[0] || "");
   const [trucks, setTrucks] = useState(geofence?.trucks || []);
   const [updateGeofenceLoading, setUpdateGeofenceLoading] = useState(false);
 
@@ -52,7 +49,8 @@ const EditFence = ({ onClose, editSelectedRow }) => {
       area,
     };
     await dispatch(updateGeofenceAction(geofence?._id, geofenceData));
-    await dispatch(getSingleGeofenceAction(editSelectedRow?._id));
+    // await dispatch(getSingleGeofenceAction(editSelectedRow?._id));
+    await dispatch(getAllGeofenceAction());
     setUpdateGeofenceLoading(false);
   };
 
@@ -74,10 +72,7 @@ const EditFence = ({ onClose, editSelectedRow }) => {
     if (trucks && area) {
       trucks.forEach((truck) => {
         const { truckName, latitude, longitude } = truck;
-        const isInside = isTruckInPolygon(
-          [latitude, longitude],
-          area?.coordinates
-        );
+        const isInside = isTruckInPolygon([latitude, longitude], area?.coordinates);
         if (!isInside && alert === "outfence") {
           //  console.log(`Truck ${truckName} is out of the polygon.`);
         } else if (isInside && alert === "infence") {
@@ -130,10 +125,7 @@ const EditFence = ({ onClose, editSelectedRow }) => {
           <CloseIcon onClick={onClose} />
         </Box>
       </Box>
-      <Typography
-        variant="h3"
-        sx={{ color: "#000", fontSize: "20px", fontWeight: 700 }}
-      >
+      <Typography variant="h3" sx={{ color: "#000", fontSize: "20px", fontWeight: 700 }}>
         Info
       </Typography>
       <Grid container spacing="14" mt={1}>
@@ -209,20 +201,11 @@ const EditFence = ({ onClose, editSelectedRow }) => {
         </Grid>
       </Grid>
       {/* Map */}
-      <Typography
-        mt={2}
-        variant="h3"
-        sx={{ color: "#000", fontSize: "20px", fontWeight: 700 }}
-      >
+      <Typography mt={2} variant="h3" sx={{ color: "#000", fontSize: "20px", fontWeight: 700 }}>
         Location
       </Typography>
       <Box mt={2} sx={{ width: "100%", height: "400px" }}>
-        <EditMap
-          gettedTrucks={trucks}
-          area={area}
-          setArea={setArea}
-          geofenceId={geofence?._id}
-        />
+        <EditMap gettedTrucks={trucks} area={area} setArea={setArea} geofenceId={geofence?._id} />
       </Box>
       {/* List */}
       <Typography
@@ -233,7 +216,7 @@ const EditFence = ({ onClose, editSelectedRow }) => {
       <Button
         onClick={updateGeofenceHandler}
         sx={{
-          margin: '8px 0',
+          margin: "8px 0",
           width: "100%",
           color: "#fff",
           height: "100%",
@@ -241,16 +224,10 @@ const EditFence = ({ onClose, editSelectedRow }) => {
         }}
         disabled={updateGeofenceLoading}
       >
-        {updateGeofenceLoading && (
-          <CircularProgress sx={{ mx: "10px", color: "white" }} size={25} />
-        )}
+        {updateGeofenceLoading && <CircularProgress sx={{ mx: "10px", color: "white" }} size={25} />}
         Update Geofence
       </Button>
-      <Typography
-        mt={2}
-        variant="h3"
-        sx={{ color: "#000", fontSize: "20px", fontWeight: 700 }}
-      >
+      <Typography mt={2} variant="h3" sx={{ color: "#000", fontSize: "20px", fontWeight: 700 }}>
         Truck List
       </Typography>
       {/* truck list component  */}

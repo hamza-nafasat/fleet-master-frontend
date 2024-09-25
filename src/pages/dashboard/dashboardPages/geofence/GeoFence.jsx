@@ -9,14 +9,8 @@ import EditIcon from "../../../../assets/svgs/geofence/EditIcon";
 import ViewIcon from "../../../../assets/svgs/geofence/ViewIcon";
 import AddIcon from "../../../../assets/svgs/settings/AddIcon";
 import Modal from "../../../../components/modal/Modal";
-import {
-  deleteGeofenceAction,
-  getAllGeofenceAction,
-} from "../../../../redux/actions/geofence.action";
-import {
-  clearGeofenceError,
-  clearGeofenceMessage,
-} from "../../../../redux/slices/geofence.slice";
+import { deleteGeofenceAction, getAllGeofenceAction } from "../../../../redux/actions/geofence.action";
+import { clearGeofenceError, clearGeofenceMessage } from "../../../../redux/slices/geofence.slice";
 import AddFence from "./components/AddFence";
 import EditFence from "./components/EditFence";
 import ViewFence from "./components/ViewFence";
@@ -59,8 +53,7 @@ const GeoFence = () => {
         },
         {
           label: "No",
-          onClick: () =>
-            toast.info("Delete action cancelled", { autoClose: 2000 }),
+          onClick: () => toast.info("Delete action cancelled", { autoClose: 2000 }),
         },
       ],
     });
@@ -135,10 +128,7 @@ const GeoFence = () => {
               },
             }}
           >
-            <Box
-              sx={{ cursor: "pointer" }}
-              onClick={() => handleViewModal(params.row)}
-            >
+            <Box sx={{ cursor: "pointer" }} onClick={() => handleViewModal(params.row)}>
               <ViewIcon />
             </Box>
           </Tooltip>
@@ -158,10 +148,7 @@ const GeoFence = () => {
               },
             }}
           >
-            <Box
-              sx={{ cursor: "pointer" }}
-              onClick={() => handleEditModal(params.row)}
-            >
+            <Box sx={{ cursor: "pointer" }} onClick={() => handleEditModal(params.row)}>
               <EditIcon />
             </Box>
           </Tooltip>
@@ -242,12 +229,11 @@ const GeoFence = () => {
         rowsPerPageOptions={[5, 10, 20]}
         getRowClassName={(params) => {
           const isInactive = params.row.status === "inactive";
-          const endDate = params.row.endDate
-            ? new Date(params.row.endDate)
-            : null;
+          const endDate = params.row.endDate ? new Date(params.row.endDate) : null;
           const currentDate = new Date();
-          const isExpired = endDate && endDate < currentDate;
+          const isExpired = endDate && new Date(endDate) < currentDate;
 
+          console.log("isExpired", isInactive || isExpired);
           // Assign a class based on row status or expiration date
           return isInactive || isExpired ? "red-cell" : "default-cell";
         }}
@@ -317,19 +303,12 @@ const GeoFence = () => {
       )}
       {modalType === "view" && (
         <Modal onClose={handleCloseModal}>
-          <ViewFence
-            fence={selectedFence}
-            onClose={handleCloseModal}
-            editModal={handleEditModal}
-          />
+          <ViewFence fence={selectedFence} onClose={handleCloseModal} editModal={handleEditModal} />
         </Modal>
       )}
       {modalType === "edit" && (
         <Modal onClose={handleCloseModal}>
-          <EditFence
-            editSelectedRow={editSelectedRow}
-            onClose={handleCloseModal}
-          />
+          <EditFence editSelectedRow={editSelectedRow} onClose={handleCloseModal} />
         </Modal>
       )}
     </Box>
