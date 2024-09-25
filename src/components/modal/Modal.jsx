@@ -14,6 +14,7 @@ const Modal = ({ children, onClose, zIndex = 1000, width }) => {
               xs: "1rem",
               md: "1.2rem",
             },
+
             width: width ? width : {
               xs: "300px",
               sm: "600px",
@@ -34,6 +35,10 @@ const Modal = ({ children, onClose, zIndex = 1000, width }) => {
     document.body
   );
 };
+
+<div>
+
+</div>
 
 const ModalOuter = styled("div")({
   background: "rgba(0, 0, 0, 0.8)",

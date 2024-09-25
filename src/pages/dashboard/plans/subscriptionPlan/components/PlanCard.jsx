@@ -100,7 +100,9 @@ const PlanCard = ({ bg, title, type, price, featuresList, description, btnBg, on
           Description
         </Typography>
         <Typography sx={{ fontSize: "14px", marginTop: "10px", color: "#000" }}>{description}</Typography>
-        {subscription && subscription.plan === type && subscription.subscriptionStatus === "active" ? (
+        {subscription &&
+        subscription.plan === type &&
+        (subscription.subscriptionStatus === "active" || "trailing") ? (
           <CustomBtn onClick={onClick} variant="contained" sx={{ background: btnBg }}>
             Cancel Now
           </CustomBtn>
