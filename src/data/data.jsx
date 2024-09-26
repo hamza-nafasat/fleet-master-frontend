@@ -302,6 +302,33 @@ export const users = [
     phone: "+12 345 6789 0",
     profile: 'https://placehold.co/113x105',
   },
+  {
+    firstName: "Hafidh",
+    lastName: "Suleymani",
+    id: 678,
+    email: "test@gmail.com",
+    role: "Admin",
+    phone: "+12 345 6789 0",
+    profile: 'https://placehold.co/113x105',
+  },
+  {
+    firstName: "Hafidh",
+    lastName: "Suleymani",
+    id: 678,
+    email: "test@gmail.com",
+    role: "Admin",
+    phone: "+12 345 6789 0",
+    profile: 'https://placehold.co/113x105',
+  },
+  {
+    firstName: "Hafidh",
+    lastName: "Suleymani",
+    id: 678,
+    email: "test@gmail.com",
+    role: "Admin",
+    phone: "+12 345 6789 0",
+    profile: 'https://placehold.co/113x105',
+  },
 ];
 
 export const roles = [
