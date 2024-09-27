@@ -25,20 +25,22 @@ const getSingleTruckReportsAction = (timeTo, timeFrom, plateNumber) => async (di
 };
 // get admin dashboard details
 // ---------------------------
-const adminDashboardDetailsAction = () => async (dispatch) => {
-  dispatch(getAdminDashboardDetailsStart());
-  try {
-    const response = await customAxios.get("admin/dashboard/details");
-    // console.log("admin dashboard details api response ", response);
-    dispatch(getAdminDashboardDetailsSuccess(response.data));
-  } catch (error) {
-    // console.log("admin dashboard details api error", error);
-    dispatch(
-      getAdminDashboardDetailsFailure(
-        error?.response?.data?.message || "Error ocurred while Getting Dashboard Details"
-      )
-    );
-  }
-};
+const adminDashboardDetailsAction =
+  (from = "last-month") =>
+  async (dispatch) => {
+    dispatch(getAdminDashboardDetailsStart());
+    try {
+      const response = await customAxios.get(`admin/dashboard/details?from=${from}`);
+      // console.log("admin dashboard details api response ", response);
+      dispatch(getAdminDashboardDetailsSuccess(response.data));
+    } catch (error) {
+      // console.log("admin dashboard details api error", error);
+      dispatch(
+        getAdminDashboardDetailsFailure(
+          error?.response?.data?.message || "Error ocurred while Getting Dashboard Details"
+        )
+      );
+    }
+  };
 
 export { getSingleTruckReportsAction, adminDashboardDetailsAction };

@@ -1,78 +1,93 @@
-import React from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Box, Typography } from '@mui/material';
+/* eslint-disable react/prop-types */
+import React, { useEffect } from "react";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { Box, Typography } from "@mui/material";
 
-const data = [
-  { day: -1, crashes: 0 },
-  { day: 0, crashes: 5 },
-  { day: 1, crashes: 10 },
-  { day: 2, crashes: 15 },
-  { day: 3, crashes: 10 },
-  { day: 4, crashes: 20 },
-  { day: 5, crashes: 30 },
-  { day: 6, crashes: 45 },
-  { day: 7, crashes: 35 },
-  { day: 8, crashes: 20 },
-  { day: 9, crashes: 10 },
-  { day: 10, crashes: 15 },
-  { day: 11, crashes: 25 },
-  { day: 12, crashes: 40 },
-  { day: 13, crashes: 50 },
-  { day: 14, crashes: 30 },
-  { day: 15, crashes: 10 },
-  { day: 16, crashes: 0 }
-];
+const ReportChart = ({ trucksData, driversData }) => {
+  const [combinedData, setCombinedData] = React.useState([]);
 
-const ReportChart = () => {
+  useEffect(() => {
+    if (trucksData && driversData) {
+      const data = [];
+      for (let i = 0; i < driversData?.label?.length; i++) {
+        let obj = { label: "", driverData: "", truckData: "" };
+        obj.label = driversData?.label[i];
+        obj.driverData = driversData?.data[i];
+        obj.truckData = trucksData?.data[i];
+        data.push(obj);
+      }
+      setCombinedData(data);
+    }
+  }, [trucksData, driversData]);
+
   return (
     <Box>
-      <Typography variant='h3' sx={{
-            fontSize: {
-                xs: '16px',
-                md: '24px'
-            },
-            fontWeight: '600',
-            textTransform: 'uppercase',
-            padding: '1rem'
-        }}>
-            Reported Crashes on the Road
+      <Typography
+        variant="h3"
+        sx={{
+          fontSize: {
+            xs: "16px",
+            md: "24px",
+          },
+          fontWeight: "600",
+          textTransform: "uppercase",
+          padding: "1rem",
+        }}
+      >
+        Trucks And Drivers Report
       </Typography>
       <ResponsiveContainer width="100%" height={250}>
-        <AreaChart data={data} margin={{ top: 20, right: 20, left: -20, bottom: 20 }}>
+        <AreaChart
+          data={combinedData}
+          margin={{ top: 20, right: 20, left: -20, bottom: 20 }}
+          stackOffset="expand"
+        >
           <defs>
-            <linearGradient id="colorCrashes" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="49.51%" stopColor="#D5E4FF" stopOpacity={1} />
-              <stop offset="130.54%" stopColor="rgba(255, 255, 255, 0)" stopOpacity={0} />
+            {/* Gradient for Truck Data */}
+            <linearGradient id="colorTruck" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#4f86f7" stopOpacity={0.9} />
+              <stop offset="95%" stopColor="#b3d4fc" stopOpacity={0.3} />
+            </linearGradient>
+            {/* Gradient for Driver Data */}
+            <linearGradient id="colorDriver" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#00C49F" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#b4f0d9" stopOpacity={0.2} />
             </linearGradient>
           </defs>
-          <CartesianGrid vertical={false} />
-          <XAxis 
-            dataKey="day" 
-            domain={[-1, 16]}
-            tickCount={18}
-            tick={{ fontSize: 12 }} 
-            axisLine={false} 
-            tickLine={false} 
-          />
-          <YAxis 
-            domain={[0, 60]} 
-            tickCount={7} 
-            tick={{ fontSize: 12 }} 
-            axisLine={false} 
-            tickLine={false} 
+          <CartesianGrid vertical={false} stroke="#ccc" />
+          <XAxis dataKey="label" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
+          <YAxis
+            domain={["auto", "auto"]}
+            tickCount={7}
+            tick={{ fontSize: 12 }}
+            axisLine={true}
+            tickLine={true}
           />
           <Tooltip />
-          <Area 
-            type="linear" 
-            dataKey="crashes" 
-            stroke="#8884d8" 
-            fillOpacity={1} 
-            fill="url(#colorCrashes)" 
+          {/* Truck Data Area */}
+          <Area
+            type="linear"
+            dataKey="truckData"
+            stroke="#4f86f7"
+            strokeWidth={2}
+            fillOpacity={1}
+            fill="url(#colorTruck)"
+            stackId="1"
+          />
+          {/* Driver Data Area */}
+          <Area
+            type="linear"
+            dataKey="driverData"
+            stroke="#00C49F"
+            strokeWidth={2}
+            fillOpacity={1}
+            fill="url(#colorDriver)"
+            stackId="1"
           />
         </AreaChart>
       </ResponsiveContainer>
     </Box>
   );
-}
+};
 
 export default ReportChart;

@@ -18,6 +18,16 @@ const Home = () => {
     totalEmployees: 0,
     totalDevices: 0,
     totalAlarms: 0,
+    chartData: {
+      truck: {
+        label: [],
+        data: [],
+      },
+      driver: {
+        label: [],
+        data: [],
+      },
+    },
   });
 
   useEffect(() => {
@@ -36,6 +46,7 @@ const Home = () => {
         totalEmployees: dashboardDetails.totalEmployees ?? prevState.totalEmployees,
         totalDevices: dashboardDetails.totalDevices ?? prevState.totalDevices,
         totalAlarms: dashboardDetails.totalAlarms ?? prevState.totalAlarms,
+        chartData: dashboardDetails.chartData ?? prevState.chartData,
       }));
     }
   }, [dashboardDetails]);
@@ -82,7 +93,11 @@ const Home = () => {
               borderRadius: "16px",
             }}
           >
-            <ReportChart />
+            <ReportChart
+              trucksData={dashboardData.chartData.truck}
+              driversData={dashboardData.chartData.driver}
+              chartData={dashboardData.chartData}
+            />
           </Box>
         </Grid>
       </Grid>
