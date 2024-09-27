@@ -113,7 +113,7 @@ const ListOfTrucks = () => {
                 <BodyTableCell>
                   <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
                     <LocationIcon onClick={() => handleOpenMapModal(truck)} />
-                    <VideoRecordIcon />
+                    {/* <VideoRecordIcon /> */}
                     {liveStreamUrl && <PlayIcon onClick={() => handleOpenVideoModal(liveStreamUrl)} />}
                   </Box>
                 </BodyTableCell>
