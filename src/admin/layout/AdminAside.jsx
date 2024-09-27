@@ -28,7 +28,7 @@ const AdminAside = ({ toggleNav }) => {
   let path = urlArr[2];
 
   const [openPage, setOpenPage] = useState(null);
-  const [isActivePage, setIsActivePage] = useState(path);
+  const [isActivePage, setIsActivePage] = useState('home');
 
   const handlePages = (page) => {
     if (page.subPages) setOpenPage(page.page);
