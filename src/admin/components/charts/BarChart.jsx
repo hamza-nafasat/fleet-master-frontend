@@ -57,6 +57,9 @@ const BarChart = () => {
       },
     },
     colors: ["#007AFF", "#A6D1FF", "#00E396"],
+    legend: {
+      show: false,
+    },
   });
 
   // Series data as state
@@ -78,9 +81,9 @@ const BarChart = () => {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h3 className="font-[600] md:text-xl text-lg ">Revenue Overview</h3>
+        <h3 className="font-[600] md:text-lg text-base ">Revenue Overview</h3>
         <Dropdown
-          color="#007AFF"
+          color="#00000050"
           options={[
             { option: "This week" },
             { option: "This month" },
@@ -93,7 +96,7 @@ const BarChart = () => {
           options={options}
           series={series}
           type="bar"
-          height={350}
+          height={200}
         />
       </div>
     </div>

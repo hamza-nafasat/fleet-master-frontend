@@ -5,6 +5,9 @@ import BarChart from "../../components/charts/BarChart";
 import { users } from "../../../data/data";
 import { Link } from "react-router-dom";
 import UserCard from "../users/UserCard";
+import AreaChart from "../../components/charts/AreaChart";
+import Wallet from "../../components/home/Wallet";
+import Transactions from "../../components/home/Transactions";
 
 const cardsData = [
   {
@@ -29,11 +32,44 @@ const cardsData = [
 
 const spliceUser = users.slice(0, 5);
 
+const transactions = [
+  {
+    type: "Subscription",
+    via: "Card Transfer",
+    price: "$75.00",
+  },
+  {
+    type: "Revenue",
+    via: "Card Transfer",
+    price: "$75.00",
+  },
+  {
+    type: "Subscription",
+    via: "Card Transfer",
+    price: "$75.00",
+  },
+  {
+    type: "Revenue",
+    via: "Card Transfer",
+    price: "$75.00",
+  },
+  {
+    type: "Subscription",
+    via: "Card Transfer",
+    price: "$75.00",
+  },
+  {
+    type: "Revenue",
+    via: "Card Transfer",
+    price: "$75.00",
+  },
+];
+
 const Home = () => {
   return (
     <div>
       <div className="grid grid-cols-12 gap-4">
-        <div className="col-span-12 lg:col-span-8">
+        <div className="col-span-12 xl:col-span-8 flex flex-col">
           <div className=" grid   grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {cardsData.map((card, i) => (
               <TotalCard
@@ -67,9 +103,28 @@ const Home = () => {
           <div className="mt-4 grid grid-cols-1">
             <BarChart />
           </div>
+          <div className="mt-4 grid grid-cols-1 flex-1">
+            <AreaChart />
+          </div>
         </div>
-        <div className="col-span-12 lg:col-span-4 bg-white rounded-lg p-3">
-          Wallet
+        <div className="col-span-12 xl:col-span-4 bg-white rounded-lg p-3 shadow-md">
+          <h3 className="font-[600] text-base md:text-lg mb-3">Wallet</h3>
+          <Wallet />
+          <div className="flex justify-between items-center mb-3 w-full mt-4">
+            <h3 className="font-[600] text-black text-base sm:text-lg ">
+              Recent Transactions
+            </h3>
+
+            <button className="text-[#007AFF] text-xs ">See all</button>
+          </div>
+          {transactions.map((single, i) => (
+            <Transactions
+              key={i}
+              type={single.type}
+              via={single.via}
+              price={single.price}
+            />
+          ))}
         </div>
       </div>
       <div className="flex justify-between items-center mb-1 w-full mt-4">

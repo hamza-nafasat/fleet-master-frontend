@@ -11,9 +11,6 @@ const Dropdown = ({
   overflow,
   color = "#11111199",
   bg = "bg-[#ffffff]",
-  // Default text color (transparent black)
-  // dropdownTextColor = 'white', // Default dropdown text color (white)
-  // borderColor = '#d1d5db', // Default border color (light gray)
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(null);
@@ -83,7 +80,7 @@ const Dropdown = ({
           >
             {options.map((option) => (
               <li
-                className={`py-2 px-4 border-b text-xs ${bg}`}
+                className={`py-2 px-4 border-b text-xs ${bg} hover:bg-[#00000010]`}
                 style={{
                   color: color, // Apply custom dropdown text color
                   borderColor: color, // Apply custom border color to dropdown items
