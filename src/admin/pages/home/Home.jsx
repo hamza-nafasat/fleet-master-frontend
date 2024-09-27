@@ -67,10 +67,10 @@ const transactions = [
 
 const Home = () => {
   return (
-    <div>
+    <div className="pb-6">
       <div className="grid grid-cols-12 gap-4">
         <div className="col-span-12 xl:col-span-8 flex flex-col">
-          <div className=" grid   grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {cardsData.map((card, i) => (
               <TotalCard
                 key={i}
@@ -81,7 +81,7 @@ const Home = () => {
               />
             ))}
           </div>
-          <div className="mt-4 grid  grid-cols-1  lg:grid-cols-2 gap-4">
+          <div className="mt-4 grid  grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="p-5 bg-[#005CAE26] rounded-lg flex justify-between">
               <h3 className="font-[600] md:text-lg text-base text-[#0067C2]">
                 TOTAL FLEETS
