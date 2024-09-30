@@ -21,6 +21,7 @@ import { getDeviceDataAction, getMyAllSensorsDataAction } from "./redux/actions/
 import { getAllNotificationsAction } from "./redux/actions/notification.actions";
 import { getMyProfileAction } from "./redux/actions/user.actions";
 import { clearUserError, clearUserMessage } from "./redux/slices/user.slice";
+import ScrollToTop from "./components/scrollToTop/ScrollToTop";
 
 const Login = lazy(() => import("./pages/auth/login"));
 const Home = lazy(() => import("./pages/dashboard/Home/Home"));
@@ -113,6 +114,7 @@ function App() {
     <Elements stripe={stripeLoad}>
       <Router>
         <Suspense fallback={<GlobalLoader />}>
+          <ScrollToTop />
           <Routes>
             <Route
               element={

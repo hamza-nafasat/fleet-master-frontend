@@ -38,6 +38,7 @@ const Dashboard = () => {
             xs={12}
             xl={9.9}
             sx={{ overflowY: "scroll", background: "#f3f8ff", "&::-webkit-scrollbar": { width: 0 } }}
+            className="scroll-to-top"
           >
             <Header />
             <Main />
