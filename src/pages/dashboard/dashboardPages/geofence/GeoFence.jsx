@@ -22,13 +22,11 @@ const GeoFence = () => {
   const [editSelectedRow, setEditSelectedRow] = useState();
   const [selectedFence, setSelectedFence] = useState(null);
   const { message, error, geofences } = useSelector((state) => state.geofence);
-  console.log("genfencoes", geofences);
 
   const handleAddModal = () => {
     setModalType("add");
   };
   const handleViewModal = (row) => {
-    // console.log("viewed row", row);
     setSelectedFence(row);
     setModalType("view");
   };
@@ -112,62 +110,17 @@ const GeoFence = () => {
             marginTop: "7px",
           }}
         >
-          <Tooltip
-            title="View Fence"
-            placement="top-start"
-            slotProps={{
-              popper: {
-                modifiers: [
-                  {
-                    name: "offset",
-                    options: {
-                      offset: [-26, -17],
-                    },
-                  },
-                ],
-              },
-            }}
-          >
+          <Tooltip title="View Fence" placement="top">
             <Box sx={{ cursor: "pointer" }} onClick={() => handleViewModal(params.row)}>
               <ViewIcon />
             </Box>
           </Tooltip>
-          <Tooltip
-            title="Edit Fence"
-            placement="top-start"
-            slotProps={{
-              popper: {
-                modifiers: [
-                  {
-                    name: "offset",
-                    options: {
-                      offset: [-26, -17],
-                    },
-                  },
-                ],
-              },
-            }}
-          >
+          <Tooltip title="Edit Fence" placement="top">
             <Box sx={{ cursor: "pointer" }} onClick={() => handleEditModal(params.row)}>
               <EditIcon />
             </Box>
           </Tooltip>
-          <Tooltip
-            title="Delete Fence"
-            placement="top-start"
-            slotProps={{
-              popper: {
-                modifiers: [
-                  {
-                    name: "offset",
-                    options: {
-                      offset: [-30, -17],
-                    },
-                  },
-                ],
-              },
-            }}
-          >
+          <Tooltip title="Delete Fence" placement="top">
             <Box
               sx={{
                 cursor: isDelLoading ? "not-allowed" : "pointer",
@@ -232,8 +185,6 @@ const GeoFence = () => {
           const endDate = params.row.endDate ? new Date(params.row.endDate) : null;
           const currentDate = new Date();
           const isExpired = endDate && new Date(endDate) < currentDate;
-
-          console.log("isExpired", isInactive || isExpired);
           // Assign a class based on row status or expiration date
           return isInactive || isExpired ? "red-cell" : "default-cell";
         }}
