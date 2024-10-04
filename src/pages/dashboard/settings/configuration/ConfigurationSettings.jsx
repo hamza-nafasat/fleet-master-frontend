@@ -22,7 +22,9 @@ import { updateMyProfileAction } from "../../../../redux/actions/user.actions";
 const ConfigurationSettings = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-  const [selectedDatabase, setSelectedDatabase] = useState("remote-cloud-database");
+  const [selectedDatabase, setSelectedDatabase] = useState(
+    "remote-cloud-database"
+  );
   const [modal, setModal] = useState(false);
   const [newDatabase, setNewDatabase] = useState(null);
   const [intervalValue, setIntervalValue] = useState("30");
@@ -34,6 +36,7 @@ const ConfigurationSettings = () => {
   const openModalHandler = () => {
     setModal("confirm-database");
   };
+  const instructionsModalHandler = () => setModal("instruction-modal");
 
   const confirmDatabaseChange = () => {
     if (newDatabase) {
@@ -50,6 +53,8 @@ const ConfigurationSettings = () => {
 
   const saveConfigrationHandler = async () => {
     setIsLoading(true);
+    instructionsModalHandler();
+    /* 
     try {
       if (!intervalValue) toast.error("Please select time interval");
       const formData = new FormData();
@@ -60,6 +65,7 @@ const ConfigurationSettings = () => {
     } finally {
       setIsLoading(false);
     }
+    */
   };
 
   useEffect(() => {
@@ -126,7 +132,11 @@ const ConfigurationSettings = () => {
                   control={<Radio />}
                   label="Remote Cloud Database"
                 />
-                <FormControlLabel value="local-database" control={<Radio />} label="Local Database" />
+                <FormControlLabel
+                  value="local-database"
+                  control={<Radio />}
+                  label="Local Database"
+                />
               </RadioGroup>
             </FormControl>
             {selectedDatabase === "remote-cloud-database" && (
@@ -145,7 +155,7 @@ const ConfigurationSettings = () => {
                   <Grid item xs={12} sm={6}>
                     <TextField
                       fullWidth
-                      label="Server Address"
+                      label="Server Host"
                       variant="outlined"
                       sx={{ background: "transparent" }}
                     />
@@ -202,9 +212,9 @@ const ConfigurationSettings = () => {
                 cursor: "not-allowed",
               },
             }}
-            disabled={isLoading}
+            // disabled={isLoading}
           >
-            {isLoading ? "Saving..." : "SAVE"}
+            {/* {isLoading ? "Saving..." : "SAVE"} */}
             SAVE
           </Button>
         </Grid>
@@ -218,11 +228,52 @@ const ConfigurationSettings = () => {
           />
         </Modal>
       )}
+      {modal === "instruction-modal" && (
+        <Modal width={{ xs: "300px", md: "700px" }} onClose={closeModalHandler}>
+          <InstructionModalContent onClose={closeModalHandler} />
+        </Modal>
+      )}
     </Box>
   );
 };
 
 export default ConfigurationSettings;
+
+const InstructionModalContent = ({ onClose }) => {
+  return (
+    <div className="px-4">
+      <h6 className="text-base md:text-2xl font-semibold text-center">
+        Instructions
+      </h6>
+      <ul className="mt-4 md:mt-6 flex flex-col gap-4 text-sm md:text-[15px]">
+        <li className="list-disc text-gray-600">
+          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Libero
+          beatae deserunt consequuntur amet, nulla distinctio voluptas harum non
+          eaque facere.
+        </li>
+        <li className="list-disc text-gray-600">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum ipsa
+          harum consectetur?
+        </li>
+        <li className="list-disc text-gray-600">
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolores
+          tenetur ullam exercitationem eaque deserunt obcaecati et, sequi est?
+        </li>
+      </ul>
+      <div className="mt-4 flex justify-end">
+        <Button
+          onClick={onClose}
+          sx={{
+            color: "#fff",
+            borderRadius: "16px",
+            width: "157px",
+            padding: "16px",
+          }}
+        >Close</Button>
+      </div>
+    </div>
+  );
+};
 
 const Heading = ({ heading, mt }) => {
   return (
@@ -256,9 +307,13 @@ const Label = ({ label }) => {
 const DatabaseChangeModal = ({ onClose, changeDatabase, selectedDatabase }) => {
   return (
     <Box>
-      <Typography sx={{ fontSize: { xs: "18px", md: "22px" }, fontWeight: 600 }}>
-        {selectedDatabase === "remote-cloud-database" && "Local Database Storage Confirmation"}
-        {selectedDatabase === "local-database" && "Remote Database Storage Confirmation"}
+      <Typography
+        sx={{ fontSize: { xs: "18px", md: "22px" }, fontWeight: 600 }}
+      >
+        {selectedDatabase === "remote-cloud-database" &&
+          "Local Database Storage Confirmation"}
+        {selectedDatabase === "local-database" &&
+          "Remote Database Storage Confirmation"}
       </Typography>
       <Typography
         sx={{
