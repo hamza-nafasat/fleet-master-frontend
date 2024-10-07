@@ -21,10 +21,16 @@ import { updateMyProfileAction } from "../../../../redux/actions/user.actions";
 
 const ConfigurationSettings = () => {
   const dispatch = useDispatch();
+  const [dataBase, setDataBase] = useState({
+    isCustomDb: false,
+    customDbName: "",
+    customDbHost: "",
+    customDbUsername: "",
+    customDbPassword: "",
+    customDbPort: "",
+  });
   const { user } = useSelector((state) => state.user);
-  const [selectedDatabase, setSelectedDatabase] = useState(
-    "remote-cloud-database"
-  );
+  const [selectedDatabase, setSelectedDatabase] = useState("remote-cloud-database");
   const [modal, setModal] = useState(false);
   const [newDatabase, setNewDatabase] = useState(null);
   const [intervalValue, setIntervalValue] = useState("30");
@@ -54,23 +60,57 @@ const ConfigurationSettings = () => {
   const saveConfigrationHandler = async () => {
     setIsLoading(true);
     instructionsModalHandler();
-    /* 
+
     try {
       if (!intervalValue) toast.error("Please select time interval");
       const formData = new FormData();
+      const dbData = {
+        customDbName: dataBase.customDbName,
+        customDbHost: dataBase.customDbHost,
+        customDbUsername: dataBase.customDbUsername,
+        customDbPassword: dataBase.customDbPassword,
+        customDbPort: dataBase.customDbPort,
+      };
+      if (selectedDatabase === "local-database") {
+        dbData.isCustomDb = "yes";
+      } else {
+        dbData.isCustomDb = "no";
+      }
+      if (selectedDatabase === "local-database") {
+        if (
+          !dataBase.customDbName ||
+          !dataBase.customDbHost ||
+          !dataBase.customDbUsername ||
+          !dataBase.customDbPassword ||
+          !dataBase.customDbPort
+        ) {
+          return toast.error(
+            "Please fill all the fields in local database section otherwise it will not work"
+          );
+        }
+      }
       formData.append("interval", intervalValue);
+      formData.append("customDb", JSON.stringify(dbData));
       await dispatch(updateMyProfileAction(formData));
     } catch (error) {
       console.log(error);
     } finally {
       setIsLoading(false);
     }
-    */
   };
 
   useEffect(() => {
     if (user) {
       setIntervalValue(user.interval);
+      setSelectedDatabase(user?.isCustomDb ? "local-database" : "remote-cloud-database");
+      setDataBase({
+        isCustomDb: user?.isCustomDb === "yes" ? true : false,
+        customDbName: user?.customDbName,
+        customDbHost: user?.customDbHost,
+        customDbUsername: user?.customDbUsername,
+        customDbPassword: user?.customDbPassword,
+        customDbPort: user?.customDbPort,
+      });
     }
   }, [dispatch, user]);
 
@@ -132,11 +172,7 @@ const ConfigurationSettings = () => {
                   control={<Radio />}
                   label="Remote Cloud Database"
                 />
-                <FormControlLabel
-                  value="local-database"
-                  control={<Radio />}
-                  label="Local Database"
-                />
+                <FormControlLabel value="local-database" control={<Radio />} label="Local Database" />
               </RadioGroup>
             </FormControl>
             {selectedDatabase === "remote-cloud-database" && (
@@ -144,6 +180,10 @@ const ConfigurationSettings = () => {
                 <TextField
                   fullWidth
                   label="Database Name"
+                  InputLabelProps={{ shrink: true }}
+                  placeholder="Enter database name"
+                  value={dataBase.customDbName}
+                  onChange={(e) => setDataBase({ ...dataBase, customDbName: e.target.value })}
                   variant="outlined"
                   sx={{ mb: 2, background: "transparent" }}
                 />
@@ -155,7 +195,11 @@ const ConfigurationSettings = () => {
                   <Grid item xs={12} sm={6}>
                     <TextField
                       fullWidth
-                      label="Server Host"
+                      label="Host Name"
+                      InputLabelProps={{ shrink: true }}
+                      placeholder="Enter host name"
+                      value={dataBase.customDbHost}
+                      onChange={(e) => setDataBase({ ...dataBase, customDbHost: e.target.value })}
                       variant="outlined"
                       sx={{ background: "transparent" }}
                     />
@@ -164,6 +208,10 @@ const ConfigurationSettings = () => {
                     <TextField
                       fullWidth
                       label="Port Number"
+                      InputLabelProps={{ shrink: true }}
+                      placeholder="Enter port number"
+                      value={dataBase.customDbPort}
+                      onChange={(e) => setDataBase({ ...dataBase, customDbPort: e.target.value })}
                       variant="outlined"
                       sx={{ background: "transparent" }}
                     />
@@ -172,6 +220,10 @@ const ConfigurationSettings = () => {
                     <TextField
                       fullWidth
                       label="Database Name"
+                      InputLabelProps={{ shrink: true }}
+                      placeholder="Enter database name"
+                      value={dataBase.customDbName}
+                      onChange={(e) => setDataBase({ ...dataBase, customDbName: e.target.value })}
                       variant="outlined"
                       sx={{ background: "transparent" }}
                     />
@@ -180,6 +232,10 @@ const ConfigurationSettings = () => {
                     <TextField
                       fullWidth
                       label="Username"
+                      InputLabelProps={{ shrink: true }}
+                      placeholder="Enter username"
+                      value={dataBase.customDbUsername}
+                      onChange={(e) => setDataBase({ ...dataBase, customDbUsername: e.target.value })}
                       variant="outlined"
                       sx={{ background: "transparent" }}
                     />
@@ -187,6 +243,11 @@ const ConfigurationSettings = () => {
                   <Grid item xs={12}>
                     <TextField
                       fullWidth
+                      // type="password"
+                      InputLabelProps={{ shrink: true }}
+                      placeholder="Enter password"
+                      value={dataBase.customDbPassword}
+                      onChange={(e) => setDataBase({ ...dataBase, customDbPassword: e.target.value })}
                       label="Password"
                       variant="outlined"
                       sx={{ background: "transparent" }}
@@ -242,22 +303,18 @@ export default ConfigurationSettings;
 const InstructionModalContent = ({ onClose }) => {
   return (
     <div className="px-4">
-      <h6 className="text-base md:text-2xl font-semibold text-center">
-        Instructions
-      </h6>
+      <h6 className="text-base md:text-2xl font-semibold text-center">Instructions</h6>
       <ul className="mt-4 md:mt-6 flex flex-col gap-4 text-sm md:text-[15px]">
         <li className="list-disc text-gray-600">
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Libero
-          beatae deserunt consequuntur amet, nulla distinctio voluptas harum non
-          eaque facere.
+          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Libero beatae deserunt consequuntur
+          amet, nulla distinctio voluptas harum non eaque facere.
         </li>
         <li className="list-disc text-gray-600">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum ipsa
-          harum consectetur?
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum ipsa harum consectetur?
         </li>
         <li className="list-disc text-gray-600">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolores
-          tenetur ullam exercitationem eaque deserunt obcaecati et, sequi est?
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolores tenetur ullam exercitationem
+          eaque deserunt obcaecati et, sequi est?
         </li>
       </ul>
       <div className="mt-4 flex justify-end">
@@ -269,7 +326,9 @@ const InstructionModalContent = ({ onClose }) => {
             width: "157px",
             padding: "16px",
           }}
-        >Close</Button>
+        >
+          Close
+        </Button>
       </div>
     </div>
   );
@@ -307,13 +366,9 @@ const Label = ({ label }) => {
 const DatabaseChangeModal = ({ onClose, changeDatabase, selectedDatabase }) => {
   return (
     <Box>
-      <Typography
-        sx={{ fontSize: { xs: "18px", md: "22px" }, fontWeight: 600 }}
-      >
-        {selectedDatabase === "remote-cloud-database" &&
-          "Local Database Storage Confirmation"}
-        {selectedDatabase === "local-database" &&
-          "Remote Database Storage Confirmation"}
+      <Typography sx={{ fontSize: { xs: "18px", md: "22px" }, fontWeight: 600 }}>
+        {selectedDatabase === "remote-cloud-database" && "Local Database Storage Confirmation"}
+        {selectedDatabase === "local-database" && "Remote Database Storage Confirmation"}
       </Typography>
       <Typography
         sx={{
