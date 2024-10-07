@@ -17,6 +17,12 @@ import geofencingImg from "../../../../../assets/images/notifications/geo-fencin
 import infenceImg from "../../../../../assets/images/notifications/infence.png";
 import outfenceImg from "../../../../../assets/images/notifications/outfence.png";
 import damageSensorImg from "../../../../../assets/images/notifications/damage-sensor.png";
+import towImg from "../../../../../assets/images/notifications/tow.png";
+import offlineImg from "../../../../../assets/images/notifications/offline.png";
+import crashImg from "../../../../../assets/images/notifications/crash.png";
+import stopImg from "../../../../../assets/images/notifications/stop.png";
+import tirePressureImg from "../../../../../assets/images/notifications/tire-pressure.png";
+import idleImg from "../../../../../assets/images/notifications/idle.png";
 
 const NotificationItem = ({ id, truckId, createdAt, type, message, isRead, onClose }) => {
   const dispatch = useDispatch();
@@ -129,6 +135,36 @@ const getNotificationDetails = (type) => {
     case "outfence":
       return {
         icon: outfenceImg,
+        miniIcon: <AlertIcon />,
+      };
+    case "tow":
+      return {
+        icon: towImg,
+        miniIcon: <AlertIcon />,
+      };
+    case "offline":
+      return {
+        icon: offlineImg,
+        miniIcon: <DangerIcon />,
+      };
+    case "crash":
+      return {
+        icon: crashImg,
+        miniIcon: <DangerIcon />,
+      };
+    case "instant-stop":
+      return {
+        icon: stopImg,
+        miniIcon: <AlertIcon />,
+      };
+    case "tire-pressure":
+      return {
+        icon: tirePressureImg,
+        miniIcon: <AlertIcon />,
+      };
+    case "truck-idle":
+      return { 
+        icon: idleImg,
         miniIcon: <AlertIcon />,
       };
 
