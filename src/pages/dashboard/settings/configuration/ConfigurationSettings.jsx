@@ -273,10 +273,9 @@ const ConfigurationSettings = () => {
                 cursor: "not-allowed",
               },
             }}
-            // disabled={isLoading}
+            disabled={isLoading}
           >
-            {/* {isLoading ? "Saving..." : "SAVE"} */}
-            SAVE
+            {isLoading ? "Saving..." : "SAVE"}
           </Button>
         </Grid>
       </Grid>
