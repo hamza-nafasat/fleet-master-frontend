@@ -6,21 +6,19 @@ import {
   Modal,
   styled,
   TextField,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import * as XLSX from "xlsx";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import DownloadIcon from "../../../../assets/svgs/reports/DownloadIcon";
-import { getSingleTruckReportsAction } from "../../../../redux/actions/admin.actions";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import { useEffect, useState } from "react";
 import { IoCloudUploadOutline } from "react-icons/io5";
+import { useDispatch, useSelector } from "react-redux";
+import * as XLSX from "xlsx";
 import logo from "../../../../assets/images/logo.png";
 import CameraIcon from "../../../../assets/svgs/modal/CameraIcon";
 import NoData from "../../../../components/noData/NoData";
+import { getSingleTruckReportsAction } from "../../../../redux/actions/admin.actions";
 
 const columns = [
   {
@@ -180,7 +178,11 @@ const TruckReport = () => {
     // yOffset += 10; // Adjust yOffset for logo
     doc.setFontSize(15);
     doc.setFont("helvetica", "normal");
-    doc.text("Fleet Master Truck Report", (doc.internal.pageSize.getWidth() - 50) / 2, yOffset); // Left align
+    doc.text(
+      "Fleet Master Truck Report",
+      (doc.internal.pageSize.getWidth() - 50) / 2,
+      yOffset
+    ); // Left align
     yOffset += 10;
 
     const tableColumn = [
@@ -242,7 +244,10 @@ const TruckReport = () => {
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "Members");
       // Buffer for Excel file
-      const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: "xlsx",
+        type: "array",
+      });
       const eData = new Blob([excelBuffer], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
       });
@@ -267,8 +272,12 @@ const TruckReport = () => {
       const flattenedData = singleTruckReport.map((report) => ({
         ...report,
         plateNumber: report.truck?.plateNumber || "",
-        driverName: `${report.truck?.assignedTo?.firstName} ${report.truck?.assignedTo?.lastName}` || "",
-        deviceId: report.truck?.devices?.find((device) => device.type == "gps")?._id || "",
+        driverName:
+          `${report.truck?.assignedTo?.firstName} ${report.truck?.assignedTo?.lastName}` ||
+          "",
+        deviceId:
+          report.truck?.devices?.find((device) => device.type == "gps")?._id ||
+          "",
         truckStatus: report.truck?.status || "",
         fleetNumber: report.truck?.fleetnumber || "",
         createdAt: report.createdAt,
@@ -396,7 +405,9 @@ const TruckReport = () => {
             },
           }}
         >
-          {isLoading ? <CircularProgress sx={{ color: "#ffffff", mx: 2 }} size={24} /> : null}
+          {isLoading ? (
+            <CircularProgress sx={{ color: "#ffffff", mx: 2 }} size={24} />
+          ) : null}
           {isLoading ? "Loading..." : "Get Reports"}
         </Button>
       </Box>
@@ -408,10 +419,16 @@ const TruckReport = () => {
         }}
       >
         <Box sx={{ display: "flex", gap: "8px" }}>
-          <Button onClick={handleOpen} sx={{ color: "#fff", padding: "8px 12px" }}>
+          <Button
+            onClick={handleOpen}
+            sx={{ color: "#fff", padding: "8px 12px" }}
+          >
             Export PDF
           </Button>
-          <Button onClick={exportToExcel} sx={{ color: "#fff", padding: "8px 12px" }}>
+          <Button
+            onClick={exportToExcel}
+            sx={{ color: "#fff", padding: "8px 12px" }}
+          >
             Export CSV
           </Button>
         </Box>
@@ -483,7 +500,11 @@ const TruckReport = () => {
       ) : (
         <NoData />
       )}
-      <Modal open={open} onClose={handleClose} sx={{ display: "grid", placeItems: "center" }}>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        sx={{ display: "grid", placeItems: "center" }}
+      >
         <Box
           sx={{
             padding: "20px",
