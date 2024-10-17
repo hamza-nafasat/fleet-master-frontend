@@ -51,9 +51,9 @@ const ConfigurationSettings = lazy(
 const MyProfile = lazy(() => import("./pages/dashboard/navigation/Profile"));
 
 // Admin Routes
-const AdminDashboard = lazy(() => import("./admin/layout/index"))
-const AdminHome = lazy(() => import("./admin/pages/home/Home"))
-const AdminUsers = lazy(() => import("./admin/pages/users/Users"))
+const AdminDashboard = lazy(() => import("./admin/layout/index"));
+const AdminHome = lazy(() => import("./admin/pages/home/Home"));
+const AdminUsers = lazy(() => import("./admin/pages/users/Users"));
 
 function App() {
   const dispatch = useDispatch();
@@ -156,7 +156,7 @@ function App() {
               </Route>
             </Route>
             <Route path="/admin" element={<AdminDashboard />}>
-              <Route index element={<Navigate replace to='home' />} />
+              <Route index element={<Navigate replace to="home" />} />
               <Route path="home" element={<AdminHome />} />
               <Route path="users" element={<AdminUsers />} />
             </Route>

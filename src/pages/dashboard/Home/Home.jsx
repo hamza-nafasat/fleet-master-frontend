@@ -33,7 +33,7 @@ const Home = () => {
   useEffect(() => {
     dispatch(adminDashboardDetailsAction());
   }, [dispatch]);
-  console.log("dashboard details", dashboardData);
+  // console.log("dashboard details", dashboardData);
 
   useEffect(() => {
     if (dashboardDetails) {

@@ -94,10 +94,10 @@ const getMyAllSensorsDataAction = () => async (dispatch) => {
   dispatch(getMyAllSensorsDataStart());
   try {
     const response = await customAxios.get("/sensors/latest-data");
-    console.log("get my all sensors latest data api response ", response?.data?.data);
+    // console.log("get my all sensors latest data api response ", response?.data?.data);
     dispatch(getMyAllSensorsDataSuccess(response.data));
   } catch (error) {
-    console.log("get my all sensors latest data api error", error);
+    // console.log("get my all sensors latest data api error", error);
     dispatch(
       getMyAllSensorsDataFailure(
         error?.response?.data?.message || "Error ocurred while getting my all sensors latest data"

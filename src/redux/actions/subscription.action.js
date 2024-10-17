@@ -25,10 +25,10 @@ const subscriptionListAction = () => async (dispatch) => {
   try {
     dispatch(getSubscriptionListStart());
     const response = await customAxios.get("/subscription/list");
-    console.log("subscription get all api response ", response);
+    // console.log("subscription get all api response ", response);
     dispatch(getSubscriptionListSuccess(response.data));
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     dispatch(
       getSubscriptionListFailure(
         error?.response?.data?.message || "Error ocurred while getting all subscriptions"

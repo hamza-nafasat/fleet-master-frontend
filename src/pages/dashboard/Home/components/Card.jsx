@@ -6,7 +6,7 @@ import alarmsIcon from "../../../../assets/images/cards/alarms-vehicle.png";
 import { Box, Grid, Stack, Typography, styled } from "@mui/material";
 
 const Card = ({ dashboardData }) => {
-  console.log("dashboard data", dashboardData);
+  // console.log("dashboard data", dashboardData);
   const cardsData = [
     {
       title: "Your Fleet",

@@ -26,7 +26,7 @@ const ReviewCard = ({ card }) => {
       if (!plan) return toast.error("Please select a plan");
       const response = await customAxios.post("/subscription/create-session", { plan });
       const data = response.data;
-      console.log("subscription data", data);
+      // console.log("subscription data", data);
       const sessionId = data.sessionId;
       const redirectUrl = data.redirect_url;
       if (redirectUrl) window.location.href = redirectUrl;

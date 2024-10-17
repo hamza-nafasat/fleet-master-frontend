@@ -32,10 +32,10 @@ const registerUserAction = (formData) => async (dispatch) => {
   dispatch(registerUserStart());
   try {
     const response = await customFormAxios.post("/user/register", formData);
-    console.log("user login api response ", response);
+    // console.log("user login api response ", response);
     dispatch(registerUserSuccess(response.data));
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     dispatch(registerUserFailure(error?.response?.data?.message || "Error ocurred while Register"));
   }
 };

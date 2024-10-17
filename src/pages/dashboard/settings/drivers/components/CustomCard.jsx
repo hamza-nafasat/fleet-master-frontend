@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 
 const CustomCard = ({ driver, handleOpenEditModal, onDelete }) => {
-    console.log('driver', driver)
+  // console.log('driver', driver)
   return (
     <Grid item xs={12} md={4}>
       <Card
@@ -51,12 +51,12 @@ const CustomCard = ({ driver, handleOpenEditModal, onDelete }) => {
               objectFit: "cover",
             }}
           ></Avatar>
-          <Tooltip title={driver.assignedTruck ? 'Connected': 'Not Connected'}>
+          <Tooltip title={driver.assignedTruck ? "Connected" : "Not Connected"}>
             <Box
               sx={{
                 width: "15px",
                 height: "15px",
-                backgroundColor: driver.assignedTruck ? '#00A389': '#e90015',
+                backgroundColor: driver.assignedTruck ? "#00A389" : "#e90015",
                 borderRadius: "100%",
                 position: "absolute",
                 border: "2px solid white",
@@ -145,10 +145,10 @@ const CustomCard = ({ driver, handleOpenEditModal, onDelete }) => {
                   },
                   color: "#006BCE",
                   fontWeight: "400",
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                  maxWidth: '100px'
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  maxWidth: "100px",
                 }}
               >
                 {driver?._id}
@@ -223,9 +223,7 @@ const CustomCard = ({ driver, handleOpenEditModal, onDelete }) => {
                   fontWeight: "400",
                 }}
               >
-                {driver?.assignedTruck
-                  ? driver?.assignedTruckDetails?.truckName
-                  : "Not Assigned"}
+                {driver?.assignedTruck ? driver?.assignedTruckDetails?.truckName : "Not Assigned"}
               </Typography>
             </Box>
           </Box>
