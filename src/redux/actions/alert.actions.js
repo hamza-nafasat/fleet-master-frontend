@@ -34,10 +34,10 @@ const getAllAlertsActions = () => async (dispatch) => {
   try {
     dispatch(getAllAlertsStart());
     const response = await customAxios.get("/alert/all");
-    // console.log("alert get all api response ", response);
+    console.log("alert get all api response ", response);
     dispatch(getAllAlertsSuccess(response.data));
   } catch (error) {
-    // console.log("alert get all api error", error);
+    console.log("alert get all api error", error);
     dispatch(getAllAlertsFailure(error?.response?.data?.message || "Error ocurred while getting alerts"));
   }
 };

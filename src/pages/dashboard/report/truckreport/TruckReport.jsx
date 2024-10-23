@@ -14,11 +14,13 @@ import "jspdf-autotable";
 import { useEffect, useState } from "react";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import * as XLSX from "xlsx";
 import logo from "../../../../assets/images/logo.png";
 import CameraIcon from "../../../../assets/svgs/modal/CameraIcon";
 import NoData from "../../../../components/noData/NoData";
 import { getSingleTruckReportsAction } from "../../../../redux/actions/admin.actions";
+import { clearAdminError, clearAdminMessage } from "../../../../redux/slices/admin.slice";
 
 const columns = [
   {
@@ -105,16 +107,14 @@ const TruckReport = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
   const { trucks } = useSelector((state) => state.truck);
-  const { singleTruckReport } = useSelector((state) => state.admin);
+  const { singleTruckReport, error, message } = useSelector((state) => state.admin);
 
   const getReportsHandler = async () => {
     setIsLoading(true);
     await dispatch(getSingleTruckReportsAction(timeTo, timeFrom, plateNumber));
     setIsLoading(false);
   };
-
   const handleImageSrc = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -125,7 +125,6 @@ const TruckReport = () => {
       reader.readAsDataURL(file);
     }
   };
-
   // download pdf
   const downloadPDF = async () => {
     const doc = new jsPDF();
@@ -153,18 +152,18 @@ const TruckReport = () => {
     };
 
     // Center text function
-    const centerText = (text, y, fontSize, color, bold = false) => {
-      doc.setFontSize(fontSize);
-      if (Array.isArray(color) && color.length === 3) {
-        doc.setTextColor(color[0], color[1], color[2]);
-      } else {
-        console.error("Invalid color format", color);
-      }
-      doc.setFont("helvetica", bold ? "bold" : "normal");
-      doc.text(text, doc.internal.pageSize.getWidth() / 2, y, {
-        align: "center",
-      });
-    };
+    // const centerText = (text, y, fontSize, color, bold = false) => {
+    //   doc.setFontSize(fontSize);
+    //   if (Array.isArray(color) && color.length === 3) {
+    //     doc.setTextColor(color[0], color[1], color[2]);
+    //   } else {
+    //     console.error("Invalid color format", color);
+    //   }
+    //   doc.setFont("helvetica", bold ? "bold" : "normal");
+    //   doc.text(text, doc.internal.pageSize.getWidth() / 2, y, {
+    //     align: "center",
+    //   });
+    // };
 
     // Add Date in top left corner
     const date = new Date();
@@ -178,11 +177,7 @@ const TruckReport = () => {
     // yOffset += 10; // Adjust yOffset for logo
     doc.setFontSize(15);
     doc.setFont("helvetica", "normal");
-    doc.text(
-      "Fleet Master Truck Report",
-      (doc.internal.pageSize.getWidth() - 50) / 2,
-      yOffset
-    ); // Left align
+    doc.text("Fleet Master Truck Report", (doc.internal.pageSize.getWidth() - 50) / 2, yOffset); // Left align
     yOffset += 10;
 
     const tableColumn = [
@@ -236,7 +231,6 @@ const TruckReport = () => {
     doc.save("truck-report.pdf");
     handleClose();
   };
-
   // download csv
   const exportToExcel = async () => {
     try {
@@ -272,12 +266,8 @@ const TruckReport = () => {
       const flattenedData = singleTruckReport.map((report) => ({
         ...report,
         plateNumber: report.truck?.plateNumber || "",
-        driverName:
-          `${report.truck?.assignedTo?.firstName} ${report.truck?.assignedTo?.lastName}` ||
-          "",
-        deviceId:
-          report.truck?.devices?.find((device) => device.type == "gps")?._id ||
-          "",
+        driverName: `${report.truck?.assignedTo?.firstName} ${report.truck?.assignedTo?.lastName}` || "",
+        deviceId: report.truck?.devices?.find((device) => device.type == "gps")?._id || "",
         truckStatus: report.truck?.status || "",
         fleetNumber: report.truck?.fleetnumber || "",
         createdAt: report.createdAt,
@@ -290,6 +280,17 @@ const TruckReport = () => {
   useEffect(() => {
     if (trucks) setPlateNumbers(trucks.map((truck) => truck.plateNumber));
   }, [trucks]);
+
+  useEffect(() => {
+    if (message) {
+      toast.success(message);
+      dispatch(clearAdminMessage());
+    }
+    if (error) {
+      toast.error(error);
+      dispatch(clearAdminError());
+    }
+  }, [message, error, dispatch]);
 
   return (
     <Box
@@ -405,9 +406,7 @@ const TruckReport = () => {
             },
           }}
         >
-          {isLoading ? (
-            <CircularProgress sx={{ color: "#ffffff", mx: 2 }} size={24} />
-          ) : null}
+          {isLoading ? <CircularProgress sx={{ color: "#ffffff", mx: 2 }} size={24} /> : null}
           {isLoading ? "Loading..." : "Get Reports"}
         </Button>
       </Box>
@@ -419,16 +418,10 @@ const TruckReport = () => {
         }}
       >
         <Box sx={{ display: "flex", gap: "8px" }}>
-          <Button
-            onClick={handleOpen}
-            sx={{ color: "#fff", padding: "8px 12px" }}
-          >
+          <Button onClick={handleOpen} sx={{ color: "#fff", padding: "8px 12px" }}>
             Export PDF
           </Button>
-          <Button
-            onClick={exportToExcel}
-            sx={{ color: "#fff", padding: "8px 12px" }}
-          >
+          <Button onClick={exportToExcel} sx={{ color: "#fff", padding: "8px 12px" }}>
             Export CSV
           </Button>
         </Box>
@@ -500,11 +493,7 @@ const TruckReport = () => {
       ) : (
         <NoData />
       )}
-      <Modal
-        open={open}
-        onClose={handleClose}
-        sx={{ display: "grid", placeItems: "center" }}
-      >
+      <Modal open={open} onClose={handleClose} sx={{ display: "grid", placeItems: "center" }}>
         <Box
           sx={{
             padding: "20px",
@@ -527,6 +516,7 @@ const TruckReport = () => {
 
 export default TruckReport;
 
+// eslint-disable-next-line react/prop-types
 const ModalContent = ({ onChange, profile, generatePdf }) => {
   return (
     <Box>

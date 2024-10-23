@@ -14,7 +14,6 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import LocationIcon from "../../../../../../assets/svgs/home/LocationIcon";
 import PlayIcon from "../../../../../../assets/svgs/home/PlayIcon";
-import VideoRecordIcon from "../../../../../../assets/svgs/home/VideoRecordIcon";
 import SearchIcon from "../../../../../../assets/svgs/map/SearchIcon";
 import Modal from "../../../../../../components/modal/Modal";
 import { getAllTrucksAction } from "../../../../../../redux/actions/truck.actions";
@@ -75,7 +74,7 @@ const ListOfTrucks = () => {
         onChange={(e) => setSearchTruck(e.target.value)}
         InputProps={{
           endAdornment: (
-            <InputAdornment>
+            <InputAdornment position="end">
               <SearchIcon />
             </InputAdornment>
           ),

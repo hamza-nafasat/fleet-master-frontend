@@ -238,7 +238,7 @@ const AddEmployee = ({ onClose }) => {
                 PROFILE PICTURE
               </Typography>
               <Image src={profile} />
-              <ChangeButton startIcon={<CameraIcon />}>
+              <ChangeButton sx={{ cursor: "pointer" }} startIcon={<CameraIcon />}>
                 CHANGE PHOTOS
                 <FileInput type="file" onChange={handleImageSrc} />
               </ChangeButton>
@@ -266,7 +266,7 @@ const AddEmployee = ({ onClose }) => {
                     width: "137px",
                     padding: "16px",
                     "&:disable": {
-                      color: "#fff",
+                      // color: "#fff",
                       opacity: "0.3",
                       cursor: "not-allowed",
                     },

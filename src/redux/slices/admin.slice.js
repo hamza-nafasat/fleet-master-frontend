@@ -37,6 +37,14 @@ const adminSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+
+    // clear error and message
+    clearAdminError: (state) => {
+      state.error = null;
+    },
+    clearAdminMessage: (state) => {
+      state.message = null;
+    },
   },
 });
 
@@ -47,5 +55,7 @@ export const {
   getAdminDashboardDetailsStart,
   getAdminDashboardDetailsSuccess,
   getAdminDashboardDetailsFailure,
+  clearAdminError,
+  clearAdminMessage,
 } = adminSlice.actions;
 export default adminSlice;
