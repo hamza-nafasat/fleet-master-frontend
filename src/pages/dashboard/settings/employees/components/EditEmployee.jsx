@@ -66,7 +66,10 @@ const EditEmployee = ({ onClose, employ }) => {
                         fontWeight: 600,
                     }}
                 >
-                    <Box sx={{ cursor: "pointer", height: "25px" }} onClick={onClose}>
+                    <Box
+                        sx={{ cursor: "pointer", height: "25px" }}
+                        onClick={onClose}
+                    >
                         <BackIcon />
                     </Box>
                     EDIT EMPLOYEE
@@ -130,7 +133,14 @@ const EditEmployee = ({ onClose, employ }) => {
                             change={(e) => setRole(e.target.value)}
                         />
                     </Grid>
-                    <Grid item xs="12" lg="6" display="flex" flexDirection="column" alignItems="flex-end">
+                    <Grid
+                        item
+                        xs="12"
+                        lg="6"
+                        display="flex"
+                        flexDirection="column"
+                        alignItems="flex-end"
+                    >
                         <Typography
                             sx={{
                                 color: "rgba(113, 117, 121, 1)",

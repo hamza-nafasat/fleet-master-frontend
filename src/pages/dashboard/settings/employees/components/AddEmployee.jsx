@@ -1,5 +1,17 @@
 /* eslint-disable react/prop-types */
-import { Box, Button, Grid, TextField, Typography, styled } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormHelperText,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+  styled,
+} from "@mui/material";
 import { useFormik } from "formik";
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -9,6 +21,7 @@ import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
 import { addNewEmployAction } from "../../../../../redux/actions/employees.action";
 import { getAllTrucksAction } from "../../../../../redux/actions/truck.actions";
 import { addEmployeeSchema } from "../../../../../schemas";
+import { toast } from "react-toastify";
 
 const AddEmployee = ({ onClose }) => {
   const dispatch = useDispatch();
@@ -22,6 +35,8 @@ const AddEmployee = ({ onClose }) => {
     phoneNumber: "",
     image: "",
     role: "",
+    password: "",
+    confirmPassword: "",
   };
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } = useFormik({
@@ -30,6 +45,10 @@ const AddEmployee = ({ onClose }) => {
 
     onSubmit: async (values) => {
       setIsLoading(true);
+      if (values.password !== values.confirmPassword) {
+        toast.error("Password does not match");
+        return setIsLoading(false);
+      }
       const formData = new FormData();
       formData.append("file", values.image);
       formData.append("firstName", values.firstName);
@@ -37,6 +56,8 @@ const AddEmployee = ({ onClose }) => {
       formData.append("email", values.email);
       formData.append("phoneNumber", values.phoneNumber);
       formData.append("role", values.role);
+      formData.append("password", values.password);
+
       await dispatch(addNewEmployAction(formData));
       setIsLoading(false);
     },
@@ -161,18 +182,49 @@ const AddEmployee = ({ onClose }) => {
               />
             </Grid>
             <Grid item xs="12" lg="6">
+              <FormControl fullWidth error={touched.role && Boolean(errors.role)}>
+                <InputLabel id="role-label">Role</InputLabel>
+                <Select
+                  labelId="role-label"
+                  id="role"
+                  name="role"
+                  value={values.role}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                >
+                  <MenuItem value="report-manager">Report Manager</MenuItem>
+                  <MenuItem value="site-manager">Site Manager</MenuItem>
+                  <MenuItem value="payment-manager">Payment Manager</MenuItem>
+                </Select>
+                {touched.role && errors.role && <FormHelperText>{errors.role}</FormHelperText>}
+              </FormControl>
+            </Grid>
+            <Grid item xs="12" lg="6">
               <TextField
                 type="text"
-                label="Role"
-                maxLength="30"
+                label="Password"
+                name="password"
+                id="password"
                 fullWidth
-                name="role"
-                id="role"
-                value={values.role}
+                value={values.password}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                error={touched.role && Boolean(errors.role)}
-                helperText={touched.role && errors.role}
+                error={touched.password && Boolean(errors.password)}
+                helperText={touched.password && errors.password}
+              />
+            </Grid>
+            <Grid item xs="12" lg="6">
+              <TextField
+                type="text"
+                label="Confirm Password"
+                name="confirmPassword"
+                id="confirmPassword"
+                fullWidth
+                value={values.confirmPassword}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.confirmPassword && Boolean(errors.confirmPassword)}
+                helperText={touched.confirmPassword && errors.confirmPassword}
               />
             </Grid>
             <Grid item xs="12" lg="6" display="flex" flexDirection="column" alignItems="flex-end">

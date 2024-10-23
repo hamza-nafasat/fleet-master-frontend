@@ -223,7 +223,7 @@ const CustomCard = ({ driver, handleOpenEditModal, onDelete }) => {
                   fontWeight: "400",
                 }}
               >
-                {driver?.assignedTruck ? driver?.assignedTruckDetails?.truckName : "Not Assigned"}
+                {driver?.assignedTruck ? driver?.assignedTruck?.truckName : "Not Assigned"}
               </Typography>
             </Box>
           </Box>

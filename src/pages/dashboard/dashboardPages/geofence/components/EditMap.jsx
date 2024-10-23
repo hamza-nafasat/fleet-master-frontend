@@ -96,9 +96,8 @@ const EditMap = ({ gettedTrucks, area, setArea, geofenceId }) => {
   return (
     <React.Fragment>
       <MapContainer
-        center={[25.276987, 55.296249]}
-        scrollWheelZoom={false}
-        zoom={6}
+        center={gettedTrucks?.area?.coordinates?.[0] || [25.276987, 55.296249]}
+        zoom={3}
         style={{ height: "400px", width: "100%", zIndex: 0, borderRadius: "20px" }}
         attributionControl={false}
       >

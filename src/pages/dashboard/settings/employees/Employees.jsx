@@ -7,14 +7,8 @@ import EditUser from "./components/EditEmployee";
 import AddUser from "./components/AddEmployee";
 import { confirmAlert } from "react-confirm-alert";
 import { toast } from "react-toastify";
-import {
-  clearEmployError,
-  clearEmployMessage,
-} from "../../../../redux/slices/employees.slice";
-import {
-  deleteEmployAction,
-  getAllEmployeesAction,
-} from "../../../../redux/actions/employees.action";
+import { clearEmployError, clearEmployMessage } from "../../../../redux/slices/employees.slice";
+import { deleteEmployAction, getAllEmployeesAction } from "../../../../redux/actions/employees.action";
 import { useDispatch, useSelector } from "react-redux";
 import NoData from "../../../../components/noData/NoData";
 
@@ -79,9 +73,7 @@ const Employees = () => {
           borderRadius: "24px",
         }}
       >
-        <Box
-          sx={{ padding: "10px", display: "flex", justifyContent: "flex-end" }}
-        >
+        <Box sx={{ padding: "10px", display: "flex", justifyContent: "flex-end" }}>
           <Box onClick={handleOpenAddUserModal} sx={{ cursor: "pointer" }}>
             <AddIcon />
           </Box>

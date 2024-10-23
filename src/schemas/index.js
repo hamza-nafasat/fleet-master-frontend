@@ -49,6 +49,12 @@ export const addEmployeeSchema = Yup.object({
   email: Yup.string().required("Email is required"),
   phoneNumber: Yup.string().required("Phone number is required"),
   role: Yup.string().required("Role is required"),
+
+  password: Yup.string().min(6).required("Password is required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password"), null], "Password must match")
+    .min(6)
+    .required("Password is required"),
   image: Yup.mixed()
     .required("Image is required")
     .test(

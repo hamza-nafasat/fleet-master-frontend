@@ -41,9 +41,7 @@ const SubscriptionHistory = lazy(
   () => import("./pages/dashboard/plans/subscriptionHistory/SubscriptionHistory")
 );
 const TruckDetail = lazy(() => import("./pages/dashboard/settings/trucks/components/TruckDetail"));
-const Notification = lazy(
-  () => import("./pages/dashboard/navigation/header/components/NotificationDetail")
-);
+const Notification = lazy(() => import("./pages/dashboard/navigation/header/components/NotificationDetail"));
 const Register = lazy(() => import("./pages/auth/register/Register"));
 const ConfigurationSettings = lazy(
   () => import("./pages/dashboard/settings/configuration/ConfigurationSettings")
@@ -70,7 +68,7 @@ function App() {
       dispatch(getDeviceDataAction(data));
     });
     socket.on(socketEvent.NOTIFICATIONS, async (data) => {
-      // console.log("i am called");
+      console.log("i am called");
       await dispatch(adminDashboardDetailsAction());
       await dispatch(getAllNotificationsAction());
     });
@@ -126,10 +124,7 @@ function App() {
             </Route>
             <Route path="/verify-otp" element={<Otp />} />
             <Route path="/forget-password" element={<ForgetPassword />} />
-            <Route
-              path="/verify-email"
-              element={<NotVerified user={user} isVerified={user?.isVerified} />}
-            />
+            <Route path="/verify-email" element={<NotVerified user={user} isVerified={user?.isVerified} />} />
             <Route path="/reset-password/:reset-token" element={<ResetPassword />} />
             <Route path="/" element={<Navigate replace to="/login" />} />
             <Route element={<ProtectedRoute user={user} isLogin={user ? true : false} />}>

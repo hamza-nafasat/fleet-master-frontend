@@ -61,7 +61,7 @@ const EditFence = ({ onClose, editSelectedRow }) => {
 
   // useEffect for socket event
   useEffect(() => {
-    socket.on(socketEvent.GEOFENCE_TRUCKS_DATA, (data) => {
+    socket.on(socketEvent.GEOFENCE_TRUCKS_DATA, () => {
       // console.log(data);
       dispatch(getSingleGeofenceAction(editSelectedRow?._id));
     });
@@ -71,7 +71,7 @@ const EditFence = ({ onClose, editSelectedRow }) => {
   useEffect(() => {
     if (trucks && area) {
       trucks.forEach((truck) => {
-        const { truckName, latitude, longitude } = truck;
+        const { latitude, longitude } = truck;
         const isInside = isTruckInPolygon([latitude, longitude], area?.coordinates);
         if (!isInside && alert === "outfence") {
           //  console.log(`Truck ${truckName} is out of the polygon.`);
@@ -208,11 +208,7 @@ const EditFence = ({ onClose, editSelectedRow }) => {
         <EditMap gettedTrucks={trucks} area={area} setArea={setArea} geofenceId={geofence?._id} />
       </Box>
       {/* List */}
-      <Typography
-        mt={6}
-        variant="h3"
-        sx={{ color: "#000", fontSize: "20px", fontWeight: 700 }}
-      ></Typography>
+      <Typography mt={6} variant="h3" sx={{ color: "#000", fontSize: "20px", fontWeight: 700 }}></Typography>
       <Button
         onClick={updateGeofenceHandler}
         sx={{

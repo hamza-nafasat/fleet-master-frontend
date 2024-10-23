@@ -64,8 +64,8 @@ const ViewFence = ({ onClose, editModal, fence }) => {
 
   return (
     <MapContainer
-      center={[25.276987, 55.296249]}
-      zoom={6}
+      center={drawnLayers?.coordinates?.[0] || [25.276987, 55.296249]}
+      zoom={3}
       style={{ height: "600px", width: "100%" }}
       attributionControl={false}
     >
