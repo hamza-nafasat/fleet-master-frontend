@@ -24,7 +24,7 @@ const alertType = [
   { type: "sensor-damage" },
   { type: "sudden-stop" },
   { type: "two-detection" },
-  { type: "trie-pressure" },
+  { type: "tire-pressure" },
   { type: "sensor-offline" },
   { type: "crash-detection" },
 ];

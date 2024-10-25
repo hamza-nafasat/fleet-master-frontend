@@ -70,7 +70,6 @@ function App() {
       dispatch(getDeviceDataAction(data));
     });
     socket.on(socketEvent.NOTIFICATIONS, async (data) => {
-      console.log("i am called");
       if (user && (user?.role == "user" || user?.role == "site-manager")) {
         await dispatch(adminDashboardDetailsAction());
         await dispatch(getAllNotificationsAction());
