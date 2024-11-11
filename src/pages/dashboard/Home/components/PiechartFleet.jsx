@@ -1,15 +1,16 @@
 import { Box, Typography } from "@mui/material";
-import React from "react";
+
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
 const PiechartFleet = () => {
   const data = [
     { name: "idle", value: 3 },
     { name: "active", value: 1 },
-    { name: "critical", value: 1 },
+    { name: "critical", value: 5 },
   ];
 
-  const COLORS = ["rgba(150, 150, 150, 1)", "rgba(58, 163, 87, 1)", "rgba(255, 101, 84, 1)"];
+  const COLORS = ["#AAD3DF", "#08852A", "#F72A2A"];
+  // #003F79
 
   // Calculate total value
   const totalValue = data.find((d) => d.name === "active")?.value || 0;
@@ -57,13 +58,17 @@ const PiechartFleet = () => {
                 data={normalData}
                 cx="50%"
                 cy="50%"
-                innerRadius={40}
+                innerRadius={50}
                 outerRadius={70}
                 fill="#8884d8"
                 dataKey="value"
               >
                 {normalData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="none" />
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                    stroke="none"
+                  />
                 ))}
               </Pie>
               {/* Critical Segment */}
@@ -71,13 +76,13 @@ const PiechartFleet = () => {
                 data={criticalData}
                 cx="50%"
                 cy="50%"
-                innerRadius={40}
-                outerRadius={80}
+                innerRadius={50}
+                outerRadius={70}
                 fill="#8884d8"
                 dataKey="value"
                 startAngle={-20}
                 endAngle={60}
-                cornerRadius={7}
+                // cornerRadius={7}
               >
                 {criticalData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[2]} stroke="none" />
@@ -129,7 +134,7 @@ const PiechartFleet = () => {
                 width: "10px",
                 height: "10px",
                 borderRadius: "50%",
-                backgroundColor: "rgba(150, 150, 150, 1)",
+                backgroundColor: "#AAD3DF",
               }}
             ></Box>
             <Typography
@@ -154,7 +159,7 @@ const PiechartFleet = () => {
                 width: "10px",
                 height: "10px",
                 borderRadius: "50%",
-                backgroundColor: "rgba(58, 163, 87, 1)",
+                backgroundColor: "#08852A",
               }}
             ></Box>
             <Typography
@@ -179,7 +184,7 @@ const PiechartFleet = () => {
                 width: "10px",
                 height: "10px",
                 borderRadius: "50%",
-                backgroundColor: "rgba(255, 101, 84, 1)",
+                backgroundColor: "#F72A2A",
               }}
             ></Box>
             <Typography

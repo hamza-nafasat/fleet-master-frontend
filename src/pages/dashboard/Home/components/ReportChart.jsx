@@ -1,6 +1,14 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect } from "react";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import { Box, Typography } from "@mui/material";
 
 const ReportChart = ({ trucksData, driversData }) => {
@@ -34,7 +42,7 @@ const ReportChart = ({ trucksData, driversData }) => {
           padding: "1rem",
         }}
       >
-        Trucks And Drivers Report
+        Reported Crashes on the Road
       </Typography>
       <ResponsiveContainer width="100%" height={250}>
         <AreaChart
@@ -55,13 +63,18 @@ const ReportChart = ({ trucksData, driversData }) => {
             </linearGradient>
           </defs>
           <CartesianGrid vertical={false} stroke="#ccc" />
-          <XAxis dataKey="label" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
+          <XAxis
+            dataKey="label"
+            tick={{ fontSize: 10 }}
+            axisLine={false}
+            tickLine={false}
+          />
           <YAxis
             domain={["auto", "auto"]}
             tickCount={7}
-            tick={{ fontSize: 12 }}
-            axisLine={true}
-            tickLine={true}
+            tick={{ fontSize: 10 }}
+            axisLine={false}
+            tickLine={false}
           />
           <Tooltip />
           {/* Truck Data Area */}
@@ -69,7 +82,7 @@ const ReportChart = ({ trucksData, driversData }) => {
             type="linear"
             dataKey="truckData"
             stroke="#4f86f7"
-            strokeWidth={2}
+            strokeWidth={1}
             fillOpacity={1}
             fill="url(#colorTruck)"
             stackId="1"
@@ -79,7 +92,7 @@ const ReportChart = ({ trucksData, driversData }) => {
             type="linear"
             dataKey="driverData"
             stroke="#00C49F"
-            strokeWidth={2}
+            strokeWidth={1}
             fillOpacity={1}
             fill="url(#colorDriver)"
             stackId="1"
