@@ -3,7 +3,6 @@ import { Fragment, useEffect, useState } from "react";
 import { confirmAlert } from "react-confirm-alert";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import DownloadIcon from "../../../../assets/svgs/reports/DownloadIcon";
 import AddIcon from "../../../../assets/svgs/settings/AddIcon";
 import Modal from "../../../../components/modal/Modal";
 import { deleteDeviceAction, getAllDevicesAction } from "../../../../redux/actions/device.actions";
@@ -81,7 +80,6 @@ const Devices = () => {
           <Box sx={{ cursor: "pointer" }} onClick={handleOpenAddModal}>
             <AddIcon />
           </Box>
-          <DownloadIcon />
         </Box>
         <Grid container spacing={2}>
           {devices?.map((device, i) => (

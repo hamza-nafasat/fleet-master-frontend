@@ -21,8 +21,6 @@ import damageSensorImg from "../../../assets/images/notifications/damage-sensor.
 const NotificationItem = ({ id, truckId, createdAt, type, message, isRead, onClose }) => {
   const dispatch = useDispatch();
   const { icon, miniIcon } = getNotificationDetails(type);
-  const helo = getNotificationDetails(type);
-  // console.log(id, type, helo);
 
   const openNotification = async () => {
     onClose();
@@ -111,7 +109,7 @@ const getNotificationDetails = (type) => {
         icon: overspeedImg,
         miniIcon: <AlertIcon />,
       };
-    case "damage-sensor":
+    case "sensor-damage":
       return {
         icon: damageSensorImg,
         miniIcon: <DangerIcon />,

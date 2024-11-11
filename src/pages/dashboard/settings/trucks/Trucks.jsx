@@ -5,7 +5,6 @@ import { Box, Grid } from "@mui/material";
 import { confirmAlert } from "react-confirm-alert";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import DownloadIcon from "../../../../assets/svgs/reports/DownloadIcon";
 import AddIcon from "../../../../assets/svgs/settings/AddIcon";
 import Modal from "../../../../components/modal/Modal";
 import { deleteTruckAction, getAllTrucksAction } from "../../../../redux/actions/truck.actions";
@@ -94,7 +93,6 @@ const Trucks = () => {
           <Box sx={{ cursor: "pointer" }} onClick={handleOpenAddUserModal}>
             <AddIcon />
           </Box>
-          <DownloadIcon />
         </Box>
         <Grid
           container

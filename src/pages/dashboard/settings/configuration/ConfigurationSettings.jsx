@@ -175,20 +175,7 @@ const ConfigurationSettings = () => {
                 <FormControlLabel value="local-database" control={<Radio />} label="Local Database" />
               </RadioGroup>
             </FormControl>
-            {selectedDatabase === "remote-cloud-database" && (
-              <Box sx={{ mt: 2 }}>
-                <TextField
-                  fullWidth
-                  label="Database Name"
-                  InputLabelProps={{ shrink: true }}
-                  placeholder="Enter database name"
-                  value={dataBase.customDbName}
-                  onChange={(e) => setDataBase({ ...dataBase, customDbName: e.target.value })}
-                  variant="outlined"
-                  sx={{ mb: 2, background: "transparent" }}
-                />
-              </Box>
-            )}
+
             {selectedDatabase === "local-database" && (
               <Box sx={{ mt: 2 }}>
                 <Grid container spacing={2}>
