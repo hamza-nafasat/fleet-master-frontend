@@ -17,32 +17,6 @@ const DeviceCard = ({ device, handleDeleteDevice, handleOpenEditModal }) => {
           },
         }}
       >
-        {/* <Typography
-          sx={{
-            textAlign: "center",
-            color: "rgba(70, 66, 85, 1)",
-            fontSize: "18px",
-            fontWeight: 500,
-          }}
-        >
-          {device?.name}
-        </Typography>
-        <Tooltip title={device?.status == "online" ? "Online" : "Offline"}>
-          <Box
-            sx={{
-              width: "15px",
-              height: "15px",
-              backgroundColor: device?.status == "online" ? "#00A389" : "#e90015",
-              borderRadius: "100%",
-              position: "absolute",
-              border: "2px solid white",
-              bottom: "-7px",
-              left: "50%",
-              transform: "translate(-50%, 0px)",
-            }}
-          ></Box>
-        </Tooltip> */}
-
         <Box
           sx={{
             position: "absolute",
