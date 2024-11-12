@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Tooltip, Typography } from "@mui/material";
 
 const DeviceCard = ({ device, handleDeleteDevice, handleOpenEditModal }) => {
   return (
@@ -10,13 +10,14 @@ const DeviceCard = ({ device, handleDeleteDevice, handleOpenEditModal }) => {
         sx={{
           background: "rgba(255, 255, 255, 1)",
           borderRadius: "12px",
+          position: "relative",
           padding: {
             xs: "1rem",
             md: "2rem",
           },
         }}
       >
-        <Typography
+        {/* <Typography
           sx={{
             textAlign: "center",
             color: "rgba(70, 66, 85, 1)",
@@ -24,8 +25,75 @@ const DeviceCard = ({ device, handleDeleteDevice, handleOpenEditModal }) => {
             fontWeight: 500,
           }}
         >
-          {device?.uniqueId}
+          {device?.name}
         </Typography>
+        <Tooltip title={device?.status == "online" ? "Online" : "Offline"}>
+          <Box
+            sx={{
+              width: "15px",
+              height: "15px",
+              backgroundColor: device?.status == "online" ? "#00A389" : "#e90015",
+              borderRadius: "100%",
+              position: "absolute",
+              border: "2px solid white",
+              bottom: "-7px",
+              left: "50%",
+              transform: "translate(-50%, 0px)",
+            }}
+          ></Box>
+        </Tooltip> */}
+
+        <Box
+          sx={{
+            position: "absolute",
+            top: "5%",
+            left: "50%",
+            transform: "translate(-50%, 0)",
+          }}
+        >
+          <Typography
+            sx={{
+              textAlign: "center",
+              color: "rgba(70, 66, 85, 1)",
+              fontSize: "18px",
+              fontWeight: 500,
+            }}
+          >
+            {device?.name}
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.2rem",
+              position: "absolute",
+              left: "50%",
+              transform: "translate(-50%, 0)",
+            }}
+          >
+            <Tooltip title={device?.status == "online" ? "Online" : "Offline"}>
+              <Box
+                sx={{
+                  width: "15px",
+                  height: "15px",
+                  backgroundColor: device?.status == "online" ? "#00A389" : "#e90015",
+                  borderRadius: "100%",
+                  border: "2px solid white",
+                }}
+              ></Box>
+            </Tooltip>
+            <Typography
+              sx={{
+                textAlign: "center",
+                color: "rgba(70, 66, 85, 1)",
+                fontSize: "12px",
+              }}
+            >
+              {device?.status == "online" ? "Online" : "Offline"}
+            </Typography>
+          </Box>
+        </Box>
         <Box
           sx={{
             marginTop: "1.5rem",
@@ -59,7 +127,7 @@ const DeviceCard = ({ device, handleDeleteDevice, handleOpenEditModal }) => {
                 fontSize: "12px",
               }}
             >
-              Device Name
+              Unique ID
             </Typography>
             <Typography
               sx={{
@@ -67,7 +135,7 @@ const DeviceCard = ({ device, handleDeleteDevice, handleOpenEditModal }) => {
                 fontSize: "16px",
               }}
             >
-              {device?.name}
+              {device?.uniqueId}
             </Typography>
           </Box>
         </Box>
