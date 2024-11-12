@@ -84,6 +84,7 @@ const ReportChart = ({ trucksData, driversData }) => {
             stroke="#4f86f7"
             strokeWidth={1}
             fillOpacity={1}
+            strokeDasharray="5 5"
             fill="url(#colorTruck)"
             stackId="1"
           />
@@ -94,6 +95,7 @@ const ReportChart = ({ trucksData, driversData }) => {
             stroke="#00C49F"
             strokeWidth={1}
             fillOpacity={1}
+            strokeDasharray="5 5"
             fill="url(#colorDriver)"
             stackId="1"
           />
