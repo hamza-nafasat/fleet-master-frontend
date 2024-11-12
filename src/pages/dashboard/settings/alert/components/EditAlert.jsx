@@ -25,7 +25,7 @@ const alertType = [
   { type: "two-detection" },
   { type: "tire-pressure" },
   { type: "sensor-offline" },
-  { type: "crash-detection" 
+  { type: "crash-detection" },
 ];
 const severityType = [{ type: "high" }, { type: "medium" }, { type: "low" }];
 const status = [{ type: "enable" }, { type: "disable" }];
