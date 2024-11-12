@@ -25,7 +25,7 @@ const alertType = [
   { type: "tire-pressure" },
   { type: "sensor-offline" },
   { type: "idle-engine" },
-  { type: "sensor-damage" },
+  { type: "sensor-damage
 ];
 const severityType = [{ type: "high" }, { type: "medium" }, { type: "low" }];
 const status = [{ type: "enable" }, { type: "disable" }];
