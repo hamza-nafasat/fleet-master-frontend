@@ -19,13 +19,13 @@ import { getAllAlertsActions, updateAlertAction } from "../../../../../redux/act
 const alertType = [
   { type: "infence" },
   { type: "outfence" },
-  { type: "speed-alert" },
+  { type: "speed" },
+  { type: "sensor-damage" },
   { type: "sudden-stop" },
   { type: "two-detection" },
   { type: "tire-pressure" },
   { type: "sensor-offline" },
-  { type: "idle-engine" },
-  { type: "sensor-damage" },
+  { type: "crash-detection" 
 ];
 const severityType = [{ type: "high" }, { type: "medium" }, { type: "low" }];
 const status = [{ type: "enable" }, { type: "disable" }];
