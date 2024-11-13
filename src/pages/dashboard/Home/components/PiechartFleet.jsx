@@ -1,22 +1,17 @@
+/* eslint-disable react/prop-types */
 import { Box, Typography } from "@mui/material";
 
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
-const PiechartFleet = () => {
-  const data = [
-    { name: "idle", value: 3 },
-    { name: "active", value: 1 },
-    { name: "critical", value: 5 },
-  ];
-
+const PiechartFleet = ({ trucksActiveIdleChartData }) => {
   const COLORS = ["#AAD3DF", "#08852A", "#F72A2A"];
   // #003F79
 
   // Calculate total value
-  const totalValue = data.find((d) => d.name === "active")?.value || 0;
+  const totalValue = trucksActiveIdleChartData?.find((d) => d?.name === "active")?.value || 0;
 
-  const normalData = data.filter((entry) => entry.name !== "critical");
-  const criticalData = data.filter((entry) => entry.name === "critical");
+  const normalData = trucksActiveIdleChartData?.filter((entry) => entry?.name !== "critical");
+  const criticalData = trucksActiveIdleChartData?.filter((entry) => entry?.name === "critical");
 
   return (
     <Box
@@ -54,21 +49,9 @@ const PiechartFleet = () => {
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               {/* Normal Segments */}
-              <Pie
-                data={normalData}
-                cx="50%"
-                cy="50%"
-                innerRadius={50}
-                outerRadius={70}
-                fill="#8884d8"
-                dataKey="value"
-              >
+              <Pie data={normalData} cx="50%" cy="50%" innerRadius={50} outerRadius={70} fill="#8884d8" dataKey="value">
                 {normalData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                    stroke="none"
-                  />
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="none" />
                 ))}
               </Pie>
               {/* Critical Segment */}
