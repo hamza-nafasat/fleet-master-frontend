@@ -1,17 +1,21 @@
 /* eslint-disable react/prop-types */
 import { Box, Typography } from "@mui/material";
-
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
 const PiechartFleet = ({ trucksActiveIdleChartData }) => {
   const COLORS = ["#AAD3DF", "#08852A", "#F72A2A"];
-  // #003F79
+  const BLACK_COLOR = "#00000020";
 
   // Calculate total value
-  const totalValue = trucksActiveIdleChartData?.find((d) => d?.name === "active")?.value || 0;
+  const totalValue =
+    trucksActiveIdleChartData?.find((d) => d?.name === "active")?.value || 0;
 
-  const normalData = trucksActiveIdleChartData?.filter((entry) => entry?.name !== "critical");
-  const criticalData = trucksActiveIdleChartData?.filter((entry) => entry?.name === "critical");
+  const normalData = trucksActiveIdleChartData?.filter(
+    (entry) => entry?.name !== "critical"
+  );
+  const criticalData = trucksActiveIdleChartData?.filter(
+    (entry) => entry?.name === "critical"
+  );
 
   return (
     <Box
@@ -48,10 +52,33 @@ const PiechartFleet = ({ trucksActiveIdleChartData }) => {
         <Box sx={{ width: "260px", height: "200px" }}>
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
+              {/* Base Layer for Black Background */}
+              <Pie
+                data={[{ name: "background", value: 1 }]}
+                cx="50%"
+                cy="50%"
+                innerRadius={50}
+                outerRadius={70}
+                dataKey="value"
+              >
+                <Cell fill={BLACK_COLOR} />
+              </Pie>
               {/* Normal Segments */}
-              <Pie data={normalData} cx="50%" cy="50%" innerRadius={50} outerRadius={70} fill="#8884d8" dataKey="value">
+              <Pie
+                data={normalData}
+                cx="50%"
+                cy="50%"
+                innerRadius={50}
+                outerRadius={70}
+                fill="#8884d8"
+                dataKey="value"
+              >
                 {normalData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="none" />
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                    stroke="none"
+                  />
                 ))}
               </Pie>
               {/* Critical Segment */}
@@ -65,7 +92,6 @@ const PiechartFleet = ({ trucksActiveIdleChartData }) => {
                 dataKey="value"
                 startAngle={-20}
                 endAngle={60}
-                // cornerRadius={7}
               >
                 {criticalData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[2]} stroke="none" />
