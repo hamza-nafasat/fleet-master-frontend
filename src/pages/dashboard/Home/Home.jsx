@@ -18,15 +18,14 @@ const Home = () => {
     totalEmployees: 0,
     totalDevices: 0,
     totalAlarms: 0,
-    chartData: {
-      truck: {
-        label: [],
-        data: [],
-      },
-      driver: {
-        label: [],
-        data: [],
-      },
+    trucksActiveIdleChartData: [
+      { name: "idle", value: 0 },
+      { name: "active", value: 0 },
+      { name: "critical", value: 0 },
+    ],
+    crashReport: {
+      label: [],
+      data: [],
     },
   });
 
@@ -41,16 +40,13 @@ const Home = () => {
         ...prevState,
         totalTrucks: dashboardDetails.totalTrucks ?? prevState.totalTrucks,
         totalDrivers: dashboardDetails.totalDrivers ?? prevState.totalDrivers,
-        totalAssignedTrucks:
-          dashboardDetails.totalAssignedTrucks ?? prevState.totalAssignedTrucks,
-        totalUnAssignedTrucks:
-          dashboardDetails.totalUnAssignedTrucks ??
-          prevState.totalUnAssignedTrucks,
-        totalEmployees:
-          dashboardDetails.totalEmployees ?? prevState.totalEmployees,
+        totalAssignedTrucks: dashboardDetails.totalAssignedTrucks ?? prevState.totalAssignedTrucks,
+        totalUnAssignedTrucks: dashboardDetails.totalUnAssignedTrucks ?? prevState.totalUnAssignedTrucks,
+        totalEmployees: dashboardDetails.totalEmployees ?? prevState.totalEmployees,
         totalDevices: dashboardDetails.totalDevices ?? prevState.totalDevices,
         totalAlarms: dashboardDetails.totalAlarms ?? prevState.totalAlarms,
-        chartData: dashboardDetails.chartData ?? prevState.chartData,
+        crashReport: dashboardDetails.crashReport ?? prevState.crashReport,
+        trucksActiveIdleChartData: dashboardDetails?.trucksActiveIdleChartData ?? prevState.trucksActiveIdleChartData,
       }));
     }
   }, [dashboardDetails]);
@@ -75,7 +71,7 @@ const Home = () => {
               },
             }}
           >
-            <PiechartFleet />
+            <PiechartFleet trucksActiveIdleChartData={dashboardData?.trucksActiveIdleChartData} />
           </Box>
         </Grid>
         <Grid
@@ -97,11 +93,7 @@ const Home = () => {
               borderRadius: "16px",
             }}
           >
-            <ReportChart
-              trucksData={dashboardData.chartData.truck}
-              driversData={dashboardData.chartData.driver}
-              chartData={dashboardData.chartData}
-            />
+            <ReportChart crashReport={dashboardData?.crashReport} />
           </Box>
         </Grid>
       </Grid>
