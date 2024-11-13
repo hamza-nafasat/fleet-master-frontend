@@ -40,10 +40,10 @@ const Notification = ({ length }) => {
 export default Notification;
 
 const NotificationBox = styled(Box)({
-  position: "absolute",
-  right: "50px",
-  top: "30px",
-  width: "72px",
+  // position: "absolute",
+  // right: "50px",
+  // top: "30px",
+  width: "52px",
   cursor: "pointer",
 });
 const NotificationNumbers = styled(Box)({

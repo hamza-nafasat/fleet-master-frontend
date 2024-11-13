@@ -6,6 +6,9 @@ import profilePic from "../../../../assets/images/settings/driver-profile.png";
 import { getAllNotificationsAction } from "../../../../redux/actions/notification.actions";
 import { logoutUserAction } from "../../../../redux/actions/user.actions";
 import Notification from "./components/Notification";
+import { Box, Drawer } from "@mui/material";
+import Aside from "../Aside";
+import { MenuRounded } from "@mui/icons-material";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -16,6 +19,11 @@ const Header = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [newNotificationLength, setNewNotificationLength] = useState(0);
   const location = useLocation();
+  const [openNav, setOpenNav] = useState(false);
+
+  const toggleNav = (newOpen) => {
+    setOpenNav(newOpen);
+  };
 
   let urlArr = location.pathname.split("/");
   let pageTitle = urlArr[urlArr.length - 1].replaceAll("-", " ");
@@ -57,7 +65,7 @@ const Header = () => {
     >
       <div className="flex justify-between items-start text-white">
         <div>
-          <h1 className="text-2xl md:text-4xl font-semibold">Fleet Management Transportation</h1>
+          <h1 className="text-base sm:text-2xl md:text-4xl font-semibold">Fleet Management Transportation</h1>
           {user?.subscriptionId && user.subscriptionId.subscriptionStatus === "trialing" && (
             <p className="mt-2">
               You are on trial mode. Your trial will end on{" "}
@@ -66,17 +74,17 @@ const Header = () => {
           )}
           <p className="uppercase text-lg md:text-xl font-medium">{pageTitle}</p>
         </div>
-        <div className="relative mt-[-30px]">
+        <div className="relative flex items-center">
           {user && (user?.role == "user" || (user && user?.role == "site-manager")) && (
-            <div className="h-[25px]">
+            <div className="h-[30px]">
               <Notification length={newNotificationLength} />
             </div>
           )}
-          <div onClick={() => setDropdownOpen(!dropdownOpen)} className="cursor-pointer inline-block">
+          <div onClick={() => setDropdownOpen(!dropdownOpen)} className="cursor-pointer size-12">
             <img
               src={user?.image?.url || profilePic}
               alt={user?.firstName}
-              className="w-12 h-12 rounded-full object-cover"
+              className="size-12 block rounded-full object-cover"
             />
           </div>
 
@@ -100,6 +108,43 @@ const Header = () => {
           )}
         </div>
       </div>
+      <Box
+          onClick={() => toggleNav(true)}
+          sx={{
+            cursor: "pointer",
+            position: "absolute",
+            top: "5px",
+            left: "14px",
+            display: {
+              sm: "block",
+              xl: "none",
+            },
+          }}
+        >
+          <MenuRounded
+            sx={{
+              width: "1.5em",
+              height: "1.5em",
+              color: "#006bce",
+            }}
+          />
+        </Box>
+      <Drawer
+          open={openNav}
+          onClose={() => toggleNav(false)}
+          PaperProps={{
+            sx: {
+              width: "310px",
+              "&::-webkit-scrollbar": {
+                width: 0,
+                height: 0,
+              },
+              background: "linear-gradient(180deg, #006BCB 0%, #004A8B 100%)",
+            },
+          }}
+        >
+          <Aside toggleNav={toggleNav} />
+        </Drawer>
     </div>
   );
 };
