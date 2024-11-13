@@ -89,7 +89,7 @@ const Header = () => {
           </div>
 
           {dropdownOpen && (
-            <div className="absolute right-0  w-36 bg-white rounded-md shadow-lg z-20">
+            <div className="absolute right-0 top-[50px] w-36 bg-white rounded-md shadow-lg z-20">
               <ul className="py-1">
                 <li
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"

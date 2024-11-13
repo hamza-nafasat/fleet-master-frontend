@@ -14,6 +14,7 @@ const NotificationContent = ({ notificationOpen, handleNotificationClose }) => {
         sx: {
           width: "300px",
           height: 'auto',
+          top: '131px !important',
           maxHeight: "396px",
           borderRadius: "6px",
           boxShadow: "2px 2px 8px 0px rgba(0, 0, 0, 0.32), -2px 2px 8px 0px rgba(0, 0, 0, 0.32)",
