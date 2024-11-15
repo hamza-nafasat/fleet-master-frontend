@@ -112,21 +112,21 @@ export default NotificationItem;
 
 const getNotificationDetails = (type) => {
   switch (type) {
-    case "speed":
+    case "speed-alert":
       return {
         icon: overspeedImg,
         miniIcon: <AlertIcon />,
       };
-    case "damage-sensor":
+    case "damage-alert":
       return {
         icon: damageSensorImg,
         miniIcon: <DangerIcon />,
       };
-    case "geo-fencing":
-      return {
-        icon: geofencingImg,
-        miniIcon: <CheckIcon />,
-      };
+    // case "geo-fencing":
+    //   return {
+    //     icon: geofencingImg,
+    //     miniIcon: <CheckIcon />,
+    //   };
     case "infence":
       return {
         icon: infenceImg,
@@ -137,32 +137,27 @@ const getNotificationDetails = (type) => {
         icon: outfenceImg,
         miniIcon: <AlertIcon />,
       };
-    case "tow":
+    case "two-detection":
       return {
         icon: towImg,
         miniIcon: <AlertIcon />,
       };
-    case "offline":
+    case "sensor-offline":
       return {
         icon: offlineImg,
         miniIcon: <DangerIcon />,
       };
-    case "crash":
+    case "sudden-stop":
       return {
         icon: crashImg,
         miniIcon: <DangerIcon />,
-      };
-    case "instant-stop":
-      return {
-        icon: stopImg,
-        miniIcon: <AlertIcon />,
       };
     case "tire-pressure":
       return {
         icon: tirePressureImg,
         miniIcon: <AlertIcon />,
       };
-    case "truck-idle":
+    case "idle-engine":
       return { 
         icon: idleImg,
         miniIcon: <AlertIcon />,
