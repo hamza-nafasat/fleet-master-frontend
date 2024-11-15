@@ -2,8 +2,16 @@
 import { Box, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import crashImg from "../../../../../assets/images/notifications/crash.png";
+import damageSensorImg from "../../../../../assets/images/notifications/damage-sensor.png";
+import idleImg from "../../../../../assets/images/notifications/idle.png";
+import infenceImg from "../../../../../assets/images/notifications/infence.png";
+import offlineImg from "../../../../../assets/images/notifications/offline.png";
+import outfenceImg from "../../../../../assets/images/notifications/outfence.png";
+import overspeedImg from "../../../../../assets/images/notifications/overspeed.png";
+import tirePressureImg from "../../../../../assets/images/notifications/tire-pressure.png";
+import towImg from "../../../../../assets/images/notifications/tow.png";
 import AlertIcon from "../../../../../assets/svgs/notification/AlertIcon";
-import CheckIcon from "../../../../../assets/svgs/notification/CheckIcon";
 import DangerIcon from "../../../../../assets/svgs/notification/DangerIcon";
 import LikeIcon from "../../../../../assets/svgs/notification/LikeIcon";
 import { adminDashboardDetailsAction } from "../../../../../redux/actions/admin.actions";
@@ -12,24 +20,10 @@ import {
   readNotificationAction,
 } from "../../../../../redux/actions/notification.actions";
 import { timeAgo } from "../../../../../utils/features";
-import overspeedImg from "../../../../../assets/images/notifications/overspeed.png";
-import geofencingImg from "../../../../../assets/images/notifications/geo-fencing.png";
-import infenceImg from "../../../../../assets/images/notifications/infence.png";
-import outfenceImg from "../../../../../assets/images/notifications/outfence.png";
-import damageSensorImg from "../../../../../assets/images/notifications/damage-sensor.png";
-import towImg from "../../../../../assets/images/notifications/tow.png";
-import offlineImg from "../../../../../assets/images/notifications/offline.png";
-import crashImg from "../../../../../assets/images/notifications/crash.png";
-import stopImg from "../../../../../assets/images/notifications/stop.png";
-import tirePressureImg from "../../../../../assets/images/notifications/tire-pressure.png";
-import idleImg from "../../../../../assets/images/notifications/idle.png";
 
 const NotificationItem = ({ id, truckId, createdAt, type, message, isRead, onClose }) => {
   const dispatch = useDispatch();
   const { icon, miniIcon } = getNotificationDetails(type);
-  const helo = getNotificationDetails(type);
-  // console.log(id, type, helo);
-
   const openNotification = async () => {
     onClose();
     await dispatch(readNotificationAction(id));
