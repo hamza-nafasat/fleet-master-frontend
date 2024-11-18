@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box, Button, MenuItem, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,27 +7,26 @@ import { clearDeviceError, clearDeviceMessage } from "../../../../redux/slices/d
 import { toast } from "react-toastify";
 
 const columns = [
-  { field: "name", headerName: "NAME", headerAlign: 'center', align: 'center', width: 230 },
-  { field: "type", headerName: "DEVICE TYPE", headerAlign: 'center', align: 'center', width: 230 },
-  { field: "truckName", headerName: "TRUCK NAME", headerAlign: 'center', align: 'center', width: 230 },
-  { field: "fleetNumber", headerName: "FLEET NUMBER", headerAlign: 'center', align: 'center', width: 230 },
-  { field: "actions", headerName: "ACTIONS", headerAlign: 'center', align: 'center', width: 230 },
+  { field: "name", headerName: "NAME", headerAlign: "center", align: "center", width: 230 },
+  { field: "type", headerName: "DEVICE TYPE", headerAlign: "center", align: "center", width: 230 },
+  { field: "uniqueId", headerName: "UNIQUE ID", headerAlign: "center", align: "center", width: 230 },
+  { field: "state", headerName: "STATUS", headerAlign: "center", align: "center", width: 230 },
+  { field: "createdAt", headerName: "CREATED AT", headerAlign: "center", align: "center", width: 230 },
 ];
 
 const DeviceReport = () => {
-  const dispatch = useDispatch()
-  const [formTo, setFormTo] = useState('');
-  const [endTo, setEndTo] = useState('');
-  const [deviceType, setDeviceType] = useState('');
-  const [filteredRows, setFilteredRows] = useState([])
+  const dispatch = useDispatch();
+  const [formTo, setFormTo] = useState("");
+  const [endTo, setEndTo] = useState("");
+  const [deviceType, setDeviceType] = useState("");
+  const [filteredRows, setFilteredRows] = useState([]);
   const { devices, message, error } = useSelector((state) => state.device);
-  console.log('deviceytuftyrftytfrys', devices)
+  console.log("device reports", devices);
 
   useEffect(() => {
     if (message) {
       toast.success(message);
       dispatch(clearDeviceMessage());
-      
     }
     if (error) {
       toast.error(error);
@@ -81,8 +80,8 @@ const DeviceReport = () => {
           }}
           label="From"
           type="datetime-local"
-        //   value={timeFrom}
-        //   onChange={(e) => setTimeFrom(e.target.value)}
+          //   value={timeFrom}
+          //   onChange={(e) => setTimeFrom(e.target.value)}
           InputLabelProps={{
             shrink: true,
           }}
@@ -103,8 +102,8 @@ const DeviceReport = () => {
           }}
           label="To"
           type="datetime-local"
-        //   value={timeTo}
-        //   onChange={(e) => setTimeTo(e.target.value)}
+          //   value={timeTo}
+          //   onChange={(e) => setTimeTo(e.target.value)}
           InputLabelProps={{
             shrink: true,
           }}
@@ -127,17 +126,15 @@ const DeviceReport = () => {
           }}
           select
           label="Device Name"
-        //   value={plateNumber}
-        //   onChange={(e) => setPlateNumber(e.target.value)}
+          //   value={plateNumber}
+          //   onChange={(e) => setPlateNumber(e.target.value)}
         >
-            <MenuItem value='Device name'>
-              Device name
-            </MenuItem>
+          <MenuItem value="Device name">Device name</MenuItem>
         </TextField>
         <Button
-        //   disabled={isLoading}
+          //   disabled={isLoading}
           variant="contained"
-        //   onClick={getReportsHandler}
+          //   onClick={getReportsHandler}
           sx={{
             width: "100%",
             borderRadius: "8px",
@@ -160,16 +157,13 @@ const DeviceReport = () => {
         }}
       >
         <Box sx={{ display: "flex", gap: "8px" }}>
-          <Button sx={{ color: "#fff", padding: "8px 12px" }}>
-            Export PDF
-          </Button>
-          <Button sx={{ color: "#fff", padding: "8px 12px" }}>
-            Export CSV
-          </Button>
+          <Button sx={{ color: "#fff", padding: "8px 12px" }}>Export PDF</Button>
+          <Button sx={{ color: "#fff", padding: "8px 12px" }}>Export CSV</Button>
         </Box>
       </Box>
       <DataGrid
-        rows={rows}
+        rows={devices}
+        getRowId={(row) => row._id}
         columns={columns}
         pageSize={5}
         rowsPerPageOptions={[5, 10, 20]}
