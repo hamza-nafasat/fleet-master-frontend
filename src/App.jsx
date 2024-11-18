@@ -26,8 +26,9 @@ import ScrollToTop from "./components/scrollToTop/ScrollToTop";
 const Login = lazy(() => import("./pages/auth/login"));
 const Home = lazy(() => import("./pages/dashboard/Home/Home"));
 const TruckReport = lazy(() => import("./pages/dashboard/report/truckreport/TruckReport"));
-const DailyOperations = lazy(() => import("./pages/dashboard/report/operations/DailyOperations"));
-const SOS = lazy(() => import("./pages/dashboard/report/sos/SOS"));
+const DevicesReport = lazy(() => import("./pages/dashboard/report/deivces/DevicesReport"));
+const DriversReport = lazy(() => import("./pages/dashboard/report/drivers/DriversReport"));
+const AlertsReport = lazy(() => import("./pages/dashboard/report/alerts/AlertsReport"));
 const VideoEvidence = lazy(() => import("./pages/dashboard/report/video/VideoEvidence"));
 const AlertType = lazy(() => import("./pages/dashboard/settings/alert/AlertType"));
 const Drivers = lazy(() => import("./pages/dashboard/settings/drivers/Drivers"));
@@ -143,8 +144,9 @@ function App() {
                 <Route path="home" element={<Home />} />
                 <Route path="profile" element={<MyProfile />} />
                 <Route path="reports/truck-report" element={<TruckReport />} />
-                <Route path="reports/operations" element={<DailyOperations />} />
-                <Route path="reports/sos" element={<SOS />} />
+                <Route path="reports/devices-report" element={<DevicesReport />} />
+                <Route path="reports/drivers-report" element={<DriversReport />} />
+                <Route path="reports/alerts-report" element={<AlertsReport />} />
                 <Route path="reports/video" element={<VideoEvidence />} />
                 <Route path="setting/alert" element={<AlertType />} />
                 <Route path="setting/drivers" element={<Drivers />} />

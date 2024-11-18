@@ -55,6 +55,24 @@ const usePageRoutes = (initialIsActive, initialUser) => {
             route: "/dashboard/reports/truck-report",
             page: "truck-report",
           },
+          {
+            icon: <ReportNestedIcon />,
+            title: "Devices Report",
+            route: "/dashboard/reports/devices-report",
+            page: "devices-report",
+          },
+          {
+            icon: <ReportNestedIcon />,
+            title: "Drivers Report",
+            route: "/dashboard/reports/drivers-report",
+            page: "drivers-report",
+          },
+          {
+            icon: <ReportNestedIcon />,
+            title: "Alerts Report",
+            route: "/dashboard/reports/alerts-report",
+            page: "alerts-report",
+          },
         ],
       },
       {
