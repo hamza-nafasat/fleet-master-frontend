@@ -135,7 +135,7 @@ const AlertType = () => {
               height: "35px",
               width: "110px",
               background:
-                params.value === "hight"
+                params.value === "high"
                   ? "rgba(255, 101, 84, 0.2)"
                   : params.value === "medium"
                     ? "rgba(248, 152, 34, 0.2)"
