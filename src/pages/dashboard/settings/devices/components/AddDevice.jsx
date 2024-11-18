@@ -26,27 +26,27 @@ const AddDevice = ({ onClose }) => {
   const initialValues = {
     deviceName: "",
     deviceType: "",
-    ipAddress: "",
     uniqueId: "",
     url: "",
   };
 
-  const { values, touched, errors, handleBlur, handleChange, handleSubmit } = useFormik({
-    initialValues,
-    validationSchema: addDeviceSchema,
-    onSubmit: (values) => {
-      const data = {
-        name: values.deviceName,
-        type: values.deviceType,
-        ip: values.ipAddress,
-        uniqueId: values.uniqueId,
-      };
-      if (values.deviceType == "video") {
-        data.url = values.url;
-      }
-      dispatch(addDeviceAction(data));
-    },
-  });
+  const { values, touched, errors, handleBlur, handleChange, handleSubmit } =
+    useFormik({
+      initialValues,
+      validationSchema: addDeviceSchema,
+      onSubmit: (values) => {
+        const data = {
+          name: values.deviceName,
+          type: values.deviceType,
+          ip: values.ipAddress,
+          uniqueId: values.uniqueId,
+        };
+        if (values.deviceType == "video") {
+          data.url = values.url;
+        }
+        dispatch(addDeviceAction(data));
+      },
+    });
 
   return (
     <Fragment>
@@ -114,9 +114,16 @@ const AddDevice = ({ onClose }) => {
               />
             </Grid>
             <Grid item xs={12} lg={6}>
-              <FormControl fullWidth error={touched.deviceType && Boolean(errors.deviceType)}>
+              <FormControl
+                fullWidth
+                error={touched.deviceType && Boolean(errors.deviceType)}
+              >
                 <InputLabel
-                  sx={{ backgroundColor: "whitesmoke", width: "fit-content", px: 1 }}
+                  sx={{
+                    backgroundColor: "whitesmoke",
+                    width: "fit-content",
+                    px: 1,
+                  }}
                   id="deviceType-label"
                 >
                   Device Type
@@ -131,6 +138,7 @@ const AddDevice = ({ onClose }) => {
                 >
                   <MenuItem value="gps">GPS</MenuItem>
                   <MenuItem value="video">Video</MenuItem>
+                  <MenuItem value="other">Other</MenuItem>
                 </Select>
                 {touched.deviceType && errors.deviceType && (
                   <FormHelperText>{errors.deviceType}</FormHelperText>
@@ -152,21 +160,7 @@ const AddDevice = ({ onClose }) => {
                 helperText={touched.uniqueId && errors.uniqueId}
               />
             </Grid>
-            <Grid item xs="12" lg="6">
-              <TextField
-                fullWidth
-                type="text"
-                label="Ip Address"
-                maxLength="30"
-                name="ipAddress"
-                id="ipAddress"
-                value={values.ipAddress}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                error={touched.ipAddress && Boolean(errors.ipAddress)}
-                helperText={touched.ipAddress && errors.ipAddress}
-              />
-            </Grid>
+
             {values.deviceType == "video" && (
               <Grid item xs="12" lg="12">
                 <TextField

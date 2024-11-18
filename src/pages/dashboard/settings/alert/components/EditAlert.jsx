@@ -14,7 +14,10 @@ import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import BackIcon from "../../../../../assets/svgs/modal/BackIcon";
 import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
-import { getAllAlertsActions, updateAlertAction } from "../../../../../redux/actions/alert.actions";
+import {
+  getAllAlertsActions,
+  updateAlertAction,
+} from "../../../../../redux/actions/alert.actions";
 
 const alertType = [
   { type: "infence" },
@@ -32,6 +35,7 @@ const status = [{ type: "enable" }, { type: "disable" }];
 
 const EditAlert = ({ alert, onClose }) => {
   const dispatch = useDispatch();
+  const [inputEmail, setInputEmail] = useState(false);
   const { message } = useSelector((state) => state.alert);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -165,6 +169,18 @@ const EditAlert = ({ alert, onClose }) => {
                 ))}
               </TextField>
             </Grid>
+            {inputEmail && (
+              <Grid item xs={12} lg={6}>
+                <TextField
+                  type="email"
+                  name="email"
+                  onChange={handleChange}
+                  fullWidth
+                  label="Email"
+                  value={formData.email}
+                />
+              </Grid>
+            )}
             <Grid
               item
               xs={12}
@@ -191,7 +207,12 @@ const EditAlert = ({ alert, onClose }) => {
                     <Checkbox
                       checked={formData.platform === "email"}
                       value={"email"}
-                      onChange={handleChange}
+                      onChange={(event) => {
+                        handleChange(event);
+                        if (event.target.checked) {
+                          setInputEmail(true);
+                        }
+                      }}
                       name="platform"
                     />
                   }
@@ -203,7 +224,12 @@ const EditAlert = ({ alert, onClose }) => {
                     <Checkbox
                       value={"platform"}
                       checked={formData.platform === "platform"}
-                      onChange={handleChange}
+                      onChange={(event) => {
+                        handleChange(event);
+                        if (event.target.checked) {
+                          setInputEmail(false);
+                        }
+                      }}
                       name="platform"
                     />
                   }

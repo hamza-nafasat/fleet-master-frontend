@@ -24,7 +24,6 @@ const EditDevice = ({ onClose, device }) => {
   const [deviceName, setDeviceName] = useState(device?.name);
   const [deviceType, setDeviceType] = useState(device?.type);
   const [deviceUrl, setDeviceUrl] = useState(device?.url);
-  const [deviceIp, setDeviceIp] = useState(device?.ip);
   const [deviceUniqueId, setDeviceUniqueId] = useState(device?.uniqueId);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -34,9 +33,10 @@ const EditDevice = ({ onClose, device }) => {
       const data = {};
       if (deviceName && deviceName != device?.name) data.name = deviceName;
       if (deviceType && deviceType != device?.type) data.type = deviceType;
-      if (deviceIp && deviceIp != device?.ip) data.ip = deviceIp;
-      if (deviceUniqueId && deviceUniqueId != device?.uniqueId) data.uniqueId = deviceUniqueId;
-      if (deviceType == "video" && deviceUrl && deviceUrl != device?.url) data.url = deviceUrl;
+      if (deviceUniqueId && deviceUniqueId != device?.uniqueId)
+        data.uniqueId = deviceUniqueId;
+      if (deviceType == "video" && deviceUrl && deviceUrl != device?.url)
+        data.url = deviceUrl;
       else if (deviceType !== "video" && deviceUrl) {
         data.url = "remove";
       }
@@ -124,7 +124,11 @@ const EditDevice = ({ onClose, device }) => {
           <Grid item xs="12" lg="6">
             <FormControl fullWidth>
               <InputLabel
-                sx={{ backgroundColor: "whitesmoke", width: "fit-content", px: 1 }}
+                sx={{
+                  backgroundColor: "whitesmoke",
+                  width: "fit-content",
+                  px: 1,
+                }}
                 id="deviceType-label"
               >
                 Device Type
@@ -141,16 +145,7 @@ const EditDevice = ({ onClose, device }) => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs="12" lg="6">
-            <TextField
-              fullWidth
-              type="text"
-              label="Ip Address"
-              maxLength="30"
-              value={deviceIp}
-              onChange={(e) => setDeviceIp(e.target.value)}
-            />
-          </Grid>
+
           {deviceType === "video" && (
             <Grid item xs="12" lg="6">
               <TextField

@@ -15,7 +15,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import BackIcon from "../../../../../assets/svgs/modal/BackIcon";
 import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
-import { createAlertActions, getAllAlertsActions } from "../../../../../redux/actions/alert.actions";
+import {
+  createAlertActions,
+  getAllAlertsActions,
+} from "../../../../../redux/actions/alert.actions";
 
 const alertType = [
   { type: "infence" },
@@ -33,11 +36,13 @@ const severityType = [{ type: "high" }, { type: "medium" }, { type: "low" }];
 const AddAlert = ({ onClose }) => {
   const dispatch = useDispatch();
   const { message } = useSelector((state) => state.alert);
+  const [inputEmail, setInputEmail] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     alertType: "",
     severityType: "",
+    email: "",
     platform: "",
   });
 
@@ -148,6 +153,19 @@ const AddAlert = ({ onClose }) => {
                 ))}
               </TextField>
             </Grid>
+            {inputEmail && (
+              <Grid item xs={12} lg={6}>
+                <TextField
+                  type="email"
+                  name="email"
+                  onChange={handleChange}
+                  fullWidth
+                  label="Email"
+                  value={formData.email}
+                />
+              </Grid>
+            )}
+
             <Grid
               item
               xs={12}
@@ -174,7 +192,12 @@ const AddAlert = ({ onClose }) => {
                     <Checkbox
                       checked={formData.platform === "email"}
                       value={"email"}
-                      onChange={handleChange}
+                      onChange={(event) => {
+                        handleChange(event);
+                        if (event.target.checked) {
+                          setInputEmail(true);
+                        }
+                      }}
                       name="platform"
                     />
                   }
@@ -186,7 +209,12 @@ const AddAlert = ({ onClose }) => {
                     <Checkbox
                       value={"platform"}
                       checked={formData.platform === "platform"}
-                      onChange={handleChange}
+                      onChange={(event) => {
+                        handleChange(event);
+                        if (event.target.checked) {
+                          setInputEmail(false);
+                        }
+                      }}
                       name="platform"
                     />
                   }
