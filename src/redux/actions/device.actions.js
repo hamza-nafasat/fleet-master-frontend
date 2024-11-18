@@ -80,7 +80,7 @@ const getAllDevicesAction = () => async (dispatch) => {
   dispatch(getAllDevicesStart());
   try {
     const response = await customAxios.get("/device/all");
-    // console.log("get all devices api response ", response);
+    console.log("get all devices api response ", response);
     dispatch(getAllDevicesSuccess(response.data));
   } catch (error) {
     // console.log("get all devices api error", error);

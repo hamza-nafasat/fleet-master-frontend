@@ -1,27 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Box, Button, MenuItem, TextField, Typography } from "@mui/material";
-
-const rows = [
-  {
-    id: 1,
-    event: "01/14/2024 - 02:31",
-    fleetNumber: "500049",
-    plateNumber: "6752RBB",
-    driverName: "Alice Smith",
-    actions: "Unacknowledged",
-  },
-];
+import { Box, Button, MenuItem, TextField } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllDevicesAction } from "../../../../redux/actions/device.actions";
+import { clearDeviceError, clearDeviceMessage } from "../../../../redux/slices/device.slice";
+import { toast } from "react-toastify";
 
 const columns = [
-  { field: "event", headerName: "EVENT DATE/TIME", headerAlign: 'center', align: 'center', width: 230 },
+  { field: "name", headerName: "NAME", headerAlign: 'center', align: 'center', width: 230 },
+  { field: "type", headerName: "DEVICE TYPE", headerAlign: 'center', align: 'center', width: 230 },
+  { field: "truckName", headerName: "TRUCK NAME", headerAlign: 'center', align: 'center', width: 230 },
   { field: "fleetNumber", headerName: "FLEET NUMBER", headerAlign: 'center', align: 'center', width: 230 },
-  { field: "plateNumber", headerName: "PLATE NUMBER", headerAlign: 'center', align: 'center', width: 230 },
-  { field: "driverName", headerName: "DRIVER NAME", headerAlign: 'center', align: 'center', width: 230 },
   { field: "actions", headerName: "ACTIONS", headerAlign: 'center', align: 'center', width: 230 },
 ];
 
 const DeviceReport = () => {
+  const dispatch = useDispatch()
+  const [formTo, setFormTo] = useState('');
+  const [endTo, setEndTo] = useState('');
+  const [deviceType, setDeviceType] = useState('');
+  const [filteredRows, setFilteredRows] = useState([])
+  const { devices, message, error } = useSelector((state) => state.device);
+  console.log('deviceytuftyrftytfrys', devices)
+
+  useEffect(() => {
+    if (message) {
+      toast.success(message);
+      dispatch(clearDeviceMessage());
+      
+    }
+    if (error) {
+      toast.error(error);
+      dispatch(clearDeviceError());
+    }
+    dispatch(getAllDevicesAction());
+  }, [message, error, dispatch]);
   return (
     <Box
       sx={{
