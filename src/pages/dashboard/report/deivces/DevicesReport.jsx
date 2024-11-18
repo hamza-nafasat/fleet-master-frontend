@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Box, Button, MenuItem, TextField } from "@mui/material";
+import { Box, Button, CircularProgress, MenuItem, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllDevicesAction } from "../../../../redux/actions/device.actions";
 import { clearDeviceError, clearDeviceMessage } from "../../../../redux/slices/device.slice";
 import { toast } from "react-toastify";
+import NoData from "../../../../components/noData/NoData";
 
 const columns = [
   { field: "name", headerName: "NAME", headerAlign: "center", align: "center", width: 230 },
@@ -16,12 +17,19 @@ const columns = [
 
 const DeviceReport = () => {
   const dispatch = useDispatch();
-  const [formTo, setFormTo] = useState("");
-  const [endTo, setEndTo] = useState("");
-  const [deviceType, setDeviceType] = useState("");
+  const [timeFrom, setTimeFrom] = useState("");
+  const [timeTo, setTimeTo] = useState("");
+  const [type, setType] = useState("");
   const [filteredRows, setFilteredRows] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const { devices, message, error } = useSelector((state) => state.device);
-  console.log("device reports", devices);
+  console.log('devices', devices)
+  const getsDeviceHandler = async() => {
+    setIsLoading(true)
+    await dispatch(getAllDevicesAction(timeTo, timeFrom, type))
+    setIsLoading(false)
+    setFilteredRows(devices);
+  }
 
   useEffect(() => {
     if (message) {
@@ -33,7 +41,9 @@ const DeviceReport = () => {
       dispatch(clearDeviceError());
     }
     dispatch(getAllDevicesAction());
+    setFilteredRows(devices)
   }, [message, error, dispatch]);
+  
   return (
     <Box
       sx={{
@@ -80,8 +90,8 @@ const DeviceReport = () => {
           }}
           label="From"
           type="datetime-local"
-          //   value={timeFrom}
-          //   onChange={(e) => setTimeFrom(e.target.value)}
+            value={timeFrom}
+            onChange={(e) => setTimeFrom(e.target.value)}
           InputLabelProps={{
             shrink: true,
           }}
@@ -102,8 +112,8 @@ const DeviceReport = () => {
           }}
           label="To"
           type="datetime-local"
-          //   value={timeTo}
-          //   onChange={(e) => setTimeTo(e.target.value)}
+            value={timeTo}
+            onChange={(e) => setTimeTo(e.target.value)}
           InputLabelProps={{
             shrink: true,
           }}
@@ -125,16 +135,18 @@ const DeviceReport = () => {
             },
           }}
           select
-          label="Device Name"
-          //   value={plateNumber}
-          //   onChange={(e) => setPlateNumber(e.target.value)}
+          label="Device Type"
+            value={type}
+            onChange={(e) => setType(e.target.value)}
         >
-          <MenuItem value="Device name">Device name</MenuItem>
+          {devices?.map((device, i) => (
+            <MenuItem key={i} value={device?.type}>{device?.type}</MenuItem>
+          ))}
         </TextField>
         <Button
-          //   disabled={isLoading}
+            disabled={isLoading}
           variant="contained"
-          //   onClick={getReportsHandler}
+            onClick={getsDeviceHandler}
           sx={{
             width: "100%",
             borderRadius: "8px",
@@ -144,9 +156,8 @@ const DeviceReport = () => {
             },
           }}
         >
-          {/* {isLoading ? <CircularProgress sx={{ color: "#ffffff", mx: 2 }} size={24} /> : null} */}
-          {/* {isLoading ? "Loading..." : "Get Reports"} */}
-          Get Reports
+          {isLoading ? <CircularProgress sx={{ color: "#ffffff", mx: 2 }} size={24} /> : null}
+          {isLoading ? "Loading..." : "Get Devices"}
         </Button>
       </Box>
       <Box
@@ -161,8 +172,9 @@ const DeviceReport = () => {
           <Button sx={{ color: "#fff", padding: "8px 12px" }}>Export CSV</Button>
         </Box>
       </Box>
-      <DataGrid
-        rows={devices}
+      {devices?.length > 0 ? (
+        <DataGrid
+        rows={filteredRows}
         getRowId={(row) => row._id}
         columns={columns}
         pageSize={5}
@@ -224,6 +236,9 @@ const DeviceReport = () => {
           },
         }}
       />
+      ):(
+        <NoData />
+      )}
     </Box>
   );
 };

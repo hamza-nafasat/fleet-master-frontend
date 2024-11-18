@@ -110,6 +110,8 @@ const TruckReport = () => {
   const { trucks } = useSelector((state) => state.truck);
   const { singleTruckReport, error, message } = useSelector((state) => state.admin);
 
+  console.log('trucks', trucks)
+
   const getReportsHandler = async () => {
     setIsLoading(true);
     await dispatch(getSingleTruckReportsAction(timeTo, timeFrom, plateNumber));
@@ -256,10 +258,6 @@ const TruckReport = () => {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    dispatch(getSingleTruckReportsAction());
-  }, [dispatch]);
 
   useEffect(() => {
     if (singleTruckReport) {
