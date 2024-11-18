@@ -23,13 +23,15 @@ const DeviceReport = () => {
   const [filteredRows, setFilteredRows] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { devices, message, error } = useSelector((state) => state.device);
-  console.log('devices', devices)
   const getsDeviceHandler = async() => {
     setIsLoading(true)
     await dispatch(getAllDevicesAction(timeTo, timeFrom, type))
     setIsLoading(false)
-    setFilteredRows(devices);
   }
+
+  useEffect(() => {
+    dispatch(getAllDevicesAction())
+  }, [dispatch])
 
   useEffect(() => {
     if (message) {
@@ -41,8 +43,11 @@ const DeviceReport = () => {
       dispatch(clearDeviceError());
     }
     dispatch(getAllDevicesAction());
+  }, [dispatch, error, message]);
+
+  useEffect(() => {
     setFilteredRows(devices)
-  }, [message, error, dispatch]);
+  }, [devices])
   
   return (
     <Box
