@@ -29,10 +29,6 @@ const DeviceReport = () => {
     setIsLoading(false)
   }
 
-  // useEffect(() => {
-  //   dispatch(getAllDevicesAction())
-  // }, [dispatch])
-
   useEffect(() => {
     if (message) {
       toast.success(message);
