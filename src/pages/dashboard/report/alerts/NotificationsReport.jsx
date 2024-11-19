@@ -9,18 +9,20 @@ import logo from "../../../../assets/images/logo.png";
 import CameraIcon from "../../../../assets/svgs/modal/CameraIcon";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import "jspdf-autotable";
-import { getAllAlertsActions } from "../../../../redux/actions/alert.actions";
-import { clearAlertError, clearAlertMessage } from "../../../../redux/slices/alert.slice";
+import { getAllNotificationsAction } from "../../../../redux/actions/notification.actions";
+import { clearNotificationError, clearNotificationMessage } from "../../../../redux/slices/notification.slice";
 
 const columns = [
-  { field: "platform", headerName: "PLATFORM", headerAlign: "center", align: "center", width: 230 },
+  { field: "message", headerName: "MESSAGE", headerAlign: "center", align: "center", width: 330 },
   { field: "severity", headerName: "SEVERITY", headerAlign: "center", align: "center", width: 230 },
-  { field: "status", headerName: "STATUS", headerAlign: "center", align: "center", width: 230 },
+  { field: "truckId", headerName: "TRUCK ID", headerAlign: "center", align: "center", width: 230 },
   { field: "type", headerName: "TYPE", headerAlign: "center", align: "center", width: 230 },
   { field: "createdAt", headerName: "CREATED AT", headerAlign: "center", align: "center", width: 230 },
 ];
 
-const AlertsReport = () => {
+const alertsType = ['tire-pressure', 'idle-engine', 'speed-alert', 'damage-alert', 'infence', 'outfence', 'two-detection', 'sensor-offline', 'sudden-stop']
+
+const NotificationsReport = () => {
   const dispatch = useDispatch();
   const [timeFrom, setTimeFrom] = useState("");
   const [timeTo, setTimeTo] = useState("");
@@ -28,17 +30,17 @@ const AlertsReport = () => {
   const [filteredRows, setFilteredRows] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [profile, setProfile] = useState('');
-  const { alerts, error, message } = useSelector((state) => state.alert);
+  const { notifications, error, message } = useSelector((state) => state.notification);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  console.log('alerts', alerts)
+  console.log('notifications', notifications)
 
 
   const getsDeviceHandler = async () => {
     setIsLoading(true);
-    await dispatch(getAllAlertsActions(timeTo, timeFrom, type));
+    await dispatch(getAllNotificationsAction(timeTo, timeFrom, type));
     setIsLoading(false);
   }
 
@@ -143,18 +145,18 @@ const AlertsReport = () => {
   useEffect(() => {
     if (message) {
       toast.success(message);
-      dispatch(clearAlertMessage());
+      dispatch(clearNotificationMessage());
     }
     if (error) {
       toast.error(error);
-      dispatch(clearAlertError());
+      dispatch(clearNotificationError());
     }
-    dispatch(getAllAlertsActions());
+    dispatch(getAllNotificationsAction());
   }, [dispatch, error, message]);
 
   useEffect(() => {
-    setFilteredRows(alerts)
-  }, [alerts])
+    setFilteredRows(notifications)
+  }, [notifications])
   
   return (
     <Box
@@ -251,8 +253,8 @@ const AlertsReport = () => {
             value={type}
             onChange={(e) => setType(e.target.value)}
         >
-          {alerts?.map((alert, i) => (
-            <MenuItem key={i} value={alert?.type}>{alert?.type}</MenuItem>
+          {alertsType.map((alert, i) => (
+            <MenuItem key={i} value={alert}>{alert}</MenuItem>
           ))}
         </TextField>
         <Button
@@ -269,7 +271,7 @@ const AlertsReport = () => {
           }}
         >
           {isLoading ? <CircularProgress sx={{ color: "#ffffff", mx: 2 }} size={24} /> : null}
-          {isLoading ? "Loading..." : "Get Alerts"}
+          {isLoading ? "Loading..." : "Get Notifications"}
         </Button>
       </Box>
       <Box
@@ -284,7 +286,7 @@ const AlertsReport = () => {
           <Button sx={{ color: "#fff", padding: "8px 12px" }}>Export CSV</Button>
         </Box>
       </Box>
-      {alerts?.length > 0 ? (
+      {notifications?.length > 0 ? (
         <DataGrid
         rows={filteredRows}
         getRowId={(row) => row._id}
@@ -372,7 +374,7 @@ const AlertsReport = () => {
   );
 };
 
-export default AlertsReport;
+export default NotificationsReport;
 
 // eslint-disable-next-line react/prop-types
 const ModalContent = ({ onChange, profile, generatePdf }) => {

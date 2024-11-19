@@ -69,9 +69,9 @@ const usePageRoutes = (initialIsActive, initialUser) => {
           },
           {
             icon: <ReportNestedIcon />,
-            title: "Alerts Report",
-            route: "/dashboard/alerts-report",
-            page: "alerts-report",
+            title: "Notification Report",
+            route: "/dashboard/notifications-report",
+            page: "notifications-report",
           },
         ],
       },

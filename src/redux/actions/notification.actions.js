@@ -34,10 +34,15 @@ const getNewNotificationsAction = () => async (dispatch) => {
 };
 
 // get all notifications
-const getAllNotificationsAction = () => async (dispatch) => {
+const getAllNotificationsAction = (timeTo, timeFrom, type) => async (dispatch) => {
   dispatch(getAllNotificationsStart());
   try {
-    const response = await customAxios.get("/notification/all");
+    let url = "/notification/all?";
+    if(timeTo) url += `timeTo=${timeTo}&`;
+    if(timeFrom) url += `timeFrom=${timeFrom}&`;
+    if(type) url += `type=${type}&`;
+
+    const response = await customAxios.get(url);
     // console.log("get all notifications api response ", response);
     dispatch(getAllNotificationsSuccess(response.data));
   } catch (error) {

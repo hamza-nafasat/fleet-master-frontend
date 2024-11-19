@@ -45,8 +45,8 @@ const DevicesReport = lazy(
 const DriversReport = lazy(
   () => import("./pages/dashboard/report/drivers/DriversReport")
 );
-const AlertsReport = lazy(
-  () => import("./pages/dashboard/report/alerts/AlertsReport")
+const NotificationsReport = lazy(
+  () => import("./pages/dashboard/report/alerts/NotificationsReport")
 );
 const VideoEvidence = lazy(
   () => import("./pages/dashboard/report/video/VideoEvidence")
@@ -201,7 +201,7 @@ function App() {
                 <Route path="truck-report" element={<TruckReport />} />
                 <Route path="devices-report" element={<DevicesReport />} />
                 <Route path="drivers-report" element={<DriversReport />} />
-                <Route path="alerts-report" element={<AlertsReport />} />
+                <Route path="notifications-report" element={<NotificationsReport />} />
                 <Route path="reports/video" element={<VideoEvidence />} />
                 <Route path="alerts" element={<AlertType />} />
                 <Route path="drivers" element={<Drivers />} />
