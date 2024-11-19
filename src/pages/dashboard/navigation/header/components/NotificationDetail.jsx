@@ -81,10 +81,25 @@ const NotificationDetail = () => {
       headerAlign: "center",
       width: 180,
       renderCell: (params) => (
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", gap: 3 }}>
-          <DeleteIcon onClick={() => handleDeleteList(params.row)} isLoading={isDelLoading} />
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+            gap: 3,
+          }}
+        >
+          <DeleteIcon
+            onClick={() => handleDeleteList(params.row)}
+            isLoading={isDelLoading}
+          />
           <Link
-            style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
             to={`/dashboard/truck-detail/${params?.row?.truckId}`}
           >
             <FcViewDetails style={{ fontSize: "1.8rem", cursor: "pointer" }} />
@@ -103,7 +118,11 @@ const NotificationDetail = () => {
             type: notification.type,
             message: notification.message,
             createdAt:
-              notification.createdAt.split("T")[0].split("-").reverse().join("-") +
+              notification.createdAt
+                .split("T")[0]
+                .split("-")
+                .reverse()
+                .join("-") +
               "  at  " +
               new Date(notification.createdAt).toLocaleString("en-US", {
                 hour: "numeric",
@@ -176,7 +195,14 @@ const NotificationDetail = () => {
                 xs: "14px",
                 md: "16px",
               },
-              background: "#fafafa",
+              background:
+                notifications[0].severity == "high"
+                  ? "#FBDCD9"
+                  : notifications[0].severity == "low"
+                    ? "#D4E9D9"
+                    : notifications[0].severity == "medium"
+                      ? "#FAE6CF"
+                      : "",
               fontWeight: 400,
               color: "rgba(17, 17, 17, 0.6)",
             },

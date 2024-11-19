@@ -17,7 +17,8 @@ const NotificationContent = ({ notificationOpen, handleNotificationClose }) => {
           top: "131px !important",
           maxHeight: "396px",
           borderRadius: "6px",
-          boxShadow: "2px 2px 8px 0px rgba(0, 0, 0, 0.32), -2px 2px 8px 0px rgba(0, 0, 0, 0.32)",
+          boxShadow:
+            "2px 2px 8px 0px rgba(0, 0, 0, 0.32), -2px 2px 8px 0px rgba(0, 0, 0, 0.32)",
           "&::-webkit-scrollbar": {
             width: "6px",
           },
@@ -32,14 +33,18 @@ const NotificationContent = ({ notificationOpen, handleNotificationClose }) => {
         },
       }}
     >
-      <NotificationInnerContent handleNotificationClose={handleNotificationClose} />
+      <NotificationInnerContent
+        handleNotificationClose={handleNotificationClose}
+      />
     </Menu>
   );
 };
 export default NotificationContent;
 
 const NotificationInnerContent = ({ handleNotificationClose }) => {
-  const { newNotifications: notifications } = useSelector((state) => state.notification);
+  const { newNotifications: notifications } = useSelector(
+    (state) => state.notification
+  );
   return (
     <Box height={"100%"} width={"100%"}>
       <Box
@@ -76,6 +81,7 @@ const NotificationInnerContent = ({ handleNotificationClose }) => {
             createdAt={notification?.createdAt}
             isRead={notification?.isRead}
             onClose={handleNotificationClose}
+            severity={notification?.severity}
           />
         ))}
       </Box>

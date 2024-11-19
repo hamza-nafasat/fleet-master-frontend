@@ -21,7 +21,16 @@ import {
 } from "../../../../../redux/actions/notification.actions";
 import { timeAgo } from "../../../../../utils/features";
 
-const NotificationItem = ({ id, truckId, createdAt, type, message, isRead, onClose }) => {
+const NotificationItem = ({
+  id,
+  truckId,
+  createdAt,
+  type,
+  message,
+  isRead,
+  onClose,
+  severity,
+}) => {
   const dispatch = useDispatch();
   const { icon, miniIcon } = getNotificationDetails(type);
   const openNotification = async () => {
@@ -40,7 +49,14 @@ const NotificationItem = ({ id, truckId, createdAt, type, message, isRead, onClo
           justifyContent: "space-between",
           gap: "0.5rem",
           p: 1.5,
-          backgroundColor: isRead ? "rgba(255, 255, 255, 1)" : "#96cdff",
+          backgroundColor:
+            severity === "high"
+              ? "#FBDCD9"
+              : severity === "low"
+                ? "#D4E9D9"
+                : severity === "medium"
+                  ? "#FAE6CF"
+                  : "",
           borderBottom: "1px solid #0000001c",
           transition: "all 0.2s ease",
           "&:hover": {
@@ -152,7 +168,7 @@ const getNotificationDetails = (type) => {
         miniIcon: <AlertIcon />,
       };
     case "idle-engine":
-      return { 
+      return {
         icon: idleImg,
         miniIcon: <AlertIcon />,
       };
