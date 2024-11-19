@@ -71,9 +71,11 @@ const deleteDriverAction = (driverId) => async (dispatch) => {
 const getAllDriversAction = (timeTo, timeFrom) => async (dispatch) => {
     dispatch(getAllDriversStart());
     try {
-        const res = await customAxios.get(`/driver/all`, {
-            params: {timeTo, timeFrom}
-        });
+        let url = `/driver/all?`;
+        if(timeTo) url += `timeTo=${timeTo}&`;
+        if(timeFrom) url += `timeFrom=${timeFrom}&`;
+
+        const res = await customAxios.get(url);
         // console.log("get all drivers success", res);
         dispatch(getAllDriversSuccess(res.data));
     } catch (error) {
