@@ -30,11 +30,7 @@ const addDeviceAction = (data) => async (dispatch) => {
     dispatch(addDeviceSuccess(response.data));
   } catch (error) {
     // console.log("add device api error", error);
-    dispatch(
-      addDeviceFailure(
-        error?.response?.data?.message || "Error ocurred while creating truck"
-      )
-    );
+    dispatch(addDeviceFailure(error?.response?.data?.message || "Error ocurred while creating truck"));
   }
 };
 
@@ -48,11 +44,7 @@ const updateDeviceAction = (deviceId, data) => async (dispatch) => {
     dispatch(updateDeviceSuccess(response.data));
   } catch (error) {
     // console.log("update device api error", error);
-    dispatch(
-      updateDeviceFailure(
-        error?.response?.data?.message || "Error ocurred while updating device"
-      )
-    );
+    dispatch(updateDeviceFailure(error?.response?.data?.message || "Error ocurred while updating device"));
   }
 };
 
@@ -66,11 +58,7 @@ const deleteDeviceAction = (deviceId) => async (dispatch) => {
     dispatch(deleteDeviceSuccess(response.data));
   } catch (error) {
     // console.log("delete device api error", error);
-    dispatch(
-      deleteDeviceFailure(
-        error?.response?.data?.message || "Error ocurred while deleting device"
-      )
-    );
+    dispatch(deleteDeviceFailure(error?.response?.data?.message || "Error ocurred while deleting device"));
   }
 };
 
@@ -79,22 +67,17 @@ const deleteDeviceAction = (deviceId) => async (dispatch) => {
 const getAllDevicesAction = (timeTo, timeFrom, type) => async (dispatch) => {
   dispatch(getAllDevicesStart());
   try {
-    let url="/device/all?";
-    if(timeTo)url+=`timeTo=${timeTo}&`;
-    if(timeFrom)url+=`timeFrom=${timeFrom}&`;
-    if(type)url+=`type=${type}&`;
+    let url = "/device/all?";
+    if (timeTo) url += `timeTo=${timeTo}&`;
+    if (timeFrom) url += `timeFrom=${timeFrom}&`;
+    if (type) url += `type=${type}&`;
 
     const response = await customAxios.get(url);
     console.log("get all devices api response ", response);
     dispatch(getAllDevicesSuccess(response.data));
   } catch (error) {
     // console.log("get all devices api error", error);
-    dispatch(
-      getAllDevicesFailure(
-        error?.response?.data?.message ||
-          "Error ocurred while getting all devices"
-      )
-    );
+    dispatch(getAllDevicesFailure(error?.response?.data?.message || "Error ocurred while getting all devices"));
   }
 };
 
@@ -120,8 +103,7 @@ const getMyAllSensorsDataAction = () => async (dispatch) => {
     // console.log("get my all sensors latest data api error", error);
     dispatch(
       getMyAllSensorsDataFailure(
-        error?.response?.data?.message ||
-          "Error ocurred while getting my all sensors latest data"
+        error?.response?.data?.message || "Error ocurred while getting my all sensors latest data"
       )
     );
   }

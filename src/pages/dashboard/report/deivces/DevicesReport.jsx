@@ -27,18 +27,17 @@ const DeviceReport = () => {
   const [type, setType] = useState("");
   const [filteredRows, setFilteredRows] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [profile, setProfile] = useState('');
+  const [profile, setProfile] = useState("");
   const { devices, message, error } = useSelector((state) => state.device);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-
   const getsDeviceHandler = async () => {
     setIsLoading(true);
     await dispatch(getAllDevicesAction(timeTo, timeFrom, type));
     setIsLoading(false);
-  }
+  };
 
   const handleImageSrc = (e) => {
     const file = e.target.files[0];
@@ -92,21 +91,9 @@ const DeviceReport = () => {
     doc.text("Fleet Master Truck Report", (doc.internal.pageSize.getWidth() - 50) / 2, yOffset); // Left align
     yOffset += 10;
 
-    const tableColumn = [
-      "Name",
-      "Device Type",
-      "Unique ID",
-      "Status",
-      "Created At",
-    ];
+    const tableColumn = ["Name", "Device Type", "Unique ID", "Status", "Created At"];
 
-    const tableRows = filteredRows.map((row) => [
-      row.name,
-      row.type,
-      row.uniqueId,
-      row.state,
-      row.createdAt,
-    ]);
+    const tableRows = filteredRows.map((row) => [row.name, row.type, row.uniqueId, row.state, row.createdAt]);
 
     const remainingPageHeight = doc.internal.pageSize.height - yOffset - 20;
 
@@ -151,9 +138,9 @@ const DeviceReport = () => {
   }, [dispatch, error, message]);
 
   useEffect(() => {
-    setFilteredRows(devices)
-  }, [devices])
-  
+    setFilteredRows(devices);
+  }, [devices]);
+
   return (
     <Box
       sx={{
@@ -200,8 +187,8 @@ const DeviceReport = () => {
           }}
           label="From"
           type="datetime-local"
-            value={timeFrom}
-            onChange={(e) => setTimeFrom(e.target.value)}
+          value={timeFrom}
+          onChange={(e) => setTimeFrom(e.target.value)}
           InputLabelProps={{
             shrink: true,
           }}
@@ -222,8 +209,8 @@ const DeviceReport = () => {
           }}
           label="To"
           type="datetime-local"
-            value={timeTo}
-            onChange={(e) => setTimeTo(e.target.value)}
+          value={timeTo}
+          onChange={(e) => setTimeTo(e.target.value)}
           InputLabelProps={{
             shrink: true,
           }}
@@ -246,17 +233,19 @@ const DeviceReport = () => {
           }}
           select
           label="Device Type"
-            value={type}
-            onChange={(e) => setType(e.target.value)}
+          value={type}
+          onChange={(e) => setType(e.target.value)}
         >
-          {devices?.map((device, i) => (
-            <MenuItem key={i} value={device?.type}>{device?.type}</MenuItem>
+          {["gps", "video"]?.map((device, i) => (
+            <MenuItem key={i} value={device}>
+              {device}
+            </MenuItem>
           ))}
         </TextField>
         <Button
-            disabled={isLoading}
+          disabled={isLoading}
           variant="contained"
-            onClick={getsDeviceHandler}
+          onClick={getsDeviceHandler}
           sx={{
             width: "100%",
             borderRadius: "8px",
@@ -278,75 +267,77 @@ const DeviceReport = () => {
         }}
       >
         <Box sx={{ display: "flex", gap: "8px" }}>
-          <Button onClick={handleOpen} sx={{ color: "#fff", padding: "8px 12px" }}>Export PDF</Button>
+          <Button onClick={handleOpen} sx={{ color: "#fff", padding: "8px 12px" }}>
+            Export PDF
+          </Button>
           <Button sx={{ color: "#fff", padding: "8px 12px" }}>Export CSV</Button>
         </Box>
       </Box>
       {devices?.length > 0 ? (
         <DataGrid
-        rows={filteredRows}
-        getRowId={(row) => row._id}
-        columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5, 10, 20]}
-        sx={{
-          "& .MuiDataGrid-row.even-row": {
-            backgroundColor: "#fafafa",
-          },
-          "& .MuiDataGrid-columnHeader .MuiDataGrid-columnHeaderTitle": {
-            fontSize: {
-              xs: "14px",
-              md: "16px",
+          rows={filteredRows}
+          getRowId={(row) => row._id}
+          columns={columns}
+          pageSize={5}
+          rowsPerPageOptions={[5, 10, 20]}
+          sx={{
+            "& .MuiDataGrid-row.even-row": {
+              backgroundColor: "#fafafa",
             },
-            fontWeight: 600,
-            color: "#111111",
-          },
-          "& .MuiDataGrid-row .MuiDataGrid-cell": {
-            fontSize: {
-              xs: "14px",
-              md: "16px",
+            "& .MuiDataGrid-columnHeader .MuiDataGrid-columnHeaderTitle": {
+              fontSize: {
+                xs: "14px",
+                md: "16px",
+              },
+              fontWeight: 600,
+              color: "#111111",
             },
-            background: "#fafafa",
-            fontWeight: 400,
-            color: "rgba(17, 17, 17, 0.6)",
-          },
-          "& .MuiDataGrid-root": {
-            borderTopLeftRadius: "24px !important",
-            borderTopRightRadius: "24px !important",
-            border: "0 !important",
-            overflow: "hidden",
-            width: "100%",
-          },
-          "& .MuiDataGrid-main": {
-            borderTopLeftRadius: "24px",
-            borderTopRightRadius: "24px",
-            width: "100%",
-            padding: "0 10px",
-          },
-          "& .MuiDataGrid-overlay": {
-            borderTopLeftRadius: "24px",
-            borderTopRightRadius: "24px",
-          },
-          "& .MuiDataGrid-footerContainer": {
-            display: "none",
-          },
-          "& .MuiDataGrid-scrollbar": {
-            "&::-webkit-scrollbar": {
-              width: "6px",
-              height: "6px",
+            "& .MuiDataGrid-row .MuiDataGrid-cell": {
+              fontSize: {
+                xs: "14px",
+                md: "16px",
+              },
+              background: "#fafafa",
+              fontWeight: 400,
+              color: "rgba(17, 17, 17, 0.6)",
             },
-            "&::-webkit-scrollbar-track": {
-              background: "#00193333",
-              borderRadius: "6px",
+            "& .MuiDataGrid-root": {
+              borderTopLeftRadius: "24px !important",
+              borderTopRightRadius: "24px !important",
+              border: "0 !important",
+              overflow: "hidden",
+              width: "100%",
             },
-            "&::-webkit-scrollbar-thumb": {
-              background: "#006bce",
-              borderRadius: "10px",
+            "& .MuiDataGrid-main": {
+              borderTopLeftRadius: "24px",
+              borderTopRightRadius: "24px",
+              width: "100%",
+              padding: "0 10px",
             },
-          },
-        }}
-      />
-      ):(
+            "& .MuiDataGrid-overlay": {
+              borderTopLeftRadius: "24px",
+              borderTopRightRadius: "24px",
+            },
+            "& .MuiDataGrid-footerContainer": {
+              display: "none",
+            },
+            "& .MuiDataGrid-scrollbar": {
+              "&::-webkit-scrollbar": {
+                width: "6px",
+                height: "6px",
+              },
+              "&::-webkit-scrollbar-track": {
+                background: "#00193333",
+                borderRadius: "6px",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                background: "#006bce",
+                borderRadius: "10px",
+              },
+            },
+          }}
+        />
+      ) : (
         <NoData />
       )}
       <Modal open={open} onClose={handleClose} sx={{ display: "grid", placeItems: "center" }}>
@@ -359,11 +350,7 @@ const DeviceReport = () => {
             borderRadius: "12px",
           }}
         >
-          <ModalContent
-            onChange={handleImageSrc}
-            profile={profile}
-            generatePdf={() => downloadPDF(filteredRows)}
-          />
+          <ModalContent onChange={handleImageSrc} profile={profile} generatePdf={() => downloadPDF(filteredRows)} />
         </Box>
       </Modal>
     </Box>
@@ -453,4 +440,3 @@ const FileInput = styled("input")({
   opacity: "0",
   cursor: "pointer",
 });
-
