@@ -30,10 +30,10 @@ const createAlertActions = ({ platform, severity, type }) => {
 };
 
 // get all alert Action
-const getAllAlertsActions = () => async (dispatch) => {
+const getAllAlertsActions = (timeTo, timeFrom, type) => async (dispatch) => {
   try {
     dispatch(getAllAlertsStart());
-    const response = await customAxios.get("/alert/all");
+    const response = await customAxios.get("/alert/all", {params: {timeTo, timeFrom, type}});
     console.log("alert get all api response ", response);
     dispatch(getAllAlertsSuccess(response.data));
   } catch (error) {

@@ -79,9 +79,12 @@ const deleteDeviceAction = (deviceId) => async (dispatch) => {
 const getAllDevicesAction = (timeTo, timeFrom, type) => async (dispatch) => {
   dispatch(getAllDevicesStart());
   try {
-    const response = await customAxios.get("/device/all", {
-      params: {timeTo, timeFrom, type}
-    });
+    let url="/device/all?";
+    if(timeTo)url+=`timeTo=${timeTo}&`;
+    if(timeFrom)url+=`timeFrom=${timeFrom}&`;
+    if(type)url+=`type=${type}&`;
+
+    const response = await customAxios.get(url);
     console.log("get all devices api response ", response);
     dispatch(getAllDevicesSuccess(response.data));
   } catch (error) {

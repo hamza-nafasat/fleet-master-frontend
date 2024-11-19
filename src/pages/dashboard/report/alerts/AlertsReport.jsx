@@ -24,6 +24,7 @@ const AlertsReport = () => {
   const dispatch = useDispatch();
   const [timeFrom, setTimeFrom] = useState("");
   const [timeTo, setTimeTo] = useState("");
+  const [type, setType] = useState('');
   const [filteredRows, setFilteredRows] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [profile, setProfile] = useState('');
@@ -37,7 +38,7 @@ const AlertsReport = () => {
 
   const getsDeviceHandler = async () => {
     setIsLoading(true);
-    await dispatch(getAllAlertsActions(timeTo, timeFrom));
+    await dispatch(getAllAlertsActions(timeTo, timeFrom, type));
     setIsLoading(false);
   }
 
@@ -229,6 +230,31 @@ const AlertsReport = () => {
             shrink: true,
           }}
         />
+        <TextField
+          sx={{
+            width: "100%",
+            "& .MuiInputBase-root": {
+              borderColor: "#11111133",
+              borderRadius: "8px",
+            },
+            "& .MuiSelect-select": {
+              padding: "8px 10px",
+              color: "#11111199",
+              fontSize: "16px",
+            },
+            "& .MuiFormLabel-root": {
+              top: "-8px ",
+            },
+          }}
+          select
+          label="Alert Type"
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+        >
+          {alerts?.map((alert, i) => (
+            <MenuItem key={i} value={alert?.type}>{alert?.type}</MenuItem>
+          ))}
+        </TextField>
         <Button
             disabled={isLoading}
           variant="contained"
