@@ -49,14 +49,16 @@ const NotificationItem = ({
           justifyContent: "space-between",
           gap: "0.5rem",
           p: 1.5,
-          backgroundColor:
-            severity === "high"
+          backgroundColor: !isRead
+            ? severity === "high"
               ? "#FBDCD9"
               : severity === "low"
                 ? "#D4E9D9"
                 : severity === "medium"
                   ? "#FAE6CF"
-                  : "",
+                  : "#EEF7FF"
+            : "",
+
           borderBottom: "1px solid #0000001c",
           transition: "all 0.2s ease",
           "&:hover": {
