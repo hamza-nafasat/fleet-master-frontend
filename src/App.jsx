@@ -18,7 +18,7 @@ import ResetPassword from "./pages/auth/reset-password/ResetPassword";
 import Dashboard from "./pages/dashboard";
 import { adminDashboardDetailsAction } from "./redux/actions/admin.actions";
 import { getDeviceDataAction, getMyAllSensorsDataAction } from "./redux/actions/device.actions";
-import { getAllNotificationsAction } from "./redux/actions/notification.actions";
+import { getAllNotificationsAction, getNewNotificationsAction } from "./redux/actions/notification.actions";
 import { getMyProfileAction } from "./redux/actions/user.actions";
 import { clearUserError, clearUserMessage } from "./redux/slices/user.slice";
 import ScrollToTop from "./components/scrollToTop/ScrollToTop";
@@ -38,17 +38,11 @@ const Employees = lazy(() => import("./pages/dashboard/settings/employees/Employ
 const GeoFence = lazy(() => import("./pages/dashboard/dashboardPages/geofence/GeoFence"));
 const RealTimeMap = lazy(() => import("./pages/dashboard/dashboardPages/RealTimeMap/RealTimeMap"));
 const SubscriptionPlan = lazy(() => import("./pages/dashboard/plans/subscriptionPlan/SubscriptionPlan"));
-const SubscriptionHistory = lazy(
-  () => import("./pages/dashboard/plans/subscriptionHistory/SubscriptionHistory")
-);
+const SubscriptionHistory = lazy(() => import("./pages/dashboard/plans/subscriptionHistory/SubscriptionHistory"));
 const TruckDetail = lazy(() => import("./pages/dashboard/settings/trucks/components/TruckDetail"));
-const Notification = lazy(
-  () => import("./pages/dashboard/navigation/header/components/NotificationDetail")
-);
+const Notification = lazy(() => import("./pages/dashboard/navigation/header/components/NotificationDetail"));
 const Register = lazy(() => import("./pages/auth/register/Register"));
-const ConfigurationSettings = lazy(
-  () => import("./pages/dashboard/settings/configuration/ConfigurationSettings")
-);
+const ConfigurationSettings = lazy(() => import("./pages/dashboard/settings/configuration/ConfigurationSettings"));
 const MyProfile = lazy(() => import("./pages/dashboard/navigation/Profile"));
 
 // Admin Routes
@@ -72,8 +66,11 @@ function App() {
     });
     socket.on(socketEvent.NOTIFICATIONS, async (data) => {
       if (user && (user?.role == "user" || user?.role == "site-manager")) {
-        await dispatch(adminDashboardDetailsAction());
-        await dispatch(getAllNotificationsAction());
+        await Promise.all([
+          dispatch(getAllNotificationsAction()),
+          dispatch(getNewNotificationsAction()),
+          dispatch(adminDashboardDetailsAction()),
+        ]);
       }
     });
   }, [dispatch, user]);
@@ -84,7 +81,7 @@ function App() {
   }, [dispatch]);
   useEffect(() => {
     if (user && (user?.role == "user" || user?.role == "site-manager")) {
-      dispatch(getAllNotificationsAction());
+      dispatch(getNewNotificationsAction());
     }
   }, [dispatch, user]);
 
@@ -122,20 +119,13 @@ function App() {
         <Suspense fallback={<GlobalLoader />}>
           <ScrollToTop />
           <Routes>
-            <Route
-              element={
-                <ProtectedRoute isLogin={user ? false : true} user={user} redirect="/dashboard/home" />
-              }
-            >
+            <Route element={<ProtectedRoute isLogin={user ? false : true} user={user} redirect="/dashboard/home" />}>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
             </Route>
             <Route path="/verify-otp" element={<Otp />} />
             <Route path="/forget-password" element={<ForgetPassword />} />
-            <Route
-              path="/verify-email"
-              element={<NotVerified user={user} isVerified={user?.isVerified} />}
-            />
+            <Route path="/verify-email" element={<NotVerified user={user} isVerified={user?.isVerified} />} />
             <Route path="/reset-password/:reset-token" element={<ResetPassword />} />
             <Route path="/" element={<Navigate replace to="/login" />} />
             <Route element={<ProtectedRoute user={user} isLogin={user ? true : false} />}>

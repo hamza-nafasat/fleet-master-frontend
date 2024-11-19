@@ -16,8 +16,11 @@ import {
   readAllNotificationsAction,
 } from "../../../../../redux/actions/notification.actions";
 import NoData from "../../../../../components/noData/NoData";
+<<<<<<< Updated upstream
 import { IoCheckmarkOutline } from "react-icons/io5";
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
+=======
+>>>>>>> Stashed changes
 
 const NotificationDetail = () => {
   const dispatch = useDispatch();
@@ -36,9 +39,12 @@ const NotificationDetail = () => {
           label: "Yes",
           onClick: async () => {
             setIsDelLoading(true);
-            await dispatch(deleteNotificationAction(row.id));
-            await dispatch(getAllNotificationsAction());
-            await dispatch(adminDashboardDetailsAction());
+            await Promise.all([
+              dispatch(deleteNotificationAction(row.id)),
+              dispatch(getAllNotificationsAction()),
+              dispatch(getNewNotificationsAction()),
+              dispatch(adminDashboardDetailsAction()),
+            ]);
             setIsDelLoading(false);
           },
         },
@@ -81,6 +87,7 @@ const NotificationDetail = () => {
       headerAlign: "center",
       width: 180,
       renderCell: (params) => (
+<<<<<<< Updated upstream
         <Box
           sx={{
             display: "flex",
@@ -94,6 +101,10 @@ const NotificationDetail = () => {
             onClick={() => handleDeleteList(params.row)}
             isLoading={isDelLoading}
           />
+=======
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", gap: 3 }}>
+          <DeleteIcon onClick={() => handleDeleteList(params.row)} isLoading={isDelLoading} />
+>>>>>>> Stashed changes
           <Link
             style={{
               display: "flex",
@@ -151,9 +162,11 @@ const NotificationDetail = () => {
   }, [notifications]);
 
   const enterInPage = useCallback(async () => {
-    await dispatch(readAllNotificationsAction());
-    await dispatch(getAllNotificationsAction());
-    await dispatch(getNewNotificationsAction());
+    await Promise.all([
+      dispatch(readAllNotificationsAction()),
+      dispatch(getAllNotificationsAction()),
+      dispatch(getNewNotificationsAction()),
+    ]);
   }, [dispatch]);
 
   useEffect(() => {
@@ -188,6 +201,7 @@ const NotificationDetail = () => {
       >
         <DownloadIcon />
       </Box>
+<<<<<<< Updated upstream
       {notifications.length > 0 ? (
         <div style={{ height: "70%", width: "100%" }}>
           <DataGrid
@@ -206,6 +220,28 @@ const NotificationDetail = () => {
             sx={{
               "& .MuiDataGrid-row.even-row": {
                 backgroundColor: "#fafafa",
+=======
+      {notifications?.length > 0 ? (
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          pageSize={5}
+          rowsPerPageOptions={[5, 10, 20]}
+          headerClassName={() => {
+            return "MuiDataGrid-colCell-center";
+          }}
+          cellClassName={() => {
+            return "MuiDataGrid-cell-center";
+          }}
+          sx={{
+            "& .MuiDataGrid-row.even-row": {
+              backgroundColor: "#fafafa",
+            },
+            "& .MuiDataGrid-columnHeader .MuiDataGrid-columnHeaderTitle": {
+              fontSize: {
+                xs: "14px",
+                md: "16px",
+>>>>>>> Stashed changes
               },
               "& .MuiDataGrid-columnHeader .MuiDataGrid-columnHeaderTitle": {
                 fontSize: {
@@ -237,6 +273,7 @@ const NotificationDetail = () => {
                 width: "100%",
                 padding: "0 10px",
               },
+<<<<<<< Updated upstream
               "& .MuiDataGrid-overlay": {
                 borderTopLeftRadius: "24px",
                 borderTopRightRadius: "24px",
@@ -258,6 +295,11 @@ const NotificationDetail = () => {
             }}
           />
         </div>
+=======
+            },
+          }}
+        />
+>>>>>>> Stashed changes
       ) : (
         <NoData />
       )}

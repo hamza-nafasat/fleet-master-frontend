@@ -13,8 +13,8 @@ const NotificationContent = ({ notificationOpen, handleNotificationClose }) => {
       PaperProps={{
         sx: {
           width: "300px",
-          height: 'auto',
-          top: '131px !important',
+          height: "auto",
+          top: "131px !important",
           maxHeight: "396px",
           borderRadius: "6px",
           boxShadow: "2px 2px 8px 0px rgba(0, 0, 0, 0.32), -2px 2px 8px 0px rgba(0, 0, 0, 0.32)",
@@ -39,7 +39,7 @@ const NotificationContent = ({ notificationOpen, handleNotificationClose }) => {
 export default NotificationContent;
 
 const NotificationInnerContent = ({ handleNotificationClose }) => {
-  const { notifications } = useSelector((state) => state.notification);
+  const { newNotifications: notifications } = useSelector((state) => state.notification);
   return (
     <Box height={"100%"} width={"100%"}>
       <Box

@@ -14,7 +14,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.user);
-  const { notifications } = useSelector((state) => state.notification);
+  const { newNotifications } = useSelector((state) => state.notification);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [newNotificationLength, setNewNotificationLength] = useState(0);
@@ -42,11 +42,11 @@ const Header = () => {
   };
 
   useEffect(() => {
-    if (notifications) {
-      const unreadNotifications = notifications?.filter((notification) => !notification?.isRead);
+    if (newNotifications) {
+      const unreadNotifications = newNotifications?.filter((notification) => !notification?.isRead);
       setNewNotificationLength(unreadNotifications?.length);
     }
-  }, [notifications]);
+  }, [newNotifications]);
 
   useEffect(() => {
     if (user && (user?.role == "user" || user?.role == "site-manager")) {
@@ -109,42 +109,42 @@ const Header = () => {
         </div>
       </div>
       <Box
-          onClick={() => toggleNav(true)}
+        onClick={() => toggleNav(true)}
+        sx={{
+          cursor: "pointer",
+          position: "absolute",
+          top: "5px",
+          left: "14px",
+          display: {
+            sm: "block",
+            xl: "none",
+          },
+        }}
+      >
+        <MenuRounded
           sx={{
-            cursor: "pointer",
-            position: "absolute",
-            top: "5px",
-            left: "14px",
-            display: {
-              sm: "block",
-              xl: "none",
-            },
+            width: "1.5em",
+            height: "1.5em",
+            color: "#006bce",
           }}
-        >
-          <MenuRounded
-            sx={{
-              width: "1.5em",
-              height: "1.5em",
-              color: "#006bce",
-            }}
-          />
-        </Box>
+        />
+      </Box>
       <Drawer
-          open={openNav}
-          onClose={() => toggleNav(false)}
-          PaperProps={{
-            sx: {
-              width: "310px",
-              "&::-webkit-scrollbar": {
-                width: 0,
-                height: 0,
-              },
-              background: "linear-gradient(180deg, #006BCB 0%, #004A8B 100%)",
+        open={openNav}
+        onClose={() => toggleNav(false)}
+        PaperProps={{
+          sx: {
+            width: "310px",
+            "&::-webkit-scrollbar": {
+              width: 0,
+              height: 0,
             },
-          }}
-        >
-          <Aside toggleNav={toggleNav} />
-        </Drawer>
+            background: "linear-gradient(180deg, #006BCB 0%, #004A8B 100%)",
+          },
+        }}
+      >
+        <Aside toggleNav={toggleNav} />
+      </Drawer>
     </div>
   );
 };

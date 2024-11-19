@@ -15,7 +15,7 @@ import {
   getNewNotificationsAction,
   readAllNotificationsAction,
 } from "../../../redux/actions/notification.actions";
-import NoData from '../../../components/noData/NoData'
+import NoData from "../../../components/noData/NoData";
 
 const NotificationDetail = () => {
   const dispatch = useDispatch();
@@ -78,9 +78,7 @@ const NotificationDetail = () => {
       headerAlign: "center",
       width: 180,
       renderCell: (params) => (
-        <Box
-          sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", gap: 3 }}
-        >
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", gap: 3 }}>
           <DeleteIcon onClick={() => handleDeleteList(params.row)} isLoading={isDelLoading} />
           <Link
             style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
@@ -213,8 +211,7 @@ const NotificationDetail = () => {
             },
           }}
         />
-
-      ):(
+      ) : (
         <NoData />
       )}
     </Box>
