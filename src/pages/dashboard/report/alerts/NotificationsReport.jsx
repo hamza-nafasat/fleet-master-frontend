@@ -97,17 +97,17 @@ const NotificationsReport = () => {
     yOffset += 10;
 
     const tableColumn = [
-      "Platform",
+      "Message",
       "Severity",
-      "Status",
+      "Truck Id",
       "Type",
       "Created At",
     ];
 
     const tableRows = filteredRows.map((row) => [
-      row.platform,
+      row.message,
       row.severity,
-      row.status,
+      row.truckId,
       row.type,
       row.createdAt,
     ]);
