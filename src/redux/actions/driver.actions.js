@@ -79,7 +79,7 @@ const getAllDriversAction = (timeTo, timeFrom) => async (dispatch) => {
         // console.log("get all drivers success", res);
         dispatch(getAllDriversSuccess(res.data));
     } catch (error) {
-        // console.log("get all drivers error", error);
+        console.log("get all drivers error", error);
         dispatch(
             getAllDriversFailure(
                 error?.response?.data?.message || "Something went wrong while getting drivers"

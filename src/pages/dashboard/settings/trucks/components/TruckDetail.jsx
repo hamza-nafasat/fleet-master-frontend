@@ -66,7 +66,7 @@ const TruckDetail = () => {
             if (truckId) {
               await dispatch(deleteTruckAction(truckId));
               await dispatch(getAllTrucksAction());
-              return navigate("/dashboard/setting/trucks");
+              return navigate("/dashboard/trucks");
             }
           },
         },
@@ -108,7 +108,7 @@ const TruckDetail = () => {
     <React.Fragment>
       <TruckContainer container sx={{ padding: { xs: "16px", md: "24px" } }}>
         <Grid xs={12} display="flex" justifyContent="space-between" mb={3}>
-          <Link to="/dashboard/setting/trucks">
+          <Link to="/dashboard/trucks">
             <ArrowBackIcon sx={{ color: "rgba(70, 66, 85, 1)", fontSize: "24px" }} />
           </Link>
           <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>

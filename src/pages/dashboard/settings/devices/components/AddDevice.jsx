@@ -38,7 +38,6 @@ const AddDevice = ({ onClose }) => {
         const data = {
           name: values.deviceName,
           type: values.deviceType,
-          ip: values.ipAddress,
           uniqueId: values.uniqueId,
         };
         if (values.deviceType == "video") {

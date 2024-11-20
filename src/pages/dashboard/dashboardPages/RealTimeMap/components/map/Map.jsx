@@ -52,7 +52,7 @@ export default Map;
 export const TruckPopup = ({ truck }) => {
   // console.log("truck", truck);
   const mapDeviceId =
-    truck?.devices?.find((device) => device.type == "gps")._id ||
+    truck?.devices?.find((device) => device.type == "gps")?._id ||
     "Not Available";
   // console.log("map device id", mapDeviceId);
   return (

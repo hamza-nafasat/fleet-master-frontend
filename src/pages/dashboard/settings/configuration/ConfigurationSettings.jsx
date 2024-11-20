@@ -18,6 +18,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Modal from "../../../../components/modal/Modal";
 import { updateMyProfileAction } from "../../../../redux/actions/user.actions";
+import { CiCircleCheck } from "react-icons/ci";
+import { RxCrossCircled } from "react-icons/rx";
 
 const ConfigurationSettings = () => {
   const dispatch = useDispatch();
@@ -39,6 +41,7 @@ const ConfigurationSettings = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   // console.log("selected database", selectedDatabase);
+  const dbStatus = "connected";
 
   const closeModalHandler = () => setModal(false);
   const openModalHandler = () => {
@@ -164,25 +167,46 @@ const ConfigurationSettings = () => {
           </Box>
           <Heading heading="Database Type" mt={2} />
           <Box sx={{ paddingLeft: { xs: "15px", md: "35px" }, mt: 2 }}>
-            <FormControl>
-              <RadioGroup
-                row
-                name="database-type-radios"
-                value={selectedDatabase}
-                onChange={selectedDatabaseHandler}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "1rem",
+                justifyContent: "space-between",
+              }}
+            >
+              <FormControl>
+                <RadioGroup
+                  row
+                  name="database-type-radios"
+                  value={selectedDatabase}
+                  onChange={selectedDatabaseHandler}
+                >
+                  <FormControlLabel
+                    value="local-database"
+                    control={<Radio />}
+                    label="Local Database"
+                  />
+                  <FormControlLabel
+                    value="remote-database"
+                    control={<Radio />}
+                    label="Remote Database"
+                  />
+                </RadioGroup>
+              </FormControl>
+              <Box
+                sx={{ display: "flex", alignItems: "center", gap: "0.3rem" }}
               >
-                <FormControlLabel
-                  value="local-database"
-                  control={<Radio />}
-                  label="Local Database"
-                />
-                <FormControlLabel
-                  value="remote-database"
-                  control={<Radio />}
-                  label="Remote Database"
-                />
-              </RadioGroup>
-            </FormControl>
+                {dbStatus === "connected" ? (
+                  <CiCircleCheck fontSize={20} color="green" />
+                ) : (
+                  <RxCrossCircled fontSize={18} color="red" />
+                )}
+                <Typography color={dbStatus === "connected" ? "green" : "red"}>
+                  Connected
+                </Typography>
+              </Box>
+            </Box>
 
             {selectedDatabase === "remote-database" && (
               <Box sx={{ mt: 2 }}>
