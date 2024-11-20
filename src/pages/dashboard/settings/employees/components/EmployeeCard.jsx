@@ -205,7 +205,7 @@ const EmployeeCard = ({ employ, handleOpenEditModal, handleDeleteUser }) => {
                   fontWeight: "400",
                 }}
               >
-                {employ?.role}
+                {employ?.role == "site-admin" ? "Admin" : employ?.role == "report-manager" ? "Oprator" : employ?.role}
               </Typography>
             </Box>
           </Box>
