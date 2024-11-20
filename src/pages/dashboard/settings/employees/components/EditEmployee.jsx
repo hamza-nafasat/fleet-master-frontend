@@ -1,15 +1,5 @@
 /* eslint-disable react/prop-types */
-import {
-  Box,
-  Button,
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  Typography,
-  styled,
-} from "@mui/material";
+import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Typography, styled } from "@mui/material";
 import { Fragment, useState } from "react";
 import { useDispatch } from "react-redux";
 import BackIcon from "../../../../../assets/svgs/modal/BackIcon";
@@ -142,15 +132,9 @@ const EditEmployee = ({ onClose, employ }) => {
           <Grid item xs="12" lg="6">
             <FormControl fullWidth>
               <InputLabel id="role-label">Role</InputLabel>
-              <Select
-                labelId="role-label"
-                id="role"
-                name="role"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-              >
-                <MenuItem value="report-manager">Report Manager</MenuItem>
-                <MenuItem value="site-manager">Site Manager</MenuItem>
+              <Select labelId="role-label" id="role" name="role" value={role} onChange={(e) => setRole(e.target.value)}>
+                <MenuItem value="report-manager">Oprator</MenuItem>
+                <MenuItem value="site-admin">Admin</MenuItem>
                 <MenuItem value="payment-manager">Payment Manager</MenuItem>
               </Select>
             </FormControl>
