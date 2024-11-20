@@ -49,7 +49,7 @@ const Header = () => {
   }, [newNotifications]);
 
   useEffect(() => {
-    if (user && (user?.role == "user" || user?.role == "site-manager")) {
+    if (user && (user?.role == "user" || user?.role == "site-admin")) {
       dispatch(getAllNotificationsAction());
     }
   }, [dispatch, user]);
@@ -75,7 +75,7 @@ const Header = () => {
           <p className="uppercase text-lg md:text-xl font-medium">{pageTitle}</p>
         </div>
         <div className="relative flex items-center">
-          {user && (user?.role == "user" || (user && user?.role == "site-manager")) && (
+          {user && (user?.role == "user" || (user && user?.role == "site-admin")) && (
             <div className="h-[30px]">
               <Notification length={newNotificationLength} />
             </div>
