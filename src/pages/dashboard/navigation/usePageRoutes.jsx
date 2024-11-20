@@ -139,8 +139,7 @@ const usePageRoutes = (initialIsActive, initialUser) => {
       },
     ];
   }, [isActivePage]);
-
-  const siteManagerRoutes = useMemo(() => {
+  const siteAdminRoutes = useMemo(() => {
     return [
       {
         icon: <HomeIcon isActivePage={isActivePage} />,
@@ -168,6 +167,37 @@ const usePageRoutes = (initialIsActive, initialUser) => {
         ],
       },
       {
+        icon: <ReportsIcon isActivePage={isActivePage} />,
+        title: "Reports",
+        page: "reports",
+        subPages: [
+          {
+            icon: <ReportNestedIcon />,
+            title: "Truck Report",
+            route: "/dashboard/truck-report",
+            page: "truck-report",
+          },
+          {
+            icon: <ReportNestedIcon />,
+            title: "Devices Report",
+            route: "/dashboard/devices-report",
+            page: "devices-report",
+          },
+          {
+            icon: <ReportNestedIcon />,
+            title: "Drivers Report",
+            route: "/dashboard/drivers-report",
+            page: "drivers-report",
+          },
+          {
+            icon: <ReportNestedIcon />,
+            title: "Notification Report",
+            route: "/dashboard/notifications-report",
+            page: "notifications-report",
+          },
+        ],
+      },
+      {
         icon: <SettingIcon isActivePage={isActivePage} />,
         title: "Settings",
         page: "settings",
@@ -175,38 +205,62 @@ const usePageRoutes = (initialIsActive, initialUser) => {
           {
             icon: <SettingNestedIcon />,
             title: "Alerts Type",
-            route: "/dashboard/setting/alert",
+            route: "/dashboard/alerts",
             page: "alerts-type",
           },
           {
             icon: <SettingNestedIcon />,
             title: "Drivers",
-            route: "/dashboard/setting/drivers",
+            route: "/dashboard/drivers",
             page: "drivers",
           },
           {
             icon: <SettingNestedIcon />,
             title: "Trucks",
-            route: "/dashboard/setting/trucks",
+            route: "/dashboard/trucks",
             page: "trucks",
           },
           {
             icon: <SettingNestedIcon />,
             title: "Devices",
-            route: "/dashboard/setting/devices",
+            route: "/dashboard/devices",
             page: "devices",
           },
           {
             icon: <SettingNestedIcon />,
             title: "Employees",
-            route: "/dashboard/setting/employees",
+            route: "/dashboard/employees",
             page: "employees",
+          },
+          {
+            icon: <SettingNestedIcon />,
+            title: "Configuration",
+            route: "/dashboard/configuration-settings",
+            page: "configuration-settings",
+          },
+        ],
+      },
+      {
+        icon: <PricingIcon isActivePage={isActivePage} />,
+        title: "Pricing Plan",
+        page: "plans",
+        subPages: [
+          {
+            icon: <PlanIcon />,
+            title: "Plans",
+            route: "/dashboard/subscription-plan",
+            page: "subscription-plan",
+          },
+          {
+            icon: <ReceiptIcon />,
+            title: "Receipt",
+            route: "/dashboard/subscription-history",
+            page: "subscription-history",
           },
         ],
       },
     ];
   }, [isActivePage]);
-
   const paymentManagerRoutes = useMemo(() => {
     return [
       {
@@ -236,7 +290,6 @@ const usePageRoutes = (initialIsActive, initialUser) => {
       },
     ];
   }, [isActivePage]);
-
   const reportsManagerRoutes = useMemo(() => {
     return [
       {
@@ -246,6 +299,25 @@ const usePageRoutes = (initialIsActive, initialUser) => {
         page: "home",
       },
       {
+        icon: <DashboardIcon isActivePage={isActivePage} />,
+        title: "Dashboard",
+        page: "dashboard",
+        subPages: [
+          {
+            icon: <RealTimeMapIcon isActivePage={isActivePage} />,
+            title: "Real Time Map",
+            route: "/dashboard/real-time-map",
+            page: "real-time-map",
+          },
+          {
+            icon: <GeofenceIcon isActivePage={isActivePage} />,
+            title: "Geofence",
+            route: "/dashboard/geofence",
+            page: "geofence",
+          },
+        ],
+      },
+      {
         icon: <ReportsIcon isActivePage={isActivePage} />,
         title: "Reports",
         page: "reports",
@@ -253,14 +325,74 @@ const usePageRoutes = (initialIsActive, initialUser) => {
           {
             icon: <ReportNestedIcon />,
             title: "Truck Report",
-            route: "/dashboard/reports/truck-report",
+            route: "/dashboard/truck-report",
             page: "truck-report",
+          },
+          {
+            icon: <ReportNestedIcon />,
+            title: "Devices Report",
+            route: "/dashboard/devices-report",
+            page: "devices-report",
+          },
+          {
+            icon: <ReportNestedIcon />,
+            title: "Drivers Report",
+            route: "/dashboard/drivers-report",
+            page: "drivers-report",
+          },
+          {
+            icon: <ReportNestedIcon />,
+            title: "Notification Report",
+            route: "/dashboard/notifications-report",
+            page: "notifications-report",
+          },
+        ],
+      },
+      {
+        icon: <SettingIcon isActivePage={isActivePage} />,
+        title: "Settings",
+        page: "settings",
+        subPages: [
+          {
+            icon: <SettingNestedIcon />,
+            title: "Alerts Type",
+            route: "/dashboard/alerts",
+            page: "alerts-type",
+          },
+          {
+            icon: <SettingNestedIcon />,
+            title: "Drivers",
+            route: "/dashboard/drivers",
+            page: "drivers",
+          },
+          {
+            icon: <SettingNestedIcon />,
+            title: "Trucks",
+            route: "/dashboard/trucks",
+            page: "trucks",
+          },
+          {
+            icon: <SettingNestedIcon />,
+            title: "Devices",
+            route: "/dashboard/devices",
+            page: "devices",
+          },
+          {
+            icon: <SettingNestedIcon />,
+            title: "Employees",
+            route: "/dashboard/employees",
+            page: "employees",
+          },
+          {
+            icon: <SettingNestedIcon />,
+            title: "Configuration",
+            route: "/dashboard/configuration-settings",
+            page: "configuration-settings",
           },
         ],
       },
     ];
   }, [isActivePage]);
-
   const refetch = useCallback(
     (newIsActive, newUser) => {
       if (user?.role) setUser(newUser);
@@ -269,12 +401,11 @@ const usePageRoutes = (initialIsActive, initialUser) => {
     },
     [user.role]
   );
-
   useEffect(() => {
     if (user) {
       switch (user.role) {
-        case "site-manager":
-          setRoutes(siteManagerRoutes);
+        case "site-admin":
+          setRoutes(siteAdminRoutes);
           break;
         case "report-manager":
           setRoutes(reportsManagerRoutes);
@@ -289,16 +420,7 @@ const usePageRoutes = (initialIsActive, initialUser) => {
           setRoutes([]);
       }
     }
-  }, [
-    user,
-    isActivePage,
-    refetchTrigger,
-    siteManagerRoutes,
-    reportsManagerRoutes,
-    paymentManagerRoutes,
-    userRoutes,
-  ]);
-
+  }, [user, isActivePage, refetchTrigger, siteAdminRoutes, reportsManagerRoutes, paymentManagerRoutes, userRoutes]);
   return [routes, refetch];
 };
 
