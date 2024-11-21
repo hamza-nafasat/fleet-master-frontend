@@ -41,8 +41,6 @@ const ConfigurationSettings = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   // console.log("selected database", selectedDatabase);
-  const dbStatus = "connected";
-
   const closeModalHandler = () => setModal(false);
   const openModalHandler = () => {
     setModal("confirm-database");
@@ -198,12 +196,12 @@ const ConfigurationSettings = () => {
               <Box
                 sx={{ display: "flex", alignItems: "center", gap: "0.3rem" }}
               >
-                {dbStatus === "connected" ? (
+                {user?.isCustomDbConnected ? (
                   <CiCircleCheck fontSize={20} color="green" />
                 ) : (
                   <RxCrossCircled fontSize={18} color="red" />
                 )}
-                <Typography color={dbStatus === "connected" ? "green" : "red"}>
+                <Typography color={user?.isCustomDbConnected ? "green" : "red"}>
                   Connected
                 </Typography>
               </Box>
