@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Modal from "../../../../components/modal/Modal";
-import { updateMyProfileAction } from "../../../../redux/actions/user.actions";
+import { getMyProfileAction, updateMyProfileAction } from "../../../../redux/actions/user.actions";
 import { CiCircleCheck } from "react-icons/ci";
 import { RxCrossCircled } from "react-icons/rx";
 
@@ -95,6 +95,7 @@ const ConfigurationSettings = () => {
       formData.append("interval", intervalValue);
       formData.append("customDb", JSON.stringify(dbData));
       await dispatch(updateMyProfileAction(formData));
+      await dispatch(getMyProfileAction());
     } catch (error) {
       console.log(error);
     } finally {
