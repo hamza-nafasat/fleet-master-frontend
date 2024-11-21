@@ -33,7 +33,7 @@ const ConfigurationSettings = () => {
   });
   const { user } = useSelector((state) => state.user);
   const [selectedDatabase, setSelectedDatabase] = useState(
-    "remote-cloud-database"
+    "remote-database"
   );
   const [modal, setModal] = useState(false);
   const [newDatabase, setNewDatabase] = useState(null);
@@ -77,9 +77,9 @@ const ConfigurationSettings = () => {
         customDbPort: dataBase.customDbPort,
       };
       if (selectedDatabase === "local-database") {
-        dbData.isCustomDb = "yes";
-      } else {
         dbData.isCustomDb = "no";
+      } else {
+        dbData.isCustomDb = "yes";
       }
       if (selectedDatabase === "local-database") {
         if (
@@ -108,7 +108,7 @@ const ConfigurationSettings = () => {
     if (user) {
       setIntervalValue(user.interval);
       setSelectedDatabase(
-        user?.isCustomDb ? "local-database" : "remote-cloud-database"
+        user?.isCustomDb ?  "remote-database":"local-database"
       );
       setDataBase({
         isCustomDb: user?.isCustomDb === "yes" ? true : false,
@@ -118,6 +118,7 @@ const ConfigurationSettings = () => {
         customDbPassword: user?.customDbPassword,
         customDbPort: user?.customDbPort,
       });
+    console.log('user', user)
     }
   }, [dispatch, user]);
 
