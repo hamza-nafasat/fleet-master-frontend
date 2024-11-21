@@ -122,6 +122,12 @@ const ConfigurationSettings = () => {
     }
   }, [dispatch, user]);
 
+  useEffect(() => {
+    if(!user?.isCustomDbConnected) {
+      setModal("instruction-modal");
+    }
+  }, [user])
+
   return (
     <Box
       sx={{
