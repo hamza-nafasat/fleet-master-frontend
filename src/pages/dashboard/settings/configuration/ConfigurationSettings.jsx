@@ -358,23 +358,20 @@ export default ConfigurationSettings;
 
 const InstructionModalContent = ({ onClose }) => {
   return (
-    <div className="px-4">
+    <div className="px-4 pl-7">
       <h6 className="text-base md:text-2xl font-semibold text-center">
         Instructions
       </h6>
-      <ul className="mt-4 md:mt-6 flex flex-col gap-4 text-sm md:text-[15px]">
-        <li className="list-disc text-gray-600">
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Libero
-          beatae deserunt consequuntur amet, nulla distinctio voluptas harum non
-          eaque facere.
+      <ul className="mt-4 md:mt-6 flex flex-col gap-4 text-sm md:text-[15px] text-red-500">
+        <li className="list-decimal">
+        Double-check the database host, port, username, password, and database name for accuracy. Ensure there are no typos.
         </li>
-        <li className="list-disc text-gray-600">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum ipsa
-          harum consectetur?
+        <li className="list-decimal">
+        Confirm that the database server is running, and remote access is enabled for your IP address or the server you&#39;re connecting from.
         </li>
-        <li className="list-disc text-gray-600">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolores
-          tenetur ullam exercitationem eaque deserunt obcaecati et, sequi est?
+        <li className="list-decimal">
+        Test Connection Locally: Use a database management tool (e.g., MySQL Workbench or phpMyAdmin) to verify the credentials are correct and can establish a successful connection.
+
         </li>
       </ul>
       <div className="mt-4 flex justify-end">
