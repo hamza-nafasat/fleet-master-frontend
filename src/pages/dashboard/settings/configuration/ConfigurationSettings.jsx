@@ -203,7 +203,7 @@ const ConfigurationSettings = () => {
                   <RxCrossCircled fontSize={18} color="red" />
                 )}
                 <Typography color={user?.isCustomDbConnected ? "green" : "red"}>
-                  Connected
+                  {user?.isCustomDbConnected ? 'Connected':'Connection failed'}
                 </Typography>
               </Box>
             </Box>
