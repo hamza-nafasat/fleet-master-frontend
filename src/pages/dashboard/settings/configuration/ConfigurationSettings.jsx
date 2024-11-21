@@ -17,7 +17,10 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Modal from "../../../../components/modal/Modal";
-import { getMyProfileAction, updateMyProfileAction } from "../../../../redux/actions/user.actions";
+import {
+  getMyProfileAction,
+  updateMyProfileAction,
+} from "../../../../redux/actions/user.actions";
 import { CiCircleCheck } from "react-icons/ci";
 import { RxCrossCircled } from "react-icons/rx";
 
@@ -32,9 +35,7 @@ const ConfigurationSettings = () => {
     customDbPort: "",
   });
   const { user } = useSelector((state) => state.user);
-  const [selectedDatabase, setSelectedDatabase] = useState(
-    "remote-database"
-  );
+  const [selectedDatabase, setSelectedDatabase] = useState("remote-database");
   const [modal, setModal] = useState(false);
   const [newDatabase, setNewDatabase] = useState(null);
   const [intervalValue, setIntervalValue] = useState("30");
@@ -107,7 +108,7 @@ const ConfigurationSettings = () => {
     if (user) {
       setIntervalValue(user.interval);
       setSelectedDatabase(
-        user?.isCustomDb ?  "remote-database":"local-database"
+        user?.isCustomDb ? "remote-database" : "local-database"
       );
       setDataBase({
         isCustomDb: user?.isCustomDb === "yes" ? true : false,
@@ -117,7 +118,7 @@ const ConfigurationSettings = () => {
         customDbPassword: user?.customDbPassword,
         customDbPort: user?.customDbPort,
       });
-    console.log('user', user)
+      console.log("user", user);
     }
   }, [dispatch, user]);
 
@@ -194,18 +195,24 @@ const ConfigurationSettings = () => {
                   />
                 </RadioGroup>
               </FormControl>
-              <Box
-                sx={{ display: "flex", alignItems: "center", gap: "0.3rem" }}
-              >
-                {user?.isCustomDbConnected ? (
-                  <CiCircleCheck fontSize={20} color="green" />
-                ) : (
-                  <RxCrossCircled fontSize={18} color="red" />
-                )}
-                <Typography color={user?.isCustomDbConnected ? "green" : "red"}>
-                  {user?.isCustomDbConnected ? 'Connected':'Connection failed'}
-                </Typography>
-              </Box>
+              {selectedDatabase === "remote-database" && (
+                <Box
+                  sx={{ display: "flex", alignItems: "center", gap: "0.3rem" }}
+                >
+                  {user?.isCustomDbConnected ? (
+                    <CiCircleCheck fontSize={20} color="green" />
+                  ) : (
+                    <RxCrossCircled fontSize={18} color="red" />
+                  )}
+                  <Typography
+                    color={user?.isCustomDbConnected ? "green" : "red"}
+                  >
+                    {user?.isCustomDbConnected
+                      ? "Connected"
+                      : "Connection failed"}
+                  </Typography>
+                </Box>
+              )}
             </Box>
 
             {selectedDatabase === "remote-database" && (
