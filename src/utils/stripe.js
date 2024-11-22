@@ -186,10 +186,11 @@ const countryToCurrency = {
   ZM: "ZMW", // Zambia
   ZW: "ZWL", // Zimbabwe
 };
-const token = "b7c99ba13952a3";
+const COUNTRY_TOKEN = import.meta.env.VITE_GET_COUNTRY_TOKEN;
+const CURRENCY_TOKEN = import.meta.env.VITE_GET_CURRENCY_TOKEN;
 
 async function getUserCountry() {
-  const API_URL = `https://ipinfo.io/json?token=${token}`;
+  const API_URL = `https://ipinfo.io/json?token=${COUNTRY_TOKEN}`;
   try {
     const response = await fetch(API_URL);
     if (!response.ok) {
@@ -205,7 +206,7 @@ async function getUserCountry() {
 
 async function getExchangeRates(baseCurrency = "USD") {
   try {
-    const response = await fetch(`https://v6.exchangerate-api.com/v6/614002a5d3c72f73897635d5/latest/${baseCurrency}`);
+    const response = await fetch(`https://v6.exchangerate-api.com/v6/${CURRENCY_TOKEN}/latest/${baseCurrency}`);
     const data = await response.json();
     console.log(data); // Check what the API returns
     return data.conversion_rates;
@@ -215,6 +216,7 @@ async function getExchangeRates(baseCurrency = "USD") {
   }
 }
 async function getLocalizedPrice(basePrice, baseCurrency = "USD") {
+  if (!COUNTRY_TOKEN || !CURRENCY_TOKEN) throw new Error("Missing env variables");
   const userCountry = await getUserCountry();
   const userCurrency = countryToCurrency[userCountry] || baseCurrency;
 
