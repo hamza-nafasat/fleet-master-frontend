@@ -1,8 +1,14 @@
 /* eslint-disable react/prop-types */
 import { Box, Button, Grid, Typography, styled } from "@mui/material";
 import CheckIcon from "../../../../../assets/svgs/plans/CheckIcon";
+import { getLocalizedPrice } from "../../../../../utils/stripe";
+import { useState } from "react";
 
 const PlanCard = ({ bg, title, type, price, featuresList, description, btnBg, onClick, subscription }) => {
+  const [updatedPrice, setUpdatedPrice] = useState(`${price} USD`);
+  getLocalizedPrice(`${price}`, "USD").then((res) => {
+    setUpdatedPrice(`${res?.price} ${res?.currency}`);
+  });
   return (
     <Grid item xs={12} md={6} lg={4}>
       <Card
@@ -67,7 +73,8 @@ const PlanCard = ({ bg, title, type, price, featuresList, description, btnBg, on
             color: "#006BCB",
           }}
         >
-          {price}
+          {/* {price} */}
+          {updatedPrice}
           <Typography sx={{ fontSize: "18px", fontWeight: 400 }} variant="span">
             /{type}
           </Typography>
@@ -96,13 +103,9 @@ const PlanCard = ({ bg, title, type, price, featuresList, description, btnBg, on
             </Box>
           ))}
         </Box>
-        <Typography sx={{ marginTop: "24px", fontSize: "12px", color: "#414141B2" }}>
-          Description
-        </Typography>
+        <Typography sx={{ marginTop: "24px", fontSize: "12px", color: "#414141B2" }}>Description</Typography>
         <Typography sx={{ fontSize: "14px", marginTop: "10px", color: "#000" }}>{description}</Typography>
-        {subscription &&
-        subscription.plan === type &&
-        (subscription.subscriptionStatus === "active" || "trailing") ? (
+        {subscription && subscription.plan === type && (subscription.subscriptionStatus === "active" || "trailing") ? (
           <CustomBtn onClick={onClick} variant="contained" sx={{ background: btnBg }}>
             Cancel Now
           </CustomBtn>

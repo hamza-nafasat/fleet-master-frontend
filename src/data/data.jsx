@@ -228,7 +228,7 @@ export const users = [
     email: "test@gmail.com",
     role: "Admin",
     phone: "+12 345 6789 0",
-    profile: 'https://placehold.co/113x105',
+    profile: "https://placehold.co/113x105",
   },
   {
     firstName: "Hafidh",
@@ -237,7 +237,7 @@ export const users = [
     email: "test@gmail.com",
     role: "Admin",
     phone: "+12 345 6789 0",
-    profile: 'https://placehold.co/113x105',
+    profile: "https://placehold.co/113x105",
   },
   {
     firstName: "Hafidh",
@@ -246,7 +246,7 @@ export const users = [
     email: "test@gmail.com",
     role: "Admin",
     phone: "+12 345 6789 0",
-    profile: 'https://placehold.co/113x105',
+    profile: "https://placehold.co/113x105",
   },
   {
     firstName: "Hafidh",
@@ -255,7 +255,7 @@ export const users = [
     email: "test@gmail.com",
     role: "Admin",
     phone: "+12 345 6789 0",
-    profile: 'https://placehold.co/113x105',
+    profile: "https://placehold.co/113x105",
   },
   {
     firstName: "Hafidh",
@@ -264,7 +264,7 @@ export const users = [
     email: "test@gmail.com",
     role: "Admin",
     phone: "+12 345 6789 0",
-    profile: 'https://placehold.co/113x105',
+    profile: "https://placehold.co/113x105",
   },
   {
     firstName: "Hafidh",
@@ -273,7 +273,7 @@ export const users = [
     email: "test@gmail.com",
     role: "Admin",
     phone: "+12 345 6789 0",
-    profile: 'https://placehold.co/113x105',
+    profile: "https://placehold.co/113x105",
   },
   {
     firstName: "Hafidh",
@@ -282,7 +282,7 @@ export const users = [
     email: "test@gmail.com",
     role: "Admin",
     phone: "+12 345 6789 0",
-    profile: 'https://placehold.co/113x105',
+    profile: "https://placehold.co/113x105",
   },
   {
     firstName: "Hafidh",
@@ -291,7 +291,7 @@ export const users = [
     email: "test@gmail.com",
     role: "Admin",
     phone: "+12 345 6789 0",
-    profile: 'https://placehold.co/113x105',
+    profile: "https://placehold.co/113x105",
   },
   {
     firstName: "Hafidh",
@@ -300,7 +300,7 @@ export const users = [
     email: "test@gmail.com",
     role: "Admin",
     phone: "+12 345 6789 0",
-    profile: 'https://placehold.co/113x105',
+    profile: "https://placehold.co/113x105",
   },
   {
     firstName: "Hafidh",
@@ -309,7 +309,7 @@ export const users = [
     email: "test@gmail.com",
     role: "Admin",
     phone: "+12 345 6789 0",
-    profile: 'https://placehold.co/113x105',
+    profile: "https://placehold.co/113x105",
   },
   {
     firstName: "Hafidh",
@@ -318,7 +318,7 @@ export const users = [
     email: "test@gmail.com",
     role: "Admin",
     phone: "+12 345 6789 0",
-    profile: 'https://placehold.co/113x105',
+    profile: "https://placehold.co/113x105",
   },
   {
     firstName: "Hafidh",
@@ -327,7 +327,7 @@ export const users = [
     email: "test@gmail.com",
     role: "Admin",
     phone: "+12 345 6789 0",
-    profile: 'https://placehold.co/113x105',
+    profile: "https://placehold.co/113x105",
   },
 ];
 
@@ -363,7 +363,7 @@ export const regions = [
 export const planCards = [
   {
     title: "Basic Plan",
-    price: "$9.99",
+    price: "9.99",
     type: "monthly",
     featuresList: [
       "Access to basic content library",
@@ -379,7 +379,7 @@ export const planCards = [
   },
   {
     title: "Standard Plan",
-    price: "$19.99",
+    price: "19.99",
     type: "yearly",
     featuresList: [
       "Access to basic content library",
@@ -395,7 +395,7 @@ export const planCards = [
   },
   {
     title: "Premium Plan",
-    price: "$29.99",
+    price: "29.99",
     type: "lifetime",
     featuresList: [
       "Access to basic content library",
