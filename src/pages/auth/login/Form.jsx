@@ -61,7 +61,7 @@ const Form = () => {
             flexDirection: "column",
             alignItems: "center",
             width: "100%",
-            maxWidth: "38vw", // Adjust as needed
+            maxWidth: { xs: "90%", sm: "38vw" },
           }}
         >
           <TextField
