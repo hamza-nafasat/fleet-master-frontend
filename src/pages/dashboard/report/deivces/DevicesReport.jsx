@@ -11,6 +11,7 @@ import logo from "../../../../assets/images/logo.png";
 import CameraIcon from "../../../../assets/svgs/modal/CameraIcon";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import "jspdf-autotable";
+import * as XLSX from "xlsx";
 
 const columns = [
   { field: "name", headerName: "NAME", headerAlign: "center", align: "center", width: 230 },
@@ -123,6 +124,32 @@ const DeviceReport = () => {
     // Save the PDF
     doc.save("truck-report.pdf");
     handleClose();
+  };
+
+  // download csv
+  const exportToExcel = async (data) => {
+    try {
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Members");
+      // Buffer for Excel file
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: "xlsx",
+        type: "array",
+      });
+      const eData = new Blob([excelBuffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+      });
+      // Create a download link and trigger the download
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(eData);
+      link.download = "members.xlsx";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -270,7 +297,7 @@ const DeviceReport = () => {
           <Button onClick={handleOpen} sx={{ color: "#fff", padding: "8px 12px" }}>
             Export PDF
           </Button>
-          <Button sx={{ color: "#fff", padding: "8px 12px" }}>Export CSV</Button>
+          <Button onClick={() => exportToExcel(devices)} sx={{ color: "#fff", padding: "8px 12px" }}>Export CSV</Button>
         </Box>
       </Box>
       {devices?.length > 0 ? (

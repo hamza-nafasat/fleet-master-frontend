@@ -234,9 +234,9 @@ const TruckReport = () => {
     handleClose();
   };
   // download csv
-  const exportToExcel = async () => {
+  const exportToExcel = async (data) => {
     try {
-      const worksheet = XLSX.utils.json_to_sheet(singleTruckReport);
+      const worksheet = XLSX.utils.json_to_sheet(data);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "Members");
       // Buffer for Excel file
@@ -419,7 +419,7 @@ const TruckReport = () => {
           <Button onClick={handleOpen} sx={{ color: "#fff", padding: "8px 12px" }}>
             Export PDF
           </Button>
-          <Button onClick={exportToExcel} sx={{ color: "#fff", padding: "8px 12px" }}>
+          <Button onClick={() => exportToExcel(singleTruckReport)} sx={{ color: "#fff", padding: "8px 12px" }}>
             Export CSV
           </Button>
         </Box>
