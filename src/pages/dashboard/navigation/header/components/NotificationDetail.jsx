@@ -8,6 +8,8 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import DeleteIcon from "../../../../../assets/svgs/geofence/DeleteIcon";
 import DownloadIcon from "../../../../../assets/svgs/reports/DownloadIcon";
+import { MdDone, MdDoneAll } from "react-icons/md";
+
 import { adminDashboardDetailsAction } from "../../../../../redux/actions/admin.actions";
 import {
   deleteNotificationAction,
@@ -87,7 +89,7 @@ const NotificationDetail = () => {
             justifyContent: "center",
             alignItems: "center",
             height: "100%",
-            gap: 3,
+            gap: 2,
           }}
         >
           <DeleteIcon
@@ -104,6 +106,11 @@ const NotificationDetail = () => {
           >
             <FcViewDetails style={{ fontSize: "1.8rem", cursor: "pointer" }} />
           </Link>
+          {/* if notification unread render below icon */}
+          {/* <MdDone style={{ fontSize: "1.5rem", color: "#5B5B5B" }} /> */}
+
+          {/* if notification read the below icon render */}
+          <MdDoneAll style={{ fontSize: "1.5rem", color: "#4BC5EC" }} />
         </Box>
       ),
     },
