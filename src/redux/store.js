@@ -10,6 +10,7 @@ import subscriptionSlice from "./slices/subscription.slice";
 import notificationSlice from "./slices/notification.slice";
 import adminSlice from "./slices/admin.slice";
 import alertSlice from "./slices/alert.slice";
+import ruleEngineSlice from "./slices/ruleEngine.slice";
 
 const baseUrl = getEnv("VITE_SERVER_URL");
 
@@ -26,6 +27,7 @@ const store = configureStore({
     [adminSlice.name]: adminSlice.reducer,
 
     [alertSlice.name]: alertSlice.reducer,
+    [ruleEngineSlice.name]: ruleEngineSlice.reducer,
   },
 });
 
