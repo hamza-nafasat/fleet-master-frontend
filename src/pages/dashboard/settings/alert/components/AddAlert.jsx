@@ -121,6 +121,14 @@ const AddAlert = ({ onClose }) => {
       >
         <Box sx={{ width: "100%", display: "flex", flexDirection: "column" }}>
           <Grid container spacing={2}>
+            <Grid item xs={12} lg={12}>
+              <TextField
+                name="alertName"
+                type="text"
+                fullWidth
+                label="Alert Name"
+              />
+            </Grid>
             <Grid item xs={12} lg={6}>
               <TextField
                 name="alertType"
@@ -153,6 +161,31 @@ const AddAlert = ({ onClose }) => {
                 ))}
               </TextField>
             </Grid>
+            {formData.alertType == "idle-engine" && (
+              <Grid item xs={12} lg={12}>
+                <TextField name="alertName" fullWidth type="time" />
+              </Grid>
+            )}
+            {formData.alertType == "tire-pressure" && (
+              <Grid item xs={12} lg={12}>
+                <TextField
+                  name="alertName"
+                  label="Tyre Pressure"
+                  fullWidth
+                  type="number"
+                />
+              </Grid>
+            )}
+            {formData.alertType == "speed-alert" && (
+              <Grid item xs={12} lg={12}>
+                <TextField
+                  name="alertName"
+                  label="Speed Alert"
+                  fullWidth
+                  type="number"
+                />
+              </Grid>
+            )}
             {inputEmail && (
               <Grid item xs={12} lg={6}>
                 <TextField
@@ -165,7 +198,6 @@ const AddAlert = ({ onClose }) => {
                 />
               </Grid>
             )}
-
             <Grid
               item
               xs={12}

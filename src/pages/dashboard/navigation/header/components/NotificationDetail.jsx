@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import DeleteIcon from "../../../../../assets/svgs/geofence/DeleteIcon";
 import DownloadIcon from "../../../../../assets/svgs/reports/DownloadIcon";
-import { MdDone, MdDoneAll } from "react-icons/md";
+import { MdDoneAll } from "react-icons/md";
 
 import { adminDashboardDetailsAction } from "../../../../../redux/actions/admin.actions";
 import {

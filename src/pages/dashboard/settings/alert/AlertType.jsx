@@ -1,5 +1,11 @@
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { Box, FormControlLabel, Switch, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControlLabel,
+  Switch,
+  Typography,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { Fragment, useEffect, useState } from "react";
 import { confirmAlert } from "react-confirm-alert";
@@ -25,6 +31,7 @@ import {
 import AddAlert from "./components/AddAlert";
 import EditAlert from "./components/EditAlert";
 import NoData from "../../../../components/noData/NoData";
+import RuleEngine from "./components/RuleEngine";
 
 const AlertType = () => {
   const dispatch = useDispatch();
@@ -40,6 +47,10 @@ const AlertType = () => {
   const handleOpenAddModal = () => setModalType("add");
   const handleCloseModal = () => {
     setModalType(null);
+  };
+
+  const handleOpenEngineRule = () => {
+    setModalType("engine-rule");
   };
   // delete alert function
   const deleteAlertHandler = async (id) => {
@@ -269,10 +280,14 @@ const AlertType = () => {
           sx={{
             padding: "10px 30px",
             display: "flex",
+            alignItems: "center",
             justifyContent: "flex-end",
             gap: "10px",
           }}
         >
+          <Button variant="contained" onClick={handleOpenEngineRule}>
+            Rule Engine
+          </Button>
           <Box sx={{ cursor: "pointer" }} onClick={handleOpenAddModal}>
             <AddIcon />
           </Box>
@@ -359,6 +374,12 @@ const AlertType = () => {
       {modalType === "add" && (
         <Modal onClose={handleCloseModal}>
           <AddAlert onClose={handleCloseModal} />
+        </Modal>
+      )}
+
+      {modalType === "engine-rule" && (
+        <Modal onClose={handleCloseModal}>
+          <RuleEngine onClose={handleCloseModal} />
         </Modal>
       )}
     </Fragment>
