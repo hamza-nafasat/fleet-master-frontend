@@ -35,6 +35,13 @@ const severityType = [{ type: "high" }, { type: "medium" }, { type: "low" }];
 const RuleEngine = ({ onClose }) => {
   const [accordionList, setAccordionList] = useState([{ id: 1 }]);
   const [name, setName] = useState("");
+  const [selectedAlertTypes, setSelectedAlertTypes] = useState([]); // Track selected alert types globally
+  const [formData, setFormData] = useState({
+    severityType: "",
+    email: "",
+    platform: "",
+  });
+  const [inputEmail, setInputEmail] = useState(false);
 
   // Function to add a new accordion
   const handleAddAccordion = () => {
@@ -44,19 +51,50 @@ const RuleEngine = ({ onClose }) => {
     ]);
   };
 
-  // Mock save action
-  const handleSave = () => {
-    // if (!formData.alertType || !formData.severityType || !formData.platform) {
-    //   alert("All fields are required");
-    //   return;
-    // }
-    // console.log("Saved Form Data:", formData);
-  };
-
+  // Function to remove an accordion
   const handleRemoveAccordion = (id) => {
     setAccordionList((prevList) =>
       prevList.filter((accordion) => accordion.id !== id)
     );
+    setSelectedAlertTypes(
+      (prev) => prev.filter((item) => item.accordionId !== id) // Remove associated alert type from selectedAlertTypes
+    );
+  };
+
+  // Update selected alert types
+  const handleAlertTypeChange = (id, selectedType) => {
+    setSelectedAlertTypes((prev) => {
+      const filtered = prev.filter((item) => item.accordionId !== id); // Remove previous selection for this accordion
+      if (selectedType) {
+        filtered.push({ accordionId: id, type: selectedType }); // Add new selected type
+      }
+      return filtered;
+    });
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+    setFormData((prev) => ({
+      ...prev,
+      platform: checked ? name : "",
+    }));
+    if (name === "email") {
+      setInputEmail(true);
+    } else {
+      setInputEmail(false);
+    }
+  };
+
+  const handleSave = () => {
+    // Mock save action (add actual save logic as required)
   };
 
   return (
@@ -79,7 +117,7 @@ const RuleEngine = ({ onClose }) => {
       <Box sx={{ mt: 3 }}>
         <Grid container spacing={2}>
           {/* Alert Name Field */}
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={6}>
             <TextField
               name="alertName"
               type="text"
@@ -89,14 +127,84 @@ const RuleEngine = ({ onClose }) => {
               value={name}
             />
           </Grid>
+          {/* Severity Type Dropdown */}
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="severityType"
+              onChange={handleChange}
+              select
+              fullWidth
+              label="Severity Type"
+              value={formData.severityType}
+            >
+              {severityType.map((type, i) => (
+                <MenuItem key={i} value={type.type}>
+                  {type.type?.toUpperCase()}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+
+          {/* Email Input */}
+          {inputEmail && (
+            <Grid item xs={12}>
+              <TextField
+                type="email"
+                name="email"
+                onChange={handleChange}
+                fullWidth
+                label="Email"
+                value={formData.email || ""}
+              />
+            </Grid>
+          )}
+
+          {/* Notification Type */}
+          <Grid
+            item
+            xs={12}
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "end",
+            }}
+          >
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, mt: 2 }}>
+              NOTIFICATION TYPE*
+            </Typography>
+            <FormGroup row>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="email"
+                    checked={formData.platform === "email"}
+                    onChange={handleCheckboxChange}
+                  />
+                }
+                label="Email"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="platform"
+                    checked={formData.platform === "platform"}
+                    onChange={handleCheckboxChange}
+                  />
+                }
+                label="Platform"
+              />
+            </FormGroup>
+          </Grid>
 
           {/* Accordion Component */}
           <Grid item xs={12}>
             {accordionList.map((accordion) => (
               <Accordion
                 key={accordion.id}
-                onRemove={handleRemoveAccordion}
                 id={accordion.id}
+                onRemove={handleRemoveAccordion}
+                selectedAlertTypes={selectedAlertTypes}
+                onAlertTypeChange={handleAlertTypeChange}
               />
             ))}
           </Grid>
@@ -154,10 +262,7 @@ const RuleEngine = ({ onClose }) => {
   );
 };
 
-export default RuleEngine;
-
-const Accordion = ({ id, onRemove }) => {
-  const [inputEmail, setInputEmail] = useState(false);
+const Accordion = ({ id, onRemove, selectedAlertTypes, onAlertTypeChange }) => {
   const [formData, setFormData] = useState({
     alertType: "",
     severityType: "",
@@ -165,27 +270,26 @@ const Accordion = ({ id, onRemove }) => {
     platform: "",
   });
 
-  // Handle changes for all input fields
+  // Handle alert type change
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (name === "alertType") {
+      onAlertTypeChange(id, value); // Notify parent about alert type change
+    }
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
-  // Handle checkbox toggling for email and platform
-  const handleCheckboxChange = (event) => {
-    const { name, checked } = event.target;
-    setFormData((prev) => ({
-      ...prev,
-      platform: checked ? name : "",
-    }));
-    if (name == "email") {
-      setInputEmail(true);
-    } else {
-      setInputEmail(false);
-    }
-  };
+
+  // Filter alert types based on what's already selected
+  const availableAlertTypes = alertType.filter(
+    (type) =>
+      !selectedAlertTypes.some(
+        (selected) => selected.type === type.type && selected.accordionId !== id
+      )
+  );
+
   return (
     <MuiAccordion sx={{ margin: "10px 0" }}>
       {/* Accordion Summary */}
@@ -208,7 +312,7 @@ const Accordion = ({ id, onRemove }) => {
               label="Alert Type"
               value={formData.alertType}
             >
-              {alertType.map((type, i) => (
+              {availableAlertTypes.map((type, i) => (
                 <MenuItem key={i} value={type.type}>
                   {type.type?.toUpperCase()}
                 </MenuItem>
@@ -216,39 +320,20 @@ const Accordion = ({ id, onRemove }) => {
             </TextField>
           </Grid>
 
-          {/* Severity Type Dropdown */}
-          <Grid item xs={12} sm={6}>
-            <TextField
-              name="severityType"
-              onChange={handleChange}
-              select
-              fullWidth
-              label="Severity Type"
-              value={formData.severityType}
-            >
-              {severityType.map((type, i) => (
-                <MenuItem key={i} value={type.type}>
-                  {type.type?.toUpperCase()}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-
-          {/* Conditional Fields Based on Alert Type */}
+          {/* Additional Fields for Specific Alert Types */}
           {formData.alertType === "idle-engine" && (
-            <Grid item xs={12}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 name="idleTime"
                 fullWidth
                 type="time"
                 onChange={handleChange}
                 value={formData.idleTime || ""}
-                label="Idle Engine Time"
               />
             </Grid>
           )}
           {formData.alertType === "tire-pressure" && (
-            <Grid item xs={12}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 name="tirePressure"
                 label="Tire Pressure"
@@ -260,7 +345,7 @@ const Accordion = ({ id, onRemove }) => {
             </Grid>
           )}
           {formData.alertType === "speed-alert" && (
-            <Grid item xs={12}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 name="speedLimit"
                 label="Speed Limit"
@@ -271,64 +356,15 @@ const Accordion = ({ id, onRemove }) => {
               />
             </Grid>
           )}
-
-          {/* Email Input */}
-          {inputEmail && (
-            <Grid item xs={12}>
-              <TextField
-                type="email"
-                name="email"
-                onChange={handleChange}
-                fullWidth
-                label="Email"
-                value={formData.email || ""}
-              />
-            </Grid>
-          )}
-
-          {/* Notification Type */}
-          <Grid
-            item
-            xs={12}
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "end",
-            }}
-          >
-            <Typography variant="subtitle1" sx={{ fontWeight: 600, mt: 2 }}>
-              NOTIFICATION TYPE*
-            </Typography>
-            <FormGroup row>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="email"
-                    checked={formData.platform === "email"}
-                    onChange={handleCheckboxChange}
-                  />
-                }
-                label="Email"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="platform"
-                    checked={formData.platform === "platform"}
-                    onChange={handleCheckboxChange}
-                  />
-                }
-                label="Platform"
-              />
-            </FormGroup>
-          </Grid>
-          <Box sx={{ ml: "auto" }}>
-            <Button variant="contained" onClick={() => onRemove(id)}>
-              Cancel
-            </Button>
-          </Box>
         </Grid>
+        <Box sx={{ ml: "auto", mt: 2 }}>
+          <Button variant="contained" onClick={() => onRemove(id)}>
+            Cancel
+          </Button>
+        </Box>
       </AccordionDetails>
     </MuiAccordion>
   );
 };
+
+export default RuleEngine;
