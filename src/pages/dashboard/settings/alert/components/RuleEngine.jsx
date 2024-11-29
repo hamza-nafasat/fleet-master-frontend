@@ -20,8 +20,6 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddIcon from "../../../../../assets/svgs/settings/AddIcon";
 
 const alertType = [
-  { type: "infence" },
-  { type: "outfence" },
   { type: "speed-alert" },
   { type: "sudden-stop" },
   { type: "two-detection" },
