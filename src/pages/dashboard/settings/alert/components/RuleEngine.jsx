@@ -37,6 +37,7 @@ const RuleEngine = ({ onClose }) => {
   const [name, setName] = useState("");
   const [selectedAlertTypes, setSelectedAlertTypes] = useState([]); // Track selected alert types globally
   const [formData, setFormData] = useState({
+    alertName: "",
     severityType: "",
     email: "",
     platform: "",
@@ -64,9 +65,9 @@ const RuleEngine = ({ onClose }) => {
   // Update selected alert types
   const handleAlertTypeChange = (id, selectedType) => {
     setSelectedAlertTypes((prev) => {
-      const filtered = prev.filter((item) => item.accordionId !== id); // Remove previous selection for this accordion
+      const filtered = prev.filter((item) => item.accordionId !== id);
       if (selectedType) {
-        filtered.push({ accordionId: id, type: selectedType }); // Add new selected type
+        filtered.push({ accordionId: id, type: selectedType });
       }
       return filtered;
     });
@@ -95,6 +96,7 @@ const RuleEngine = ({ onClose }) => {
 
   const handleSave = () => {
     // Mock save action (add actual save logic as required)
+    console.log("=========Form Data========", formData);
   };
 
   return (
@@ -123,8 +125,8 @@ const RuleEngine = ({ onClose }) => {
               type="text"
               fullWidth
               label="Alert Name"
-              onChange={(e) => setName(e.target.value)}
-              value={name}
+              onChange={handleChange}
+              value={formData.alertName || ""}
             />
           </Grid>
           {/* Severity Type Dropdown */}
@@ -205,6 +207,8 @@ const RuleEngine = ({ onClose }) => {
                 onRemove={handleRemoveAccordion}
                 selectedAlertTypes={selectedAlertTypes}
                 onAlertTypeChange={handleAlertTypeChange}
+                handleChange={handleChange}
+                formData={formData}
               />
             ))}
           </Grid>
@@ -265,9 +269,6 @@ const RuleEngine = ({ onClose }) => {
 const Accordion = ({ id, onRemove, selectedAlertTypes, onAlertTypeChange }) => {
   const [formData, setFormData] = useState({
     alertType: "",
-    severityType: "",
-    email: "",
-    platform: "",
   });
 
   // Handle alert type change
