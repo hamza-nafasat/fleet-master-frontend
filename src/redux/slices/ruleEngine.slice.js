@@ -55,7 +55,7 @@ const ruleEngineSlice = createSlice({
     },
     getAllRuleEngineSuccess: (state, action) => {
       state.loading = false;
-      state.alerts = action.payload.data;
+      state.ruleEngine = action.payload.data;
     },
     getAllRuleEngineFailure: (state, action) => {
       state.loading = false;
