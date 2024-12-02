@@ -15,11 +15,11 @@ import {
 } from "../slices/alert.slice";
 
 // create alert
-const createAlertActions = ({ platform, severity, type }) => {
+const createAlertActions = ({ name, platform, severity, type }) => {
   return async (dispatch) => {
     dispatch(createAlertStart());
     try {
-      const response = await customAxios.post("/alert/create", { platform, severity, type });
+      const response = await customAxios.post("/alert/create", { name, platform, severity, type });
       // console.log("create alert api response ", response);
       dispatch(createAlertSuccess(response.data));
     } catch (error) {

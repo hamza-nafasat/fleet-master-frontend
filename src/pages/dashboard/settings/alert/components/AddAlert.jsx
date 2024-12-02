@@ -15,10 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import BackIcon from "../../../../../assets/svgs/modal/BackIcon";
 import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
-import {
-  createAlertActions,
-  getAllAlertsActions,
-} from "../../../../../redux/actions/alert.actions";
+import { createAlertActions, getAllAlertsActions } from "../../../../../redux/actions/alert.actions";
 
 const alertType = [
   { type: "infence" },
@@ -40,6 +37,7 @@ const AddAlert = ({ onClose }) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
+    alertName: "",
     alertType: "",
     severityType: "",
     email: "",
@@ -61,14 +59,16 @@ const AddAlert = ({ onClose }) => {
     try {
       await dispatch(
         createAlertActions({
+          name: formData.alertName,
           platform: formData.platform,
           severity: formData.severityType,
           type: formData.alertType,
         })
       );
       await dispatch(getAllAlertsActions());
-      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -124,6 +124,8 @@ const AddAlert = ({ onClose }) => {
             <Grid item xs={12} lg={12}>
               <TextField
                 name="alertName"
+                onChange={handleChange}
+                value={formData.alertName}
                 type="text"
                 fullWidth
                 label="Alert Name"
@@ -168,22 +170,12 @@ const AddAlert = ({ onClose }) => {
             )}
             {formData.alertType == "tire-pressure" && (
               <Grid item xs={12} lg={12}>
-                <TextField
-                  name="alertName"
-                  label="Tyre Pressure"
-                  fullWidth
-                  type="number"
-                />
+                <TextField name="alertName" label="Tyre Pressure" fullWidth type="number" />
               </Grid>
             )}
             {formData.alertType == "speed-alert" && (
               <Grid item xs={12} lg={12}>
-                <TextField
-                  name="alertName"
-                  label="Speed Alert"
-                  fullWidth
-                  type="number"
-                />
+                <TextField name="alertName" label="Speed Alert" fullWidth type="number" />
               </Grid>
             )}
             {inputEmail && (

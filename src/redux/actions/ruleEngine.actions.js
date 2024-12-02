@@ -15,5 +15,52 @@ const createRuleEngineActions = ({ name, alert, platform, severity, onMil, statu
     }
   };
 };
+// update ruleEngine
+const updateRuleEngineActions = ({ id, name, alert, platform, severity, onMil, status }) => {
+  return async (dispatch) => {
+    dispatch(createRuleEngineStart());
+    try {
+      const response = await customAxios.put(`/ruleengine/single/${id}`, {
+        name,
+        alert,
+        platform,
+        severity,
+        onMil,
+        status,
+      });
+      // console.log("create alert api response ", response);
+      dispatch(createRuleEngineSuccess(response.data));
+    } catch (error) {
+      // console.log("create alert api error", error);
+      dispatch(createRuleEngineFailure(error?.response?.data?.message || "Error occurred while creating alert"));
+    }
+  };
+};
+// delete ruleEngine
+const deleteRuleEngineActions = (id) => {
+  return async (dispatch) => {
+    dispatch(createRuleEngineStart());
+    try {
+      const response = await customAxios.delete(`/ruleengine/single/${id}`);
+      // console.log("create alert api response ", response);
+      dispatch(createRuleEngineSuccess(response.data));
+    } catch (error) {
+      // console.log("create alert api error", error);
+      dispatch(createRuleEngineFailure(error?.response?.data?.message || "Error occurred while creating alert"));
+    }
+  };
+};
+// get all ruleEngine Action
+const getAllRuleEngineActions = () => async (dispatch) => {
+  try {
+    dispatch(createRuleEngineStart());
+    const response = await customAxios.get("/ruleengine/all");
+    // console.log("alert get all api response ", response);
+    dispatch(createRuleEngineSuccess(response.data));
+  } catch (error) {
+    // console.log("alert get all api error", error);
+    dispatch(createRuleEngineFailure(error?.response?.data?.message || "Error occurred while getting alerts"));
+  }
+};
 
-export { createRuleEngineActions };
+export { createRuleEngineActions, updateRuleEngineActions, deleteRuleEngineActions, getAllRuleEngineActions };

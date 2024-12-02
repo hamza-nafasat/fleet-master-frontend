@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Accordion as MuiAccordion,
   AccordionDetails,
@@ -18,6 +18,10 @@ import {
 import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddIcon from "../../../../../assets/svgs/settings/AddIcon";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { createRuleEngineActions } from "../../../../../redux/actions/ruleEngine.actions";
+import { clearRuleEngineError, clearRuleEngineMessage } from "../../../../../redux/slices/ruleEngine.slice";
 
 const alertType = [
   { type: "speed-alert" },
@@ -31,14 +35,16 @@ const alertType = [
 const severityType = [{ type: "high" }, { type: "medium" }, { type: "low" }];
 
 const RuleEngine = ({ onClose }) => {
-  const [accordionList, setAccordionList] = useState([{ id: 1 }]);
-  const [name, setName] = useState("");
-  const [selectedAlertTypes, setSelectedAlertTypes] = useState([]); // Track selected alert types globally
+  const dispatch = useDispatch();
+  const [isAccordionComplete, setIsAccordionComplete] = useState(true);
+  const [accordionList, setAccordionList] = useState([{ id: 1, type: "" }]);
+  const { message, error } = useSelector((state) => state.ruleEngine);
   const [formData, setFormData] = useState({
     alertName: "",
     severityType: "",
     email: "",
     platform: "",
+    status: "",
   });
   const [inputEmail, setInputEmail] = useState(false);
 
@@ -52,23 +58,7 @@ const RuleEngine = ({ onClose }) => {
 
   // Function to remove an accordion
   const handleRemoveAccordion = (id) => {
-    setAccordionList((prevList) =>
-      prevList.filter((accordion) => accordion.id !== id)
-    );
-    setSelectedAlertTypes(
-      (prev) => prev.filter((item) => item.accordionId !== id) // Remove associated alert type from selectedAlertTypes
-    );
-  };
-
-  // Update selected alert types
-  const handleAlertTypeChange = (id, selectedType) => {
-    setSelectedAlertTypes((prev) => {
-      const filtered = prev.filter((item) => item.accordionId !== id);
-      if (selectedType) {
-        filtered.push({ accordionId: id, type: selectedType });
-      }
-      return filtered;
-    });
+    setAccordionList((prevList) => prevList.filter((accordion) => accordion.id !== id));
   };
 
   const handleChange = (e) => {
@@ -92,11 +82,64 @@ const RuleEngine = ({ onClose }) => {
     }
   };
 
-  const handleSave = () => {
-    // Mock save action (add actual save logic as required)
-    console.log("=========Form Data========", formData);
+  const handleSave = async () => {
+    const { alertName, email, severityType, platform, status } = formData;
+    if (!alertName || !severityType || !platform || !status) return toast.error("All fields are required");
+    if (platform === "email" && !email) return toast.error("Email is required");
+    const alerts = accordionList.map((item) => {
+      const data = {};
+      if (item?.type) data.type = item.type;
+      if (item?.speed) data.speed = item.speed;
+      if (item?.tirePressure) data.tirePressure = item.tirePressure;
+      if (item?.idleEngineTime) data.idleEngineTime = item.idleEngineTime;
+      if (data.type === "speed" && !data.speed) {
+        setIsAccordionComplete(false);
+        return toast.error("Speed Limit is required for Speed Alert");
+      }
+      if (data.type === "tire-pressure" && !data.tirePressure) {
+        setIsAccordionComplete(false);
+        return toast.error("Tire Pressure Limit is required for Tire Pressure Alert");
+      }
+      if (data.type === "idle-engine" && !data.idleEngineTime) {
+        setIsAccordionComplete(false);
+        return toast.error("Idle Engine Time Limit is required for Idle Engine Alert");
+      }
+      if (data.type) return data;
+    });
+    if (!alerts[0]?.type) return toast.error("At least one alert type is required");
+    // CHECK IS ALL FIELDS ARE COMPLETED OR NOT
+    if (!isAccordionComplete) return setIsAccordionComplete(true);
+
+    // hit the api
+    // ------------
+
+    try {
+      await dispatch(
+        createRuleEngineActions({
+          alert: alerts,
+          name: formData.alertName,
+          severity: formData.severityType,
+          platform: formData.platform,
+          onMil: formData.email,
+          status: formData.status,
+        })
+      );
+    } catch (error) {
+      console.log("Error in creating rule engine", error);
+    }
   };
 
+  useEffect(() => {
+    if (message) {
+      toast.success(message);
+      dispatch(clearRuleEngineMessage());
+      onClose();
+    }
+    if (error) {
+      toast.error(error);
+      dispatch(clearRuleEngineError());
+    }
+  }, [message, error, dispatch, onClose]);
   return (
     <Box>
       {/* Header */}
@@ -121,6 +164,7 @@ const RuleEngine = ({ onClose }) => {
             <TextField
               name="alertName"
               type="text"
+              required
               fullWidth
               label="Alert Name"
               onChange={handleChange}
@@ -133,6 +177,7 @@ const RuleEngine = ({ onClose }) => {
               name="severityType"
               onChange={handleChange}
               select
+              required
               fullWidth
               label="Severity Type"
               value={formData.severityType}
@@ -144,6 +189,23 @@ const RuleEngine = ({ onClose }) => {
               ))}
             </TextField>
           </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="status"
+              onChange={handleChange}
+              select
+              required
+              fullWidth
+              label="Status"
+              value={formData.status}
+            >
+              {["enable", "disable"].map((type, i) => (
+                <MenuItem key={i} value={type}>
+                  {type?.toUpperCase()}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
 
           {/* Email Input */}
           {inputEmail && (
@@ -151,6 +213,7 @@ const RuleEngine = ({ onClose }) => {
               <TextField
                 type="email"
                 name="email"
+                required
                 onChange={handleChange}
                 fullWidth
                 label="Email"
@@ -175,11 +238,7 @@ const RuleEngine = ({ onClose }) => {
             <FormGroup row>
               <FormControlLabel
                 control={
-                  <Checkbox
-                    name="email"
-                    checked={formData.platform === "email"}
-                    onChange={handleCheckboxChange}
-                  />
+                  <Checkbox name="email" checked={formData?.platform === "email"} onChange={handleCheckboxChange} />
                 }
                 label="Email"
               />
@@ -187,7 +246,7 @@ const RuleEngine = ({ onClose }) => {
                 control={
                   <Checkbox
                     name="platform"
-                    checked={formData.platform === "platform"}
+                    checked={formData?.platform === "platform"}
                     onChange={handleCheckboxChange}
                   />
                 }
@@ -198,24 +257,19 @@ const RuleEngine = ({ onClose }) => {
 
           {/* Accordion Component */}
           <Grid item xs={12}>
-            {accordionList.map((accordion) => (
+            {accordionList?.map((accordion) => (
               <Accordion
-                key={accordion.id}
-                id={accordion.id}
+                key={accordion?.id}
+                id={accordion?.id}
                 onRemove={handleRemoveAccordion}
-                selectedAlertTypes={selectedAlertTypes}
-                onAlertTypeChange={handleAlertTypeChange}
                 handleChange={handleChange}
-                formData={formData}
+                accordionList={accordionList}
+                setAccordionList={setAccordionList}
               />
             ))}
           </Grid>
           <Box sx={{ ml: "auto" }}>
-            <IconButton
-              onClick={handleAddAccordion}
-              color="primary"
-              aria-label="add accordion"
-            >
+            <IconButton onClick={handleAddAccordion} color="primary" aria-label="add accordion">
               <AddIcon />
             </IconButton>
           </Box>
@@ -264,30 +318,33 @@ const RuleEngine = ({ onClose }) => {
   );
 };
 
-const Accordion = ({ id, onRemove, selectedAlertTypes, onAlertTypeChange }) => {
-  const [formData, setFormData] = useState({
-    alertType: "",
-  });
+const Accordion = ({ id, onRemove, accordionList, setAccordionList }) => {
+  const [formData, setFormData] = useState({});
 
   // Handle alert type change
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    if (name === "alertType") {
-      onAlertTypeChange(id, value); // Notify parent about alert type change
-    }
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setAccordionList((prevList) =>
+      prevList.map((accordion) => {
+        if (accordion.id === id) {
+          return {
+            ...accordion,
+            [e.target.name]: e.target.value,
+          };
+        }
+        return accordion;
+      })
+    );
   };
 
   // Filter alert types based on what's already selected
-  const availableAlertTypes = alertType.filter(
-    (type) =>
-      !selectedAlertTypes.some(
-        (selected) => selected.type === type.type && selected.accordionId !== id
-      )
-  );
+  const availableAlertTypes = alertType.filter((type) => {
+    const allSelectedAlertTypes = accordionList?.map((accordion) => accordion.alert);
+    return !allSelectedAlertTypes.includes(type?.type);
+  });
+
+  useEffect(() => {
+    setFormData(accordionList.find((accordion) => accordion?.id === id) || {});
+  }, [id, accordionList]);
 
   return (
     <MuiAccordion sx={{ margin: "10px 0" }}>
@@ -304,54 +361,57 @@ const Accordion = ({ id, onRemove, selectedAlertTypes, onAlertTypeChange }) => {
           {/* Alert Type Dropdown */}
           <Grid item xs={12} sm={6}>
             <TextField
-              name="alertType"
+              name="type"
               onChange={handleChange}
               select
+              required
               fullWidth
               label="Alert Type"
-              value={formData.alertType}
+              value={formData?.type || ""}
             >
               {availableAlertTypes.map((type, i) => (
                 <MenuItem key={i} value={type.type}>
-                  {type.type?.toUpperCase()}
+                  {type?.type?.toUpperCase()}
                 </MenuItem>
               ))}
             </TextField>
           </Grid>
-
           {/* Additional Fields for Specific Alert Types */}
-          {formData.alertType === "idle-engine" && (
+          {formData?.type === "idle-engine" && (
             <Grid item xs={12} sm={6}>
               <TextField
-                name="idleTime"
+                name="idleEngineTime"
                 fullWidth
+                required
                 type="time"
                 onChange={handleChange}
-                value={formData.idleTime || ""}
+                value={formData?.idleEngineTime || ""}
               />
             </Grid>
           )}
-          {formData.alertType === "tire-pressure" && (
+          {formData?.type === "tire-pressure" && (
             <Grid item xs={12} sm={6}>
               <TextField
                 name="tirePressure"
                 label="Tire Pressure"
                 fullWidth
+                required
                 type="number"
                 onChange={handleChange}
-                value={formData.tirePressure || ""}
+                value={formData?.tirePressure || ""}
               />
             </Grid>
           )}
-          {formData.alertType === "speed-alert" && (
+          {formData?.type === "speed-alert" && (
             <Grid item xs={12} sm={6}>
               <TextField
-                name="speedLimit"
+                name="speed"
                 label="Speed Limit"
                 fullWidth
+                required
                 type="number"
                 onChange={handleChange}
-                value={formData.speedLimit || ""}
+                value={formData?.speed || ""}
               />
             </Grid>
           )}
