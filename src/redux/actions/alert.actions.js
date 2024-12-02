@@ -44,7 +44,7 @@ const getAllAlertsActions = () => async (dispatch) => {
 
 // update alert
 const updateAlertAction =
-  ({ alertId = "", platform = "", severity = "", type = "", status = "" }) =>
+  ({ alertId = "", platform = "", severity = "", type = "", status = "", name }) =>
   async (dispatch) => {
     try {
       dispatch(updateAlertStart());
@@ -53,6 +53,7 @@ const updateAlertAction =
         severity,
         type,
         status,
+        name,
       });
       // console.log("update alert api response ", response);
       dispatch(updateAlertSuccess(response.data));

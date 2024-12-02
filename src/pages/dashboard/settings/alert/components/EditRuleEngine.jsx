@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
-  Accordion as MuiAccordion,
   AccordionDetails,
   AccordionSummary,
   Box,
@@ -10,21 +9,18 @@ import {
   FormControlLabel,
   FormGroup,
   Grid,
+  IconButton,
   MenuItem,
+  Accordion as MuiAccordion,
   TextField,
   Typography,
-  IconButton,
 } from "@mui/material";
-import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import AddIcon from "../../../../../assets/svgs/settings/AddIcon";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux";
-import { createRuleEngineActions } from "../../../../../redux/actions/ruleEngine.actions";
-import {
-  clearRuleEngineError,
-  clearRuleEngineMessage,
-} from "../../../../../redux/slices/ruleEngine.slice";
+import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
+import AddIcon from "../../../../../assets/svgs/settings/AddIcon";
+import { getAllRuleEngineActions, updateRuleEngineActions } from "../../../../../redux/actions/ruleEngine.actions";
 
 const alertType = [
   { type: "speed-alert" },
@@ -37,19 +33,18 @@ const alertType = [
 ];
 const severityType = [{ type: "high" }, { type: "medium" }, { type: "low" }];
 
-const EditRuleEngine = ({ onClose }) => {
+const EditRuleEngine = ({ onClose, selectedRuleEngine }) => {
   const dispatch = useDispatch();
   const [isAccordionComplete, setIsAccordionComplete] = useState(true);
-  const [accordionList, setAccordionList] = useState([{ id: 1, type: "" }]);
-  const { message, error } = useSelector((state) => state.ruleEngine);
-  const [formData, setFormData] = useState({
-    alertName: "",
-    severityType: "",
-    email: "",
-    platform: "",
-    status: "",
-  });
   const [inputEmail, setInputEmail] = useState(false);
+  const [accordionList, setAccordionList] = useState([{ id: 1, type: "" }]);
+  const [formData, setFormData] = useState({
+    alertName: selectedRuleEngine.name,
+    severityType: selectedRuleEngine.severity,
+    email: selectedRuleEngine.onMail,
+    platform: selectedRuleEngine.platform,
+    status: selectedRuleEngine.status,
+  });
 
   // Function to add a new accordion
   const handleAddAccordion = () => {
@@ -61,9 +56,7 @@ const EditRuleEngine = ({ onClose }) => {
 
   // Function to remove an accordion
   const handleRemoveAccordion = (id) => {
-    setAccordionList((prevList) =>
-      prevList.filter((accordion) => accordion.id !== id)
-    );
+    setAccordionList((prevList) => prevList.filter((accordion) => accordion.id !== id));
   };
 
   const handleChange = (e) => {
@@ -89,8 +82,7 @@ const EditRuleEngine = ({ onClose }) => {
 
   const handleSave = async () => {
     const { alertName, email, severityType, platform, status } = formData;
-    if (!alertName || !severityType || !platform || !status)
-      return toast.error("All fields are required");
+    if (!alertName || !severityType || !platform || !status) return toast.error("All fields are required");
     if (platform === "email" && !email) return toast.error("Email is required");
     const alerts = accordionList.map((item) => {
       const data = {};
@@ -104,30 +96,27 @@ const EditRuleEngine = ({ onClose }) => {
       }
       if (data.type === "tire-pressure" && !data.tirePressure) {
         setIsAccordionComplete(false);
-        return toast.error(
-          "Tire Pressure Limit is required for Tire Pressure Alert"
-        );
+        return toast.error("Tire Pressure Limit is required for Tire Pressure Alert");
       }
       if (data.type === "idle-engine" && !data.idleEngineTime) {
         setIsAccordionComplete(false);
-        return toast.error(
-          "Idle Engine Time Limit is required for Idle Engine Alert"
-        );
+        return toast.error("Idle Engine Time Limit is required for Idle Engine Alert");
       }
       if (data.type) return data;
     });
-    if (!alerts[0]?.type)
-      return toast.error("At least one alert type is required");
+    if (!alerts[0]?.type) return toast.error("At least one alert type is required");
     // CHECK IS ALL FIELDS ARE COMPLETED OR NOT
     if (!isAccordionComplete) return setIsAccordionComplete(true);
 
+    console.log("alerts", alerts);
     // hit the api
     // ------------
 
     try {
       await dispatch(
-        createRuleEngineActions({
-          alert: alerts,
+        updateRuleEngineActions({
+          id: selectedRuleEngine._id,
+          alerts: alerts,
           name: formData.alertName,
           severity: formData.severityType,
           platform: formData.platform,
@@ -135,22 +124,30 @@ const EditRuleEngine = ({ onClose }) => {
           status: formData.status,
         })
       );
+      await dispatch(getAllRuleEngineActions());
+      onClose();
     } catch (error) {
       console.log("Error in creating rule engine", error);
     }
   };
 
   useEffect(() => {
-    if (message) {
-      toast.success(message);
-      dispatch(clearRuleEngineMessage());
-      onClose();
+    if (selectedRuleEngine) {
+      let id = 0;
+      const updatedDate = selectedRuleEngine?.alerts?.map((item) => {
+        id++;
+        return {
+          type: item.type,
+          speed: item.speed,
+          tirePressure: item.tirePressure,
+          idleEngineTime: item.idleEngineTime,
+          id: id,
+        };
+      });
+      setAccordionList(updatedDate);
     }
-    if (error) {
-      toast.error(error);
-      dispatch(clearRuleEngineError());
-    }
-  }, [message, error, dispatch, onClose]);
+  }, [selectedRuleEngine]);
+
   return (
     <Box>
       {/* Header */}
@@ -249,11 +246,7 @@ const EditRuleEngine = ({ onClose }) => {
             <FormGroup row>
               <FormControlLabel
                 control={
-                  <Checkbox
-                    name="email"
-                    checked={formData?.platform === "email"}
-                    onChange={handleCheckboxChange}
-                  />
+                  <Checkbox name="email" checked={formData?.platform === "email"} onChange={handleCheckboxChange} />
                 }
                 label="Email"
               />
@@ -284,11 +277,7 @@ const EditRuleEngine = ({ onClose }) => {
             ))}
           </Grid>
           <Box sx={{ ml: "auto" }}>
-            <IconButton
-              onClick={handleAddAccordion}
-              color="primary"
-              aria-label="add accordion"
-            >
+            <IconButton onClick={handleAddAccordion} color="primary" aria-label="add accordion">
               <AddIcon />
             </IconButton>
           </Box>
@@ -357,9 +346,7 @@ const Accordion = ({ id, onRemove, accordionList, setAccordionList }) => {
 
   // Filter alert types based on what's already selected
   const availableAlertTypes = alertType.filter((type) => {
-    const allSelectedAlertTypes = accordionList?.map(
-      (accordion) => accordion.alert
-    );
+    const allSelectedAlertTypes = accordionList?.map((accordion) => accordion.alert);
     return !allSelectedAlertTypes.includes(type?.type);
   });
 
@@ -404,7 +391,8 @@ const Accordion = ({ id, onRemove, accordionList, setAccordionList }) => {
                 name="idleEngineTime"
                 fullWidth
                 required
-                type="time"
+                label="Time in Seconds"
+                type="number"
                 onChange={handleChange}
                 value={formData?.idleEngineTime || ""}
               />

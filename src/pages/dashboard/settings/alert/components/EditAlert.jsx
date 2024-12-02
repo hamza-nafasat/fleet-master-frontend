@@ -14,10 +14,7 @@ import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import BackIcon from "../../../../../assets/svgs/modal/BackIcon";
 import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
-import {
-  getAllAlertsActions,
-  updateAlertAction,
-} from "../../../../../redux/actions/alert.actions";
+import { getAllAlertsActions, updateAlertAction } from "../../../../../redux/actions/alert.actions";
 
 const alertType = [
   { type: "infence" },
@@ -40,6 +37,7 @@ const EditAlert = ({ alert, onClose }) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
+    alertName: alert.name,
     alertType: alert.type,
     severityType: alert.severity,
     platform: alert.platform,
@@ -57,9 +55,11 @@ const EditAlert = ({ alert, onClose }) => {
     setIsLoading(true);
 
     try {
+      console.log(formData);
       await dispatch(
         updateAlertAction({
           alertId: alert._id,
+          name: formData.alertName,
           platform: formData.platform,
           severity: formData.severityType,
           type: formData.alertType,
@@ -164,14 +164,7 @@ const EditAlert = ({ alert, onClose }) => {
               </TextField>
             </Grid>
             <Grid item xs={12} lg={6}>
-              <TextField
-                name="status"
-                onChange={handleChange}
-                select
-                fullWidth
-                label="Status"
-                value={formData.status}
-              >
+              <TextField name="status" onChange={handleChange} select fullWidth label="Status" value={formData.status}>
                 {status.map((s, i) => (
                   <MenuItem key={i} value={s.type}>
                     {s.type?.toUpperCase()}
