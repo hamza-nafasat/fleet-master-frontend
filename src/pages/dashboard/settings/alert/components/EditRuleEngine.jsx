@@ -21,7 +21,10 @@ import AddIcon from "../../../../../assets/svgs/settings/AddIcon";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { createRuleEngineActions } from "../../../../../redux/actions/ruleEngine.actions";
-import { clearRuleEngineError, clearRuleEngineMessage } from "../../../../../redux/slices/ruleEngine.slice";
+import {
+  clearRuleEngineError,
+  clearRuleEngineMessage,
+} from "../../../../../redux/slices/ruleEngine.slice";
 
 const alertType = [
   { type: "speed-alert" },
@@ -34,7 +37,7 @@ const alertType = [
 ];
 const severityType = [{ type: "high" }, { type: "medium" }, { type: "low" }];
 
-const RuleEngine = ({ onClose }) => {
+const EditRuleEngine = ({ onClose }) => {
   const dispatch = useDispatch();
   const [isAccordionComplete, setIsAccordionComplete] = useState(true);
   const [accordionList, setAccordionList] = useState([{ id: 1, type: "" }]);
@@ -58,7 +61,9 @@ const RuleEngine = ({ onClose }) => {
 
   // Function to remove an accordion
   const handleRemoveAccordion = (id) => {
-    setAccordionList((prevList) => prevList.filter((accordion) => accordion.id !== id));
+    setAccordionList((prevList) =>
+      prevList.filter((accordion) => accordion.id !== id)
+    );
   };
 
   const handleChange = (e) => {
@@ -84,7 +89,8 @@ const RuleEngine = ({ onClose }) => {
 
   const handleSave = async () => {
     const { alertName, email, severityType, platform, status } = formData;
-    if (!alertName || !severityType || !platform || !status) return toast.error("All fields are required");
+    if (!alertName || !severityType || !platform || !status)
+      return toast.error("All fields are required");
     if (platform === "email" && !email) return toast.error("Email is required");
     const alerts = accordionList.map((item) => {
       const data = {};
@@ -98,15 +104,20 @@ const RuleEngine = ({ onClose }) => {
       }
       if (data.type === "tire-pressure" && !data.tirePressure) {
         setIsAccordionComplete(false);
-        return toast.error("Tire Pressure Limit is required for Tire Pressure Alert");
+        return toast.error(
+          "Tire Pressure Limit is required for Tire Pressure Alert"
+        );
       }
       if (data.type === "idle-engine" && !data.idleEngineTime) {
         setIsAccordionComplete(false);
-        return toast.error("Idle Engine Time Limit is required for Idle Engine Alert");
+        return toast.error(
+          "Idle Engine Time Limit is required for Idle Engine Alert"
+        );
       }
       if (data.type) return data;
     });
-    if (!alerts[0]?.type) return toast.error("At least one alert type is required");
+    if (!alerts[0]?.type)
+      return toast.error("At least one alert type is required");
     // CHECK IS ALL FIELDS ARE COMPLETED OR NOT
     if (!isAccordionComplete) return setIsAccordionComplete(true);
 
@@ -150,7 +161,7 @@ const RuleEngine = ({ onClose }) => {
           alignItems: "center",
         }}
       >
-        <Typography variant="h6">RULE ENGINE</Typography>
+        <Typography variant="h6">EDIT RULE ENGINE</Typography>
         <Box sx={{ cursor: "pointer" }} onClick={onClose}>
           <CloseIcon />
         </Box>
@@ -238,7 +249,11 @@ const RuleEngine = ({ onClose }) => {
             <FormGroup row>
               <FormControlLabel
                 control={
-                  <Checkbox name="email" checked={formData?.platform === "email"} onChange={handleCheckboxChange} />
+                  <Checkbox
+                    name="email"
+                    checked={formData?.platform === "email"}
+                    onChange={handleCheckboxChange}
+                  />
                 }
                 label="Email"
               />
@@ -269,7 +284,11 @@ const RuleEngine = ({ onClose }) => {
             ))}
           </Grid>
           <Box sx={{ ml: "auto" }}>
-            <IconButton onClick={handleAddAccordion} color="primary" aria-label="add accordion">
+            <IconButton
+              onClick={handleAddAccordion}
+              color="primary"
+              aria-label="add accordion"
+            >
               <AddIcon />
             </IconButton>
           </Box>
@@ -338,7 +357,9 @@ const Accordion = ({ id, onRemove, accordionList, setAccordionList }) => {
 
   // Filter alert types based on what's already selected
   const availableAlertTypes = alertType.filter((type) => {
-    const allSelectedAlertTypes = accordionList?.map((accordion) => accordion.alert);
+    const allSelectedAlertTypes = accordionList?.map(
+      (accordion) => accordion.alert
+    );
     return !allSelectedAlertTypes.includes(type?.type);
   });
 
@@ -426,4 +447,4 @@ const Accordion = ({ id, onRemove, accordionList, setAccordionList }) => {
   );
 };
 
-export default RuleEngine;
+export default EditRuleEngine;

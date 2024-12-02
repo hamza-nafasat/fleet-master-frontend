@@ -1,10 +1,7 @@
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Box, FormControlLabel, Switch, Typography } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import { Fragment, useEffect, useState } from "react";
-import { confirmAlert } from "react-confirm-alert";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
+import Modal from "../../../../components/modal/Modal";
+import RuleEngine from "./components/AddRuleEngine";
 import AddIcon from "../../../../assets/svgs/settings/AddIcon";
 import EditIcon from "../../../../assets/svgs/settings/EditIcon";
 import HighIcon from "../../../../assets/svgs/settings/HighIcon";
@@ -13,7 +10,9 @@ import InfenceIcon from "../../../../assets/svgs/settings/InfenceIcon";
 import LowIcon from "../../../../assets/svgs/settings/LowIcon";
 import MediumIcon from "../../../../assets/svgs/settings/MediumIcon";
 import OutfenceIcon from "../../../../assets/svgs/settings/OutfenceIcon";
-import Modal from "../../../../components/modal/Modal";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import {
   deleteAlertAction,
   getAllAlertsActions,
@@ -22,24 +21,26 @@ import {
   clearAlertError,
   clearAlertMessage,
 } from "../../../../redux/slices/alert.slice";
-import AddAlert from "./components/AddAlert";
-import EditAlert from "./components/EditAlert";
+import { confirmAlert } from "react-confirm-alert";
 import NoData from "../../../../components/noData/NoData";
+import { DataGrid } from "@mui/x-data-grid";
+import EditRuleEngine from "./components/EditRuleEngine";
 
-const AlertType = () => {
+const RuleEngines = () => {
   const dispatch = useDispatch();
   const { alerts, message, error } = useSelector((state) => state.alert);
   const [modalType, setModalType] = useState(null);
   const [rows, setRows] = useState([]);
   const [selectedAlert, setSelectedAlert] = useState(null);
-
+  const handleOpenEngineRule = () => {
+    setModalType("engine-rule");
+  };
+  const handleCloseModal = () => {
+    setModalType(null);
+  };
   const handleOpenEditModal = (row) => {
     setSelectedAlert(row);
     setModalType("edit");
-  };
-  const handleOpenAddModal = () => setModalType("add");
-  const handleCloseModal = () => {
-    setModalType(null);
   };
 
   // delete alert function
@@ -88,11 +89,6 @@ const AlertType = () => {
 
   const columns = [
     {
-      field: "name",
-      headerName: "ALERT NAME",
-      width: 250,
-    },
-    {
       field: "type",
       headerName: "ALERT TYPE",
       width: 250,
@@ -119,7 +115,7 @@ const AlertType = () => {
               fontWeight: "500",
             }}
           >
-            {params.value}
+            idle-engine
           </Typography>
         </Box>
       ),
@@ -167,7 +163,8 @@ const AlertType = () => {
                       : "rgba(58, 163, 87, 1)",
               }}
             >
-              {params.value?.toUpperCase()}
+              MEDIUM
+              {/* {params.value?.toUpperCase()} */}
             </Typography>
           </Box>
         </Box>
@@ -239,7 +236,6 @@ const AlertType = () => {
           }}
         >
           <EditIcon onClick={() => handleOpenEditModal(params?.row)} />
-
           <button
             style={{
               background: "transparent",
@@ -275,12 +271,10 @@ const AlertType = () => {
           sx={{
             padding: "10px 30px",
             display: "flex",
-            alignItems: "center",
             justifyContent: "flex-end",
-            gap: "10px",
           }}
         >
-          <Box sx={{ cursor: "pointer" }} onClick={handleOpenAddModal}>
+          <Box sx={{ cursor: "pointer" }} onClick={handleOpenEngineRule}>
             <AddIcon />
           </Box>
         </Box>
@@ -357,19 +351,20 @@ const AlertType = () => {
         ) : (
           <NoData />
         )}
+        {modalType === "engine-rule" && (
+          <Modal onClose={handleCloseModal}>
+            <RuleEngine onClose={handleCloseModal} />
+          </Modal>
+        )}
+
+        {modalType === "edit" && (
+          <Modal onClose={handleCloseModal}>
+            <EditRuleEngine onClose={handleCloseModal} />
+          </Modal>
+        )}
       </Box>
-      {modalType === "edit" && (
-        <Modal onClose={handleCloseModal}>
-          <EditAlert alert={selectedAlert} onClose={handleCloseModal} />
-        </Modal>
-      )}
-      {modalType === "add" && (
-        <Modal onClose={handleCloseModal}>
-          <AddAlert onClose={handleCloseModal} />
-        </Modal>
-      )}
     </Fragment>
   );
 };
 
-export default AlertType;
+export default RuleEngines;

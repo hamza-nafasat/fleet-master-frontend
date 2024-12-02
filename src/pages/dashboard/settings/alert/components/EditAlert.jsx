@@ -102,7 +102,7 @@ const EditAlert = ({ alert, onClose }) => {
           <Box sx={{ cursor: "pointer", height: "25px" }} onClick={onClose}>
             <BackIcon />
           </Box>
-          ADD ALERT
+          EDIT ALERT
         </Box>
         <Box sx={{ cursor: "pointer" }} onClick={onClose}>
           <CloseIcon />
@@ -121,6 +121,16 @@ const EditAlert = ({ alert, onClose }) => {
       >
         <Box sx={{ width: "100%", display: "flex", flexDirection: "column" }}>
           <Grid container spacing={2}>
+            <Grid item xs={12} lg={12}>
+              <TextField
+                name="alertName"
+                onChange={handleChange}
+                value={formData.alertName}
+                type="text"
+                fullWidth
+                label="Alert Name"
+              />
+            </Grid>
             <Grid item xs={12} lg={6}>
               <TextField
                 name="alertType"
