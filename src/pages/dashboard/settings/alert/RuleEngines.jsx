@@ -1,37 +1,29 @@
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Box, FormControlLabel, Switch, Typography } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import { Fragment, useEffect, useState } from "react";
-import Modal from "../../../../components/modal/Modal";
-import RuleEngine from "./components/AddRuleEngine";
+import { confirmAlert } from "react-confirm-alert";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import AddIcon from "../../../../assets/svgs/settings/AddIcon";
 import EditIcon from "../../../../assets/svgs/settings/EditIcon";
 import HighIcon from "../../../../assets/svgs/settings/HighIcon";
-import HighSpeedIcon from "../../../../assets/svgs/settings/HighSpeedIcon";
-import InfenceIcon from "../../../../assets/svgs/settings/InfenceIcon";
 import LowIcon from "../../../../assets/svgs/settings/LowIcon";
 import MediumIcon from "../../../../assets/svgs/settings/MediumIcon";
-import OutfenceIcon from "../../../../assets/svgs/settings/OutfenceIcon";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import {
-  deleteAlertAction,
-  getAllAlertsActions,
-} from "../../../../redux/actions/alert.actions";
-import {
-  clearAlertError,
-  clearAlertMessage,
-} from "../../../../redux/slices/alert.slice";
-import { confirmAlert } from "react-confirm-alert";
+import Modal from "../../../../components/modal/Modal";
 import NoData from "../../../../components/noData/NoData";
-import { DataGrid } from "@mui/x-data-grid";
+import { deleteRuleEngineActions, getAllRuleEngineActions } from "../../../../redux/actions/ruleEngine.actions";
+import { clearRuleEngineError, clearRuleEngineMessage } from "../../../../redux/slices/ruleEngine.slice";
+import RuleEngine from "./components/AddRuleEngine";
 import EditRuleEngine from "./components/EditRuleEngine";
 
 const RuleEngines = () => {
   const dispatch = useDispatch();
-  const { alerts, message, error } = useSelector((state) => state.alert);
+  const { ruleEngine, message, error } = useSelector((state) => state.ruleEngine);
   const [modalType, setModalType] = useState(null);
   const [rows, setRows] = useState([]);
-  const [selectedAlert, setSelectedAlert] = useState(null);
+  const [selectedRuleEngine, setSelectedRuleEngine] = useState(null);
+
   const handleOpenEngineRule = () => {
     setModalType("engine-rule");
   };
@@ -39,10 +31,9 @@ const RuleEngines = () => {
     setModalType(null);
   };
   const handleOpenEditModal = (row) => {
-    setSelectedAlert(row);
+    if (row) setSelectedRuleEngine(row);
     setModalType("edit");
   };
-
   // delete alert function
   const deleteAlertHandler = async (id) => {
     confirmAlert({
@@ -52,10 +43,9 @@ const RuleEngines = () => {
         {
           label: "Yes",
           onClick: async () => {
-            if (!id)
-              return toast.info("Alert Id not found", { autoClose: 2000 });
-            await dispatch(deleteAlertAction(id));
-            await dispatch(getAllAlertsActions());
+            if (!id) return toast.info("Alert Id not found", { autoClose: 2000 });
+            await dispatch(deleteRuleEngineActions(id));
+            await dispatch(getAllRuleEngineActions());
           },
         },
         {
@@ -69,29 +59,35 @@ const RuleEngines = () => {
   };
 
   useEffect(() => {
-    dispatch(getAllAlertsActions());
+    dispatch(getAllRuleEngineActions());
   }, [dispatch]);
 
   useEffect(() => {
-    if (alerts) setRows(alerts);
-  }, [alerts]);
+    if (ruleEngine) {
+      let updatedData = ruleEngine.map((item) => ({
+        ...item,
+        modifiedAlerts: item.alerts?.map((item) => item.type)?.join(", "),
+      }));
+      setRows(updatedData);
+    }
+  }, [ruleEngine]);
 
   useEffect(() => {
     if (message) {
       toast.success(message);
-      dispatch(clearAlertMessage());
+      dispatch(clearRuleEngineMessage());
     }
     if (error) {
       toast.error(error);
-      dispatch(clearAlertError());
+      dispatch(clearRuleEngineError());
     }
-  }, [alerts, dispatch, error, message]);
+  }, [dispatch, error, message]);
 
   const columns = [
     {
-      field: "type",
-      headerName: "ALERT TYPE",
-      width: 250,
+      field: "name",
+      headerName: "Name",
+      width: 200,
       renderCell: (params) => (
         <Box
           sx={{
@@ -101,13 +97,6 @@ const RuleEngines = () => {
             height: "100%",
           }}
         >
-          {params.value === "speed" ? (
-            <HighSpeedIcon />
-          ) : params.value === "infence" ? (
-            <InfenceIcon />
-          ) : (
-            <OutfenceIcon />
-          )}
           <Typography
             sx={{
               color: "rgba(0, 74, 142, 1)",
@@ -115,7 +104,7 @@ const RuleEngines = () => {
               fontWeight: "500",
             }}
           >
-            idle-engine
+            {params.value}
           </Typography>
         </Box>
       ),
@@ -144,13 +133,7 @@ const RuleEngines = () => {
                     : "rgba(58, 163, 87, 0.2)",
             }}
           >
-            {params.value === "high" ? (
-              <HighIcon />
-            ) : params.value === "medium" ? (
-              <MediumIcon />
-            ) : (
-              <LowIcon />
-            )}
+            {params.value === "high" ? <HighIcon /> : params.value === "medium" ? <MediumIcon /> : <LowIcon />}
             <Typography
               sx={{
                 fontSize: { xs: "14px", sm: "16px" },
@@ -172,8 +155,8 @@ const RuleEngines = () => {
     },
     {
       field: "platform",
-      headerName: "NOTIFICATION TYPE",
-      width: 250,
+      headerName: "PLATFORM",
+      width: 150,
       renderCell: (params) => (
         <Box
           sx={{
@@ -199,7 +182,7 @@ const RuleEngines = () => {
     {
       field: "status",
       headerName: "STATUS",
-      width: 250,
+      width: 150,
       renderCell: (params) => (
         <Box
           sx={{
@@ -209,22 +192,32 @@ const RuleEngines = () => {
             height: "100%",
           }}
         >
-          <Typography
-            sx={{ color: "#000", fontSize: { xs: "14px", sm: "16px" } }}
-          >
-            {params.value}
-          </Typography>
-          <FormControlLabel
-            control={<Switch readOnly checked={params.value === "enable"} />}
-            label=""
-          />
+          <Typography sx={{ color: "#000", fontSize: { xs: "14px", sm: "16px" } }}>{params.value}</Typography>
+          <FormControlLabel control={<Switch readOnly checked={params.value === "enable"} />} label="" />
+        </Box>
+      ),
+    },
+    {
+      field: "modifiedAlerts",
+      headerName: "ALERTS",
+      width: 350,
+      renderCell: (params) => (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            height: "100%",
+          }}
+        >
+          <Typography sx={{ color: "#000", fontSize: { xs: "14px", sm: "16px" } }}>{params.value}</Typography>
         </Box>
       ),
     },
     {
       field: "actions",
       headerName: "ACTIONS",
-      width: 250,
+      width: 150,
       renderCell: (params) => (
         <Box
           sx={{
@@ -247,9 +240,7 @@ const RuleEngines = () => {
             }}
             onClick={() => deleteAlertHandler(params?.row?._id)}
           >
-            <DeleteForeverIcon
-              style={{ fontSize: "28px", color: "rgba(255, 70, 70, 1)" }}
-            />
+            <DeleteForeverIcon style={{ fontSize: "28px", color: "rgba(255, 70, 70, 1)" }} />
           </button>
         </Box>
       ),
@@ -278,7 +269,7 @@ const RuleEngines = () => {
             <AddIcon />
           </Box>
         </Box>
-        {alerts.length > 0 ? (
+        {rows?.length > 0 ? (
           <DataGrid
             rows={rows}
             columns={columns}
@@ -359,7 +350,7 @@ const RuleEngines = () => {
 
         {modalType === "edit" && (
           <Modal onClose={handleCloseModal}>
-            <EditRuleEngine onClose={handleCloseModal} />
+            <EditRuleEngine selectedRuleEngine={selectedRuleEngine} onClose={handleCloseModal} />
           </Modal>
         )}
       </Box>
