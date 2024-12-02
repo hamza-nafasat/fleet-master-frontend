@@ -14,14 +14,8 @@ import LowIcon from "../../../../assets/svgs/settings/LowIcon";
 import MediumIcon from "../../../../assets/svgs/settings/MediumIcon";
 import OutfenceIcon from "../../../../assets/svgs/settings/OutfenceIcon";
 import Modal from "../../../../components/modal/Modal";
-import {
-  deleteAlertAction,
-  getAllAlertsActions,
-} from "../../../../redux/actions/alert.actions";
-import {
-  clearAlertError,
-  clearAlertMessage,
-} from "../../../../redux/slices/alert.slice";
+import { deleteAlertAction, getAllAlertsActions } from "../../../../redux/actions/alert.actions";
+import { clearAlertError, clearAlertMessage } from "../../../../redux/slices/alert.slice";
 import AddAlert from "./components/AddAlert";
 import EditAlert from "./components/EditAlert";
 import NoData from "../../../../components/noData/NoData";
@@ -51,8 +45,7 @@ const AlertType = () => {
         {
           label: "Yes",
           onClick: async () => {
-            if (!id)
-              return toast.info("Alert Id not found", { autoClose: 2000 });
+            if (!id) return toast.info("Alert Id not found", { autoClose: 2000 });
             await dispatch(deleteAlertAction(id));
             await dispatch(getAllAlertsActions());
           },
@@ -91,11 +84,31 @@ const AlertType = () => {
       field: "name",
       headerName: "ALERT NAME",
       width: 250,
+      renderCell: (params) => (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            height: "100%",
+          }}
+        >
+          <Typography
+            sx={{
+              color: "rgba(0, 74, 142, 1)",
+              fontSize: { xs: "14px", sm: "16px" },
+              fontWeight: "500",
+            }}
+          >
+            {params.value?.toUpperCase()}
+          </Typography>
+        </Box>
+      ),
     },
     {
       field: "type",
       headerName: "ALERT TYPE",
-      width: 250,
+      width: 200,
       renderCell: (params) => (
         <Box
           sx={{
@@ -148,13 +161,7 @@ const AlertType = () => {
                     : "rgba(58, 163, 87, 0.2)",
             }}
           >
-            {params.value === "high" ? (
-              <HighIcon />
-            ) : params.value === "medium" ? (
-              <MediumIcon />
-            ) : (
-              <LowIcon />
-            )}
+            {params.value === "high" ? <HighIcon /> : params.value === "medium" ? <MediumIcon /> : <LowIcon />}
             <Typography
               sx={{
                 fontSize: { xs: "14px", sm: "16px" },
@@ -176,7 +183,7 @@ const AlertType = () => {
     {
       field: "platform",
       headerName: "NOTIFICATION TYPE",
-      width: 250,
+      width: 200,
       renderCell: (params) => (
         <Box
           sx={{
@@ -202,7 +209,7 @@ const AlertType = () => {
     {
       field: "status",
       headerName: "STATUS",
-      width: 250,
+      width: 200,
       renderCell: (params) => (
         <Box
           sx={{
@@ -212,22 +219,15 @@ const AlertType = () => {
             height: "100%",
           }}
         >
-          <Typography
-            sx={{ color: "#000", fontSize: { xs: "14px", sm: "16px" } }}
-          >
-            {params.value}
-          </Typography>
-          <FormControlLabel
-            control={<Switch readOnly checked={params.value === "enable"} />}
-            label=""
-          />
+          <Typography sx={{ color: "#000", fontSize: { xs: "14px", sm: "16px" } }}>{params.value}</Typography>
+          <FormControlLabel control={<Switch readOnly checked={params.value === "enable"} />} label="" />
         </Box>
       ),
     },
     {
       field: "actions",
       headerName: "ACTIONS",
-      width: 250,
+      // width: 250,
       renderCell: (params) => (
         <Box
           sx={{
@@ -251,9 +251,7 @@ const AlertType = () => {
             }}
             onClick={() => deleteAlertHandler(params?.row?._id)}
           >
-            <DeleteForeverIcon
-              style={{ fontSize: "28px", color: "rgba(255, 70, 70, 1)" }}
-            />
+            <DeleteForeverIcon style={{ fontSize: "28px", color: "rgba(255, 70, 70, 1)" }} />
           </button>
         </Box>
       ),
