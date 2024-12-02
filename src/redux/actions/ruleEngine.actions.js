@@ -1,28 +1,27 @@
 import { customAxios } from "../../utils/customAxios";
-import { createRuleEngineFailure, createRuleEngineStart, createRuleEngineSuccess } from "../slices/ruleEngine.slice";
+import {
+  createRuleEngineFailure,
+  createRuleEngineStart,
+  createRuleEngineSuccess,
+  deleteRuleEngineFailure,
+  deleteRuleEngineStart,
+  deleteRuleEngineSuccess,
+  getAllRuleEngineFailure,
+  getAllRuleEngineStart,
+  getAllRuleEngineSuccess,
+  updateRuleEngineFailure,
+  updateRuleEngineStart,
+  updateRuleEngineSuccess,
+} from "../slices/ruleEngine.slice";
 
 // create ruleEngine
-const createRuleEngineActions = ({ name, alert, platform, severity, onMil, status }) => {
+const createRuleEngineActions = ({ name, alerts, platform, severity, onMil, status }) => {
   return async (dispatch) => {
     dispatch(createRuleEngineStart());
     try {
-      const response = await customAxios.post("/ruleengine/create", { name, alert, platform, severity, onMil, status });
-      // console.log("create alert api response ", response);
-      dispatch(createRuleEngineSuccess(response.data));
-    } catch (error) {
-      // console.log("create alert api error", error);
-      dispatch(createRuleEngineFailure(error?.response?.data?.message || "Error occurred while creating alert"));
-    }
-  };
-};
-// update ruleEngine
-const updateRuleEngineActions = ({ id, name, alert, platform, severity, onMil, status }) => {
-  return async (dispatch) => {
-    dispatch(createRuleEngineStart());
-    try {
-      const response = await customAxios.put(`/ruleengine/single/${id}`, {
+      const response = await customAxios.post("/ruleengine/create", {
         name,
-        alert,
+        alerts,
         platform,
         severity,
         onMil,
@@ -36,30 +35,51 @@ const updateRuleEngineActions = ({ id, name, alert, platform, severity, onMil, s
     }
   };
 };
+// update ruleEngine
+const updateRuleEngineActions = ({ id, name, alerts, platform, severity, onMil, status }) => {
+  return async (dispatch) => {
+    dispatch(updateRuleEngineStart());
+    try {
+      const response = await customAxios.put(`/ruleengine/single/${id}`, {
+        name,
+        alerts,
+        platform,
+        severity,
+        onMil,
+        status,
+      });
+      // console.log("create alert api response ", response);
+      dispatch(updateRuleEngineSuccess(response.data));
+    } catch (error) {
+      // console.log("create alert api error", error);
+      dispatch(updateRuleEngineFailure(error?.response?.data?.message || "Error occurred while creating alert"));
+    }
+  };
+};
 // delete ruleEngine
 const deleteRuleEngineActions = (id) => {
   return async (dispatch) => {
-    dispatch(createRuleEngineStart());
+    dispatch(deleteRuleEngineStart());
     try {
       const response = await customAxios.delete(`/ruleengine/single/${id}`);
       // console.log("create alert api response ", response);
-      dispatch(createRuleEngineSuccess(response.data));
+      dispatch(deleteRuleEngineSuccess(response.data));
     } catch (error) {
       // console.log("create alert api error", error);
-      dispatch(createRuleEngineFailure(error?.response?.data?.message || "Error occurred while creating alert"));
+      dispatch(deleteRuleEngineFailure(error?.response?.data?.message || "Error occurred while creating alert"));
     }
   };
 };
 // get all ruleEngine Action
 const getAllRuleEngineActions = () => async (dispatch) => {
   try {
-    dispatch(createRuleEngineStart());
+    dispatch(getAllRuleEngineStart());
     const response = await customAxios.get("/ruleengine/all");
-    // console.log("alert get all api response ", response);
-    dispatch(createRuleEngineSuccess(response.data));
+    console.log("alert get all api response ", response);
+    dispatch(getAllRuleEngineSuccess(response.data));
   } catch (error) {
-    // console.log("alert get all api error", error);
-    dispatch(createRuleEngineFailure(error?.response?.data?.message || "Error occurred while getting alerts"));
+    console.log("alert get all api error", error);
+    dispatch(getAllRuleEngineFailure(error?.response?.data?.message || "Error occurred while getting alerts"));
   }
 };
 
