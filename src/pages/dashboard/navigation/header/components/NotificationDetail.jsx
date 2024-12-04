@@ -24,6 +24,8 @@ const NotificationDetail = () => {
   const dispatch = useDispatch();
   const [isDelLoading, setIsDelLoading] = useState(false);
   const [rows, setRows] = useState([]);
+  const [page, setPage] = useState(0); // Current page number
+  const [pageSize, setPageSize] = useState(20); // Default to 20 rows per page
   const { notifications } = useSelector((state) => state.notification);
 
   const handleDeleteList = async (row) => {
@@ -93,7 +95,10 @@ const NotificationDetail = () => {
             gap: 2,
           }}
         >
-          <DeleteIcon onClick={() => handleDeleteList(params.row)} isLoading={isDelLoading} />
+          <DeleteIcon
+            onClick={() => handleDeleteList(params.row)}
+            isLoading={isDelLoading}
+          />
           <Link
             style={{
               display: "flex",
@@ -104,11 +109,6 @@ const NotificationDetail = () => {
           >
             <FcViewDetails style={{ fontSize: "1.8rem", cursor: "pointer" }} />
           </Link>
-          {/* if notification unread render below icon */}
-          {/* <MdDone style={{ fontSize: "1.5rem", color: "#5B5B5B" }} /> */}
-
-          {/* if notification read the below icon render */}
-          {/* <MdDoneAll style={{ fontSize: "1.5rem", color: "#4BC5EC" }} /> */}
           <FaGear
             onClick={() => handleReadNotification(params.row)}
             style={{ fontSize: "1.3rem", color: "#4BC5EC", cursor: "pointer" }}
@@ -117,6 +117,7 @@ const NotificationDetail = () => {
       ),
     },
   ];
+
   useEffect(() => {
     if (notifications) {
       setRows(
@@ -127,7 +128,11 @@ const NotificationDetail = () => {
             type: notification.type,
             message: notification.message,
             createdAt:
-              notification.createdAt.split("T")[0].split("-").reverse().join("-") +
+              notification.createdAt
+                .split("T")[0]
+                .split("-")
+                .reverse()
+                .join("-") +
               "  at  " +
               new Date(notification.createdAt).toLocaleString("en-US", {
                 hour: "numeric",
@@ -142,12 +147,14 @@ const NotificationDetail = () => {
 
   const handleReadNotification = async (row) => {
     await dispatch(readNotificationAction(row.id));
-    await Promise.all([dispatch(getAllNotificationsAction()), dispatch(getNewNotificationsAction())]);
+    await Promise.all([
+      dispatch(getAllNotificationsAction()),
+      dispatch(getNewNotificationsAction()),
+    ]);
   };
 
   const enterInPage = useCallback(async () => {
     await Promise.all([
-      // dispatch(readAllNotificationsAction()),
       dispatch(getAllNotificationsAction()),
       dispatch(getNewNotificationsAction()),
     ]);
@@ -156,6 +163,7 @@ const NotificationDetail = () => {
   useEffect(() => {
     enterInPage();
   }, [enterInPage]);
+
   return (
     <Box
       sx={{
@@ -180,8 +188,13 @@ const NotificationDetail = () => {
         <DataGrid
           rows={rows}
           columns={columns}
-          pageSize={5}
-          rowsPerPageOptions={[5, 10, 20]}
+          pageSize={pageSize}
+          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+          page={page}
+          onPageChange={(newPage) => setPage(newPage)}
+          paginationMode="client"
+          rowCount={rows.length}
+          rowsPerPageOptions={[5, 10, 20, 50]}
           headerClassName={() => "MuiDataGrid-colCell-center"}
           cellClassName={() => "MuiDataGrid-cell-center"}
           getRowClassName={(params) => {
@@ -201,6 +214,7 @@ const NotificationDetail = () => {
             return "";
           }}
           sx={{
+            height: 850,
             "& .MuiDataGrid-row.severity-high": {
               backgroundColor: "#FBDCD9",
             },
@@ -244,7 +258,7 @@ const NotificationDetail = () => {
               borderTopRightRadius: "24px",
             },
             "& .MuiDataGrid-footerContainer": {
-              display: "none",
+              padding: "16px",
             },
             "& .MuiDataGrid-scrollbar": {
               "&::-webkit-scrollbar": {
