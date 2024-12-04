@@ -69,7 +69,9 @@ const Aside = ({ toggleNav }) => {
                   onClick={() => {
                     handlePages(page.page);
                     setIsActivePage(page.page);
-                    page.page === "home" && window.innerWidth <= 1199 && toggleNav(false);
+                    page.page === "home" &&
+                      window.innerWidth <= 1199 &&
+                      toggleNav(false);
                   }}
                   sx={{
                     display: "flex",
@@ -78,7 +80,8 @@ const Aside = ({ toggleNav }) => {
                     cursor: "pointer",
                     borderRadius: "8px",
                     padding: "9px 16px",
-                    backgroundColor: isActivePage === page.page ? "#fff" : "transparent",
+                    backgroundColor:
+                      isActivePage === page.page ? "#fff" : "transparent",
                   }}
                 >
                   {page.icon}
@@ -96,7 +99,9 @@ const Aside = ({ toggleNav }) => {
                   </Typography>
                   {page.subPages &&
                     (openPage === page.page ? (
-                      <ChevronIconUp isActivePage={isActivePage === page.page} />
+                      <ChevronIconUp
+                        isActivePage={isActivePage === page.page}
+                      />
                     ) : (
                       <ChevronIcon isActivePage={isActivePage === page.page} />
                     ))}
@@ -127,7 +132,10 @@ const Aside = ({ toggleNav }) => {
                           borderRadius: "8px",
                           padding: "9px 16px",
                           width: "100%",
-                          backgroundColor: isActivePage === subpage.page ? "#fff" : "transparent",
+                          backgroundColor:
+                            isActivePage === subpage.page
+                              ? "#fff"
+                              : "transparent",
                         }}
                       >
                         {isActivePage === subpage.page && subpage.icon}
@@ -138,7 +146,8 @@ const Aside = ({ toggleNav }) => {
                             fontSize: "20px",
                             fontWeight: "400",
                             lineHeight: "30px",
-                            color: isActivePage === subpage.page ? "#000" : "#fff",
+                            color:
+                              isActivePage === subpage.page ? "#000" : "#fff",
                           }}
                         >
                           {subpage.title}

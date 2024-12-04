@@ -8,7 +8,8 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import DeleteIcon from "../../../../../assets/svgs/geofence/DeleteIcon";
 import DownloadIcon from "../../../../../assets/svgs/reports/DownloadIcon";
-import { MdDoneAll } from "react-icons/md";
+
+import { FaGear } from "react-icons/fa6";
 
 import { adminDashboardDetailsAction } from "../../../../../redux/actions/admin.actions";
 import {
@@ -110,7 +111,8 @@ const NotificationDetail = () => {
           {/* <MdDone style={{ fontSize: "1.5rem", color: "#5B5B5B" }} /> */}
 
           {/* if notification read the below icon render */}
-          <MdDoneAll style={{ fontSize: "1.5rem", color: "#4BC5EC" }} />
+          {/* <MdDoneAll style={{ fontSize: "1.5rem", color: "#4BC5EC" }} /> */}
+          <FaGear style={{ fontSize: "1.3rem", color: "#4BC5EC" }} />
         </Box>
       ),
     },
@@ -203,13 +205,15 @@ const NotificationDetail = () => {
                 md: "16px",
               },
               background:
-                notifications[0].severity == "high"
+                !notifications[0].isRead && notifications[0].severity == "high"
                   ? "#FBDCD9"
-                  : notifications[0].severity == "low"
+                  : !notifications[0].isRead &&
+                      notifications[0].severity == "low"
                     ? "#D4E9D9"
-                    : notifications[0].severity == "medium"
+                    : !notifications[0].isRead &&
+                        notifications[0].severity == "medium"
                       ? "#FAE6CF"
-                      : "",
+                      : "rgba(17, 17, 17, 0.0)",
               fontWeight: 400,
               color: "rgba(17, 17, 17, 0.6)",
             },
