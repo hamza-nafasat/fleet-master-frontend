@@ -24,8 +24,8 @@ const NotificationDetail = () => {
   const dispatch = useDispatch();
   const [isDelLoading, setIsDelLoading] = useState(false);
   const [rows, setRows] = useState([]);
-  const [page, setPage] = useState(0); // Current page number
-  const [pageSize, setPageSize] = useState(20); // Default to 20 rows per page
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(25);
   const { notifications } = useSelector((state) => state.notification);
 
   const handleDeleteList = async (row) => {
@@ -95,10 +95,7 @@ const NotificationDetail = () => {
             gap: 2,
           }}
         >
-          <DeleteIcon
-            onClick={() => handleDeleteList(params.row)}
-            isLoading={isDelLoading}
-          />
+          <DeleteIcon onClick={() => handleDeleteList(params.row)} isLoading={isDelLoading} />
           <Link
             style={{
               display: "flex",
@@ -128,11 +125,7 @@ const NotificationDetail = () => {
             type: notification.type,
             message: notification.message,
             createdAt:
-              notification.createdAt
-                .split("T")[0]
-                .split("-")
-                .reverse()
-                .join("-") +
+              notification.createdAt.split("T")[0].split("-").reverse().join("-") +
               "  at  " +
               new Date(notification.createdAt).toLocaleString("en-US", {
                 hour: "numeric",
@@ -147,17 +140,11 @@ const NotificationDetail = () => {
 
   const handleReadNotification = async (row) => {
     await dispatch(readNotificationAction(row.id));
-    await Promise.all([
-      dispatch(getAllNotificationsAction()),
-      dispatch(getNewNotificationsAction()),
-    ]);
+    await Promise.all([dispatch(getAllNotificationsAction()), dispatch(getNewNotificationsAction())]);
   };
 
   const enterInPage = useCallback(async () => {
-    await Promise.all([
-      dispatch(getAllNotificationsAction()),
-      dispatch(getNewNotificationsAction()),
-    ]);
+    await Promise.all([dispatch(getAllNotificationsAction()), dispatch(getNewNotificationsAction())]);
   }, [dispatch]);
 
   useEffect(() => {
@@ -190,11 +177,12 @@ const NotificationDetail = () => {
           columns={columns}
           pageSize={pageSize}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+          pagination
           page={page}
           onPageChange={(newPage) => setPage(newPage)}
           paginationMode="client"
           rowCount={rows.length}
-          rowsPerPageOptions={[5, 10, 20, 50]}
+          rowsPerPageOptions={[10, 20, 30]}
           headerClassName={() => "MuiDataGrid-colCell-center"}
           cellClassName={() => "MuiDataGrid-cell-center"}
           getRowClassName={(params) => {
@@ -214,7 +202,7 @@ const NotificationDetail = () => {
             return "";
           }}
           sx={{
-            height: 850,
+            height: 600,
             "& .MuiDataGrid-row.severity-high": {
               backgroundColor: "#FBDCD9",
             },
