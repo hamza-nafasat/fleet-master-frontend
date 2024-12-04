@@ -3,6 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   newNotifications: [],
   notifications: [],
+  currentPage: 1,
+  totalPages: 0,
   loading: false,
   error: null,
   message: null,
@@ -33,6 +35,8 @@ const notificationSlice = createSlice({
     getAllNotificationsSuccess: (state, action) => {
       state.loading = false;
       state.notifications = action.payload.notifications;
+      state.currentPage = action.payload.currentPage;
+      state.totalPages = action.payload.totalPages;
     },
     getAllNotificationsFailure: (state, action) => {
       state.loading = false;

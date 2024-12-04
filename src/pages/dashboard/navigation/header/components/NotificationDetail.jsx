@@ -24,9 +24,9 @@ const NotificationDetail = () => {
   const dispatch = useDispatch();
   const [isDelLoading, setIsDelLoading] = useState(false);
   const [rows, setRows] = useState([]);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
-  const { notifications } = useSelector((state) => state.notification);
+  const { notifications, currentPage, totalPages } = useSelector((state) => state.notification);
 
   const handleDeleteList = async (row) => {
     confirmAlert({
@@ -37,10 +37,10 @@ const NotificationDetail = () => {
           label: "Yes",
           onClick: async () => {
             setIsDelLoading(true);
+            await dispatch(deleteNotificationAction(row.id));
             await Promise.all([
-              dispatch(deleteNotificationAction(row.id)),
-              dispatch(getAllNotificationsAction()),
               dispatch(getNewNotificationsAction()),
+              dispatch(getAllNotificationsAction(false, false, false, page, pageSize, "true")),
               dispatch(adminDashboardDetailsAction()),
             ]);
             setIsDelLoading(false);
@@ -115,6 +115,26 @@ const NotificationDetail = () => {
     },
   ];
 
+  const handlePageChange = (newPage) => setPage(newPage + 1);
+  const handlePageSizeChange = (newPageSize) => setPageSize(newPageSize);
+
+  const handleReadNotification = async (row) => {
+    await dispatch(readNotificationAction(row.id));
+    await Promise.all([dispatch(getAllNotificationsAction()), dispatch(getNewNotificationsAction())]);
+  };
+
+  // const enterInPage = useCallback(async () => {
+  //   await Promise.all([
+  //     dispatch(getAllNotificationsAction(false, false, false, page, pageSize, "true")),
+  //     dispatch(getNewNotificationsAction()),
+  //   ]);
+  // }, [dispatch, page, pageSize]);
+
+  useEffect(() => {
+    dispatch(getAllNotificationsAction(false, false, false, page, pageSize, "true"));
+    dispatch(getNewNotificationsAction());
+  }, [dispatch, page, pageSize]);
+
   useEffect(() => {
     if (notifications) {
       setRows(
@@ -137,19 +157,6 @@ const NotificationDetail = () => {
       );
     }
   }, [notifications]);
-
-  const handleReadNotification = async (row) => {
-    await dispatch(readNotificationAction(row.id));
-    await Promise.all([dispatch(getAllNotificationsAction()), dispatch(getNewNotificationsAction())]);
-  };
-
-  const enterInPage = useCallback(async () => {
-    await Promise.all([dispatch(getAllNotificationsAction()), dispatch(getNewNotificationsAction())]);
-  }, [dispatch]);
-
-  useEffect(() => {
-    enterInPage();
-  }, [enterInPage]);
 
   return (
     <Box
@@ -176,12 +183,12 @@ const NotificationDetail = () => {
           rows={rows}
           columns={columns}
           pageSize={pageSize}
-          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+          rowCount={totalPages * pageSize}
           pagination
           page={page}
-          onPageChange={(newPage) => setPage(newPage)}
-          paginationMode="client"
-          rowCount={rows.length}
+          paginationMode="server"
+          onPageChange={handlePageChange}
+          onPageSizeChange={handlePageSizeChange}
           rowsPerPageOptions={[10, 20, 30]}
           headerClassName={() => "MuiDataGrid-colCell-center"}
           cellClassName={() => "MuiDataGrid-cell-center"}

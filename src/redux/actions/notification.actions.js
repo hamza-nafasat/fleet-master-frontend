@@ -27,29 +27,29 @@ const getNewNotificationsAction = () => async (dispatch) => {
     dispatch(getNewNotificationsSuccess(response.data));
   } catch (error) {
     // console.log("get all notifications api error ", error);
-    dispatch(
-      getNewNotificationsFailure(error?.response?.data?.message || "Error while fetching notifications")
-    );
+    dispatch(getNewNotificationsFailure(error?.response?.data?.message || "Error while fetching notifications"));
   }
 };
 
 // get all notifications
-const getAllNotificationsAction = (timeTo, timeFrom, type) => async (dispatch) => {
+const getAllNotificationsAction = (timeTo, timeFrom, type, page, limit, isPagination) => async (dispatch) => {
   dispatch(getAllNotificationsStart());
   try {
     let url = "/notification/all?";
-    if(timeTo) url += `timeTo=${timeTo}&`;
-    if(timeFrom) url += `timeFrom=${timeFrom}&`;
-    if(type) url += `type=${type}&`;
+    if (timeTo) url += `timeTo=${timeTo}&`;
+    if (timeFrom) url += `timeFrom=${timeFrom}&`;
+    if (type) url += `type=${type}&`;
+    if (isPagination) {
+      url += `page=${page}&limit=${limit}`;
+      url += "&isPagination=true";
+    }
 
     const response = await customAxios.get(url);
     // console.log("get all notifications api response ", response);
     dispatch(getAllNotificationsSuccess(response.data));
   } catch (error) {
     // console.log("get all notifications api error ", error);
-    dispatch(
-      getAllNotificationsFailure(error?.response?.data?.message || "Error while fetching notifications")
-    );
+    dispatch(getAllNotificationsFailure(error?.response?.data?.message || "Error while fetching notifications"));
   }
 };
 
@@ -77,9 +77,7 @@ const readAllNotificationsAction = () => async (dispatch) => {
     dispatch(readAllNotificationsSuccess(response.data));
   } catch (error) {
     // console.log("read all notification api error ", error);
-    dispatch(
-      readAllNotificationsFailure(error?.response?.data?.message || "Error while reading all notifications")
-    );
+    dispatch(readAllNotificationsFailure(error?.response?.data?.message || "Error while reading all notifications"));
   }
 };
 
@@ -93,9 +91,7 @@ const deleteNotificationAction = (notificationId) => async (dispatch) => {
     dispatch(deleteNotificationSuccess(response.data));
   } catch (error) {
     // console.log("delete notification api error ", error);
-    dispatch(
-      deleteNotificationFailure(error?.response?.data?.message || "Error while deleting notification")
-    );
+    dispatch(deleteNotificationFailure(error?.response?.data?.message || "Error while deleting notification"));
   }
 };
 
