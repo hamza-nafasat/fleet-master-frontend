@@ -2,35 +2,22 @@
 import { Box, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import damageSensorImg from "../../../assets/images/notifications/damage-sensor.png";
+import geofencingImg from "../../../assets/images/notifications/geo-fencing.png";
+import infenceImg from "../../../assets/images/notifications/infence.png";
+import outfenceImg from "../../../assets/images/notifications/outfence.png";
+import overspeedImg from "../../../assets/images/notifications/overspeed.png";
 import AlertIcon from "../../../assets/svgs/notification/AlertIcon";
 import CheckIcon from "../../../assets/svgs/notification/CheckIcon";
 import DangerIcon from "../../../assets/svgs/notification/DangerIcon";
 import LikeIcon from "../../../assets/svgs/notification/LikeIcon";
-import { adminDashboardDetailsAction } from "../../../redux/actions/admin.actions";
-import {
-  getAllNotificationsAction,
-  readNotificationAction,
-} from "../../../redux/actions/notification.actions";
 import { timeAgo } from "../../../utils/features";
-import overspeedImg from "../../../assets/images/notifications/overspeed.png";
-import geofencingImg from "../../../assets/images/notifications/geo-fencing.png";
-import infenceImg from "../../../assets/images/notifications/infence.png";
-import outfenceImg from "../../../assets/images/notifications/outfence.png";
-import damageSensorImg from "../../../assets/images/notifications/damage-sensor.png";
 
 const NotificationItem = ({ id, truckId, createdAt, type, message, isRead, onClose }) => {
-  const dispatch = useDispatch();
   const { icon, miniIcon } = getNotificationDetails(type);
 
-  const openNotification = async () => {
-    onClose();
-    await dispatch(readNotificationAction(id));
-    await dispatch(getAllNotificationsAction());
-    await dispatch(adminDashboardDetailsAction());
-  };
-
   return (
-    <Link onClick={openNotification} to={`/dashboard/truck-detail/${truckId}`}>
+    <Link to={`/dashboard/truck-detail/${truckId}`}>
       <Box
         sx={{
           display: "flex",
