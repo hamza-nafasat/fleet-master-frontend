@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import { Box, Typography } from "@mui/material";
-import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import crashImg from "../../../../../assets/images/notifications/crash.png";
 import damageSensorImg from "../../../../../assets/images/notifications/damage-sensor.png";
@@ -14,34 +13,13 @@ import towImg from "../../../../../assets/images/notifications/tow.png";
 import AlertIcon from "../../../../../assets/svgs/notification/AlertIcon";
 import DangerIcon from "../../../../../assets/svgs/notification/DangerIcon";
 import LikeIcon from "../../../../../assets/svgs/notification/LikeIcon";
-import { adminDashboardDetailsAction } from "../../../../../redux/actions/admin.actions";
-import {
-  getAllNotificationsAction,
-  readNotificationAction,
-} from "../../../../../redux/actions/notification.actions";
 import { timeAgo } from "../../../../../utils/features";
 
-const NotificationItem = ({
-  id,
-  truckId,
-  createdAt,
-  type,
-  message,
-  isRead,
-  onClose,
-  severity,
-}) => {
-  const dispatch = useDispatch();
+const NotificationItem = ({ id, truckId, createdAt, type, message, isRead, onClose, severity }) => {
   const { icon, miniIcon } = getNotificationDetails(type);
-  const openNotification = async () => {
-    onClose();
-    await dispatch(readNotificationAction(id));
-    await dispatch(getAllNotificationsAction());
-    await dispatch(adminDashboardDetailsAction());
-  };
 
   return (
-    <Link onClick={openNotification} to={`/dashboard/truck-detail/${truckId}`}>
+    <Link onClick={() => onClose()} to={`/dashboard/truck-detail/${truckId}`}>
       <Box
         sx={{
           display: "flex",
