@@ -11,14 +11,14 @@ import DownloadIcon from "../../../../../assets/svgs/reports/DownloadIcon";
 
 import { FaGear } from "react-icons/fa6";
 
+import NoData from "../../../../../components/noData/NoData";
 import { adminDashboardDetailsAction } from "../../../../../redux/actions/admin.actions";
 import {
   deleteNotificationAction,
   getAllNotificationsAction,
   getNewNotificationsAction,
-  readAllNotificationsAction,
+  readNotificationAction,
 } from "../../../../../redux/actions/notification.actions";
-import NoData from "../../../../../components/noData/NoData";
 
 const NotificationDetail = () => {
   const dispatch = useDispatch();
@@ -93,10 +93,7 @@ const NotificationDetail = () => {
             gap: 2,
           }}
         >
-          <DeleteIcon
-            onClick={() => handleDeleteList(params.row)}
-            isLoading={isDelLoading}
-          />
+          <DeleteIcon onClick={() => handleDeleteList(params.row)} isLoading={isDelLoading} />
           <Link
             style={{
               display: "flex",
@@ -112,7 +109,10 @@ const NotificationDetail = () => {
 
           {/* if notification read the below icon render */}
           {/* <MdDoneAll style={{ fontSize: "1.5rem", color: "#4BC5EC" }} /> */}
-          <FaGear style={{ fontSize: "1.3rem", color: "#4BC5EC" }} />
+          <FaGear
+            onClick={() => handleReadNotification(params.row)}
+            style={{ fontSize: "1.3rem", color: "#4BC5EC", cursor: "pointer" }}
+          />
         </Box>
       ),
     },
@@ -127,11 +127,7 @@ const NotificationDetail = () => {
             type: notification.type,
             message: notification.message,
             createdAt:
-              notification.createdAt
-                .split("T")[0]
-                .split("-")
-                .reverse()
-                .join("-") +
+              notification.createdAt.split("T")[0].split("-").reverse().join("-") +
               "  at  " +
               new Date(notification.createdAt).toLocaleString("en-US", {
                 hour: "numeric",
@@ -144,9 +140,14 @@ const NotificationDetail = () => {
     }
   }, [notifications]);
 
+  const handleReadNotification = async (row) => {
+    await dispatch(readNotificationAction(row.id));
+    await Promise.all([dispatch(getAllNotificationsAction()), dispatch(getNewNotificationsAction())]);
+  };
+
   const enterInPage = useCallback(async () => {
     await Promise.all([
-      dispatch(readAllNotificationsAction()),
+      // dispatch(readAllNotificationsAction()),
       dispatch(getAllNotificationsAction()),
       dispatch(getNewNotificationsAction()),
     ]);
@@ -181,15 +182,33 @@ const NotificationDetail = () => {
           columns={columns}
           pageSize={5}
           rowsPerPageOptions={[5, 10, 20]}
-          headerClassName={() => {
-            return "MuiDataGrid-colCell-center";
-          }}
-          cellClassName={() => {
-            return "MuiDataGrid-cell-center";
+          headerClassName={() => "MuiDataGrid-colCell-center"}
+          cellClassName={() => "MuiDataGrid-cell-center"}
+          getRowClassName={(params) => {
+            const { severity, isRead } = params.row;
+            if (!isRead) {
+              switch (severity) {
+                case "high":
+                  return "severity-high";
+                case "medium":
+                  return "severity-medium";
+                case "low":
+                  return "severity-low";
+                default:
+                  return "";
+              }
+            }
+            return "";
           }}
           sx={{
-            "& .MuiDataGrid-row.even-row": {
-              backgroundColor: "#fafafa",
+            "& .MuiDataGrid-row.severity-high": {
+              backgroundColor: "#FBDCD9",
+            },
+            "& .MuiDataGrid-row.severity-medium": {
+              backgroundColor: "#FAE6CF",
+            },
+            "& .MuiDataGrid-row.severity-low": {
+              backgroundColor: "#D4E9D9",
             },
             "& .MuiDataGrid-columnHeader .MuiDataGrid-columnHeaderTitle": {
               fontSize: {
@@ -204,16 +223,6 @@ const NotificationDetail = () => {
                 xs: "14px",
                 md: "16px",
               },
-              background:
-                !notifications[0].isRead && notifications[0].severity == "high"
-                  ? "#FBDCD9"
-                  : !notifications[0].isRead &&
-                      notifications[0].severity == "low"
-                    ? "#D4E9D9"
-                    : !notifications[0].isRead &&
-                        notifications[0].severity == "medium"
-                      ? "#FAE6CF"
-                      : "rgba(17, 17, 17, 0.0)",
               fontWeight: 400,
               color: "rgba(17, 17, 17, 0.6)",
             },
