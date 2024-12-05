@@ -7,15 +7,10 @@ const PiechartFleet = ({ trucksActiveIdleChartData }) => {
   const BLACK_COLOR = "#00000020";
 
   // Calculate total value
-  const totalValue =
-    trucksActiveIdleChartData?.find((d) => d?.name === "active")?.value || 0;
+  const totalValue = trucksActiveIdleChartData?.find((d) => d?.name === "active")?.value || 0;
 
-  const normalData = trucksActiveIdleChartData?.filter(
-    (entry) => entry?.name !== "critical"
-  );
-  const criticalData = trucksActiveIdleChartData?.filter(
-    (entry) => entry?.name === "critical"
-  );
+  const normalData = trucksActiveIdleChartData?.filter((entry) => entry?.name !== "critical");
+  const criticalData = trucksActiveIdleChartData?.filter((entry) => entry?.name === "critical");
 
   return (
     <Box
@@ -64,21 +59,9 @@ const PiechartFleet = ({ trucksActiveIdleChartData }) => {
                 <Cell fill={BLACK_COLOR} />
               </Pie>
               {/* Normal Segments */}
-              <Pie
-                data={normalData}
-                cx="50%"
-                cy="50%"
-                innerRadius={50}
-                outerRadius={70}
-                fill="#8884d8"
-                dataKey="value"
-              >
+              <Pie data={normalData} cx="50%" cy="50%" innerRadius={50} outerRadius={70} fill="#8884d8" dataKey="value">
                 {normalData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                    stroke="none"
-                  />
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="none" />
                 ))}
               </Pie>
               {/* Critical Segment */}
