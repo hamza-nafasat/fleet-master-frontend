@@ -20,8 +20,7 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
 import AddIcon from "../../../../../assets/svgs/settings/AddIcon";
-import { getAllAlertsActions } from "../../../../../redux/actions/alert.actions";
-import { createRuleEngineActions } from "../../../../../redux/actions/ruleEngine.actions";
+import { createRuleEngineActions, getAllRuleEngineActions } from "../../../../../redux/actions/ruleEngine.actions";
 
 const alertType = [
   { type: "speed-alert" },
@@ -36,6 +35,7 @@ const severityType = [{ type: "high" }, { type: "medium" }, { type: "low" }];
 
 const AddRuleEngine = ({ onClose }) => {
   const dispatch = useDispatch();
+  const [addLoading, setAddLoading] = useState(false);
   const [isAccordionComplete, setIsAccordionComplete] = useState(true);
   const [accordionList, setAccordionList] = useState([{ id: 1, type: "" }]);
   const [formData, setFormData] = useState({
@@ -89,20 +89,9 @@ const AddRuleEngine = ({ onClose }) => {
       const data = {};
       if (item?.type) data.type = item.type;
       if (item?.speed) data.speed = item.speed;
-      if (item?.tirePressure) data.tirePressure = item.tirePressure;
-      if (item?.idleEngineTime) data.idleEngineTime = item.idleEngineTime;
-      if (data.type === "speed" && !data.speed) {
-        setIsAccordionComplete(false);
-        return toast.error("Speed Limit is required for Speed Alert");
-      }
-      if (data.type === "tire-pressure" && !data.tirePressure) {
-        setIsAccordionComplete(false);
-        return toast.error("Tire Pressure Limit is required for Tire Pressure Alert");
-      }
-      if (data.type === "idle-engine" && !data.idleEngineTime) {
-        setIsAccordionComplete(false);
-        return toast.error("Idle Engine Time Limit is required for Idle Engine Alert");
-      }
+      if (item?.lessThen) data.lessThen = item.lessThen;
+      if (item?.moreThen) data.moreThen = item.moreThen;
+
       if (data.type) return data;
     });
     if (!alerts[0]?.type) return toast.error("At least one alert type is required");
@@ -113,6 +102,7 @@ const AddRuleEngine = ({ onClose }) => {
     // ------------
 
     try {
+      setAddLoading(true);
       await dispatch(
         createRuleEngineActions({
           alerts: alerts,
@@ -123,9 +113,11 @@ const AddRuleEngine = ({ onClose }) => {
           status: formData.status,
         })
       );
-      await dispatch(getAllAlertsActions());
+      await dispatch(getAllRuleEngineActions());
       onClose();
+      setAddLoading(false);
     } catch (error) {
+      setAddLoading(false);
       console.log("Error in creating rule engine", error);
     }
   };
@@ -287,6 +279,7 @@ const AddRuleEngine = ({ onClose }) => {
             Cancel
           </Button>
           <Button
+            disabled={addLoading}
             variant="contained"
             onClick={handleSave}
             sx={{
@@ -367,42 +360,39 @@ const Accordion = ({ id, onRemove, accordionList, setAccordionList }) => {
             </TextField>
           </Grid>
           {/* Additional Fields for Specific Alert Types */}
+          {(formData?.type === "tire-pressure" || formData?.type === "speed-alert") && (
+            <>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  name="lessThen"
+                  fullWidth
+                  label="Less Then"
+                  type="number"
+                  onChange={handleChange}
+                  value={formData?.lessThen || ""}
+                />
+              </Grid>{" "}
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  name="moreThen"
+                  fullWidth
+                  label="More Then"
+                  type="number"
+                  onChange={handleChange}
+                  value={formData?.moreThen || ""}
+                />
+              </Grid>
+            </>
+          )}
           {formData?.type === "idle-engine" && (
             <Grid item xs={12} sm={6}>
               <TextField
-                name="idleEngineTime"
-                fullWidth
-                required
+                name="moreThen"
                 label="Time in Seconds"
-                type="number"
-                onChange={handleChange}
-                value={formData?.idleEngineTime || ""}
-              />
-            </Grid>
-          )}
-          {formData?.type === "tire-pressure" && (
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="tirePressure"
-                label="Tire Pressure"
                 fullWidth
-                required
                 type="number"
                 onChange={handleChange}
-                value={formData?.tirePressure || ""}
-              />
-            </Grid>
-          )}
-          {formData?.type === "speed-alert" && (
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="speed"
-                label="Speed Limit"
-                fullWidth
-                required
-                type="number"
-                onChange={handleChange}
-                value={formData?.speed || ""}
+                value={formData?.moreThen || ""}
               />
             </Grid>
           )}
