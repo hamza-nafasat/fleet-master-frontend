@@ -25,7 +25,7 @@ const NotificationDetail = () => {
   const [isDelLoading, setIsDelLoading] = useState(false);
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(9);
+  const [pageSize, setPageSize] = useState(10);
   const { notifications, totalPages } = useSelector((state) => state.notification);
 
   const handleDeleteList = async (row) => {
@@ -182,7 +182,7 @@ const NotificationDetail = () => {
           rows={rows}
           columns={columns}
           initialState={{
-            pagination: { paginationModel: { pageSize: 9 } },
+            pagination: { paginationModel: { pageSize: 10 } },
           }}
           rowCount={totalPages * pageSize}
           pagination
@@ -193,7 +193,7 @@ const NotificationDetail = () => {
             setPageSize(paginationModel.pageSize);
             console.log("Page or page size changed", paginationModel);
           }}
-          pageSizeOptions={[9, 15, 25]}
+          pageSizeOptions={[10, 20, 30, 40, 50]}
           getRowClassName={(params) => {
             const { severity, isRead } = params.row;
             if (!isRead) {
