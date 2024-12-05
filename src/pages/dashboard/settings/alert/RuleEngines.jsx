@@ -12,14 +12,22 @@ import LowIcon from "../../../../assets/svgs/settings/LowIcon";
 import MediumIcon from "../../../../assets/svgs/settings/MediumIcon";
 import Modal from "../../../../components/modal/Modal";
 import NoData from "../../../../components/noData/NoData";
-import { deleteRuleEngineActions, getAllRuleEngineActions } from "../../../../redux/actions/ruleEngine.actions";
-import { clearRuleEngineError, clearRuleEngineMessage } from "../../../../redux/slices/ruleEngine.slice";
+import {
+  deleteRuleEngineActions,
+  getAllRuleEngineActions,
+} from "../../../../redux/actions/ruleEngine.actions";
+import {
+  clearRuleEngineError,
+  clearRuleEngineMessage,
+} from "../../../../redux/slices/ruleEngine.slice";
 import RuleEngine from "./components/AddRuleEngine";
 import EditRuleEngine from "./components/EditRuleEngine";
 
 const RuleEngines = () => {
   const dispatch = useDispatch();
-  const { ruleEngine, message, error } = useSelector((state) => state.ruleEngine);
+  const { ruleEngine, message, error } = useSelector(
+    (state) => state.ruleEngine
+  );
   const [modalType, setModalType] = useState(null);
   const [rows, setRows] = useState([]);
   const [selectedRuleEngine, setSelectedRuleEngine] = useState(null);
@@ -43,7 +51,8 @@ const RuleEngines = () => {
         {
           label: "Yes",
           onClick: async () => {
-            if (!id) return toast.info("Alert Id not found", { autoClose: 2000 });
+            if (!id)
+              return toast.info("Alert Id not found", { autoClose: 2000 });
             await dispatch(deleteRuleEngineActions(id));
             await dispatch(getAllRuleEngineActions());
           },
@@ -133,7 +142,13 @@ const RuleEngines = () => {
                     : "rgba(58, 163, 87, 0.2)",
             }}
           >
-            {params.value === "high" ? <HighIcon /> : params.value === "medium" ? <MediumIcon /> : <LowIcon />}
+            {params.value === "high" ? (
+              <HighIcon />
+            ) : params.value === "medium" ? (
+              <MediumIcon />
+            ) : (
+              <LowIcon />
+            )}
             <Typography
               sx={{
                 fontSize: { xs: "14px", sm: "16px" },
@@ -192,8 +207,15 @@ const RuleEngines = () => {
             height: "100%",
           }}
         >
-          <Typography sx={{ color: "#000", fontSize: { xs: "14px", sm: "16px" } }}>{params.value}</Typography>
-          <FormControlLabel control={<Switch readOnly checked={params.value === "enable"} />} label="" />
+          <Typography
+            sx={{ color: "#000", fontSize: { xs: "14px", sm: "16px" } }}
+          >
+            {params.value}
+          </Typography>
+          <FormControlLabel
+            control={<Switch readOnly checked={params.value === "enable"} />}
+            label=""
+          />
         </Box>
       ),
     },
@@ -210,7 +232,11 @@ const RuleEngines = () => {
             height: "100%",
           }}
         >
-          <Typography sx={{ color: "#000", fontSize: { xs: "14px", sm: "16px" } }}>{params.value}</Typography>
+          <Typography
+            sx={{ color: "#000", fontSize: { xs: "14px", sm: "16px" } }}
+          >
+            {params.value}
+          </Typography>
         </Box>
       ),
     },
@@ -240,7 +266,9 @@ const RuleEngines = () => {
             }}
             onClick={() => deleteAlertHandler(params?.row?._id)}
           >
-            <DeleteForeverIcon style={{ fontSize: "28px", color: "rgba(255, 70, 70, 1)" }} />
+            <DeleteForeverIcon
+              style={{ fontSize: "28px", color: "rgba(255, 70, 70, 1)" }}
+            />
           </button>
         </Box>
       ),
@@ -350,12 +378,16 @@ const RuleEngines = () => {
 
         {modalType === "edit" && (
           <Modal onClose={handleCloseModal}>
-            <EditRuleEngine selectedRuleEngine={selectedRuleEngine} onClose={handleCloseModal} />
+            <EditRuleEngine
+              selectedRuleEngine={selectedRuleEngine}
+              onClose={handleCloseModal}
+            />
           </Modal>
         )}
       </Box>
     </Fragment>
   );
+  // Comment from wahid acc
 };
 
 export default RuleEngines;
