@@ -35,6 +35,7 @@ const severityType = [{ type: "high" }, { type: "medium" }, { type: "low" }];
 
 const EditRuleEngine = ({ onClose, selectedRuleEngine }) => {
   const dispatch = useDispatch();
+  const [editRuleEngine, setEditRuleEngine] = useState(false);
   const [isAccordionComplete, setIsAccordionComplete] = useState(true);
   const [inputEmail, setInputEmail] = useState(false);
   const [accordionList, setAccordionList] = useState([{ id: 1, type: "" }]);
@@ -88,20 +89,8 @@ const EditRuleEngine = ({ onClose, selectedRuleEngine }) => {
       const data = {};
       if (item?.type) data.type = item.type;
       if (item?.speed) data.speed = item.speed;
-      if (item?.tirePressure) data.tirePressure = item.tirePressure;
-      if (item?.idleEngineTime) data.idleEngineTime = item.idleEngineTime;
-      if (data.type === "speed" && !data.speed) {
-        setIsAccordionComplete(false);
-        return toast.error("Speed Limit is required for Speed Alert");
-      }
-      if (data.type === "tire-pressure" && !data.tirePressure) {
-        setIsAccordionComplete(false);
-        return toast.error("Tire Pressure Limit is required for Tire Pressure Alert");
-      }
-      if (data.type === "idle-engine" && !data.idleEngineTime) {
-        setIsAccordionComplete(false);
-        return toast.error("Idle Engine Time Limit is required for Idle Engine Alert");
-      }
+      if (item?.lessThen) data.lessThen = item.lessThen;
+      if (item?.moreThen) data.moreThen = item.moreThen;
       if (data.type) return data;
     });
     if (!alerts[0]?.type) return toast.error("At least one alert type is required");
@@ -113,6 +102,7 @@ const EditRuleEngine = ({ onClose, selectedRuleEngine }) => {
     // ------------
 
     try {
+      setEditRuleEngine(true);
       await dispatch(
         updateRuleEngineActions({
           id: selectedRuleEngine._id,
@@ -126,7 +116,9 @@ const EditRuleEngine = ({ onClose, selectedRuleEngine }) => {
       );
       await dispatch(getAllRuleEngineActions());
       onClose();
+      setEditRuleEngine(false);
     } catch (error) {
+      setEditRuleEngine(false);
       console.log("Error in creating rule engine", error);
     }
   };
@@ -138,9 +130,8 @@ const EditRuleEngine = ({ onClose, selectedRuleEngine }) => {
         id++;
         return {
           type: item.type,
-          speed: item.speed,
-          tirePressure: item.tirePressure,
-          idleEngineTime: item.idleEngineTime,
+          lessThen: item.lessThen,
+          moreThen: item.moreThen,
           id: id,
         };
       });
@@ -306,6 +297,7 @@ const EditRuleEngine = ({ onClose, selectedRuleEngine }) => {
           </Button>
           <Button
             variant="contained"
+            disabled={editRuleEngine}
             onClick={handleSave}
             sx={{
               color: "#fff",
@@ -385,42 +377,39 @@ const Accordion = ({ id, onRemove, accordionList, setAccordionList }) => {
             </TextField>
           </Grid>
           {/* Additional Fields for Specific Alert Types */}
+          {(formData?.type === "tire-pressure" || formData?.type === "speed-alert") && (
+            <>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  name="lessThen"
+                  fullWidth
+                  label="Less Then"
+                  type="number"
+                  onChange={handleChange}
+                  value={formData?.lessThen || ""}
+                />
+              </Grid>{" "}
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  name="moreThen"
+                  fullWidth
+                  label="More Then"
+                  type="number"
+                  onChange={handleChange}
+                  value={formData?.moreThen || ""}
+                />
+              </Grid>
+            </>
+          )}
           {formData?.type === "idle-engine" && (
             <Grid item xs={12} sm={6}>
               <TextField
-                name="idleEngineTime"
-                fullWidth
-                required
+                name="moreThen"
                 label="Time in Seconds"
-                type="number"
-                onChange={handleChange}
-                value={formData?.idleEngineTime || ""}
-              />
-            </Grid>
-          )}
-          {formData?.type === "tire-pressure" && (
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="tirePressure"
-                label="Tire Pressure"
                 fullWidth
-                required
                 type="number"
                 onChange={handleChange}
-                value={formData?.tirePressure || ""}
-              />
-            </Grid>
-          )}
-          {formData?.type === "speed-alert" && (
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="speed"
-                label="Speed Limit"
-                fullWidth
-                required
-                type="number"
-                onChange={handleChange}
-                value={formData?.speed || ""}
+                value={formData?.moreThen || ""}
               />
             </Grid>
           )}
