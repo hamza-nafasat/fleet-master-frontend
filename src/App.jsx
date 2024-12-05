@@ -4,12 +4,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { lazy, Suspense, useEffect } from "react";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Navigate,
-  Route,
-  BrowserRouter as Router,
-  Routes,
-} from "react-router-dom";
+import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
@@ -22,70 +17,32 @@ import Otp from "./pages/auth/otp/Otp";
 import ResetPassword from "./pages/auth/reset-password/ResetPassword";
 import Dashboard from "./pages/dashboard";
 import { adminDashboardDetailsAction } from "./redux/actions/admin.actions";
-import {
-  getDeviceDataAction,
-  getMyAllSensorsDataAction,
-} from "./redux/actions/device.actions";
-import {
-  getAllNotificationsAction,
-  getNewNotificationsAction,
-} from "./redux/actions/notification.actions";
+import { getDeviceDataAction, getMyAllSensorsDataAction } from "./redux/actions/device.actions";
+import { getAllNotificationsAction, getNewNotificationsAction } from "./redux/actions/notification.actions";
 import { getMyProfileAction } from "./redux/actions/user.actions";
 import { clearUserError, clearUserMessage } from "./redux/slices/user.slice";
 import ScrollToTop from "./components/scrollToTop/ScrollToTop";
 
 const Login = lazy(() => import("./pages/auth/login"));
 const Home = lazy(() => import("./pages/dashboard/Home/Home"));
-const TruckReport = lazy(
-  () => import("./pages/dashboard/report/truckreport/TruckReport")
-);
-const DevicesReport = lazy(
-  () => import("./pages/dashboard/report/deivces/DevicesReport")
-);
-const DriversReport = lazy(
-  () => import("./pages/dashboard/report/drivers/DriversReport")
-);
-const NotificationsReport = lazy(
-  () => import("./pages/dashboard/report/alerts/NotificationsReport")
-);
-const VideoEvidence = lazy(
-  () => import("./pages/dashboard/report/video/VideoEvidence")
-);
+const TruckReport = lazy(() => import("./pages/dashboard/report/truckreport/TruckReport"));
+const DevicesReport = lazy(() => import("./pages/dashboard/report/deivces/DevicesReport"));
+const DriversReport = lazy(() => import("./pages/dashboard/report/drivers/DriversReport"));
+const NotificationsReport = lazy(() => import("./pages/dashboard/report/alerts/NotificationsReport"));
+const VideoEvidence = lazy(() => import("./pages/dashboard/report/video/VideoEvidence"));
 const AlertType = lazy(() => import("./pages/dashboard/settings/alert/index"));
-const Drivers = lazy(
-  () => import("./pages/dashboard/settings/drivers/Drivers")
-);
+const Drivers = lazy(() => import("./pages/dashboard/settings/drivers/Drivers"));
 const Trucks = lazy(() => import("./pages/dashboard/settings/trucks/Trucks"));
-const Devices = lazy(
-  () => import("./pages/dashboard/settings/devices/Devices")
-);
-const Employees = lazy(
-  () => import("./pages/dashboard/settings/employees/Employees")
-);
-const GeoFence = lazy(
-  () => import("./pages/dashboard/dashboardPages/geofence/GeoFence")
-);
-const RealTimeMap = lazy(
-  () => import("./pages/dashboard/dashboardPages/RealTimeMap/RealTimeMap")
-);
-const SubscriptionPlan = lazy(
-  () => import("./pages/dashboard/plans/subscriptionPlan/SubscriptionPlan")
-);
-const SubscriptionHistory = lazy(
-  () =>
-    import("./pages/dashboard/plans/subscriptionHistory/SubscriptionHistory")
-);
-const TruckDetail = lazy(
-  () => import("./pages/dashboard/settings/trucks/components/TruckDetail")
-);
-const Notification = lazy(
-  () =>
-    import("./pages/dashboard/navigation/header/components/NotificationDetail")
-);
+const Devices = lazy(() => import("./pages/dashboard/settings/devices/Devices"));
+const Employees = lazy(() => import("./pages/dashboard/settings/employees/Employees"));
+const GeoFence = lazy(() => import("./pages/dashboard/dashboardPages/geofence/GeoFence"));
+const RealTimeMap = lazy(() => import("./pages/dashboard/dashboardPages/RealTimeMap/RealTimeMap"));
+const SubscriptionPlan = lazy(() => import("./pages/dashboard/plans/subscriptionPlan/SubscriptionPlan"));
+const SubscriptionHistory = lazy(() => import("./pages/dashboard/plans/subscriptionHistory/SubscriptionHistory"));
+const TruckDetail = lazy(() => import("./pages/dashboard/settings/trucks/components/TruckDetail"));
+const Notification = lazy(() => import("./pages/dashboard/navigation/header/components/NotificationDetail"));
 const Register = lazy(() => import("./pages/auth/register/Register"));
-const ConfigurationSettings = lazy(
-  () => import("./pages/dashboard/settings/configuration/ConfigurationSettings")
-);
+const ConfigurationSettings = lazy(() => import("./pages/dashboard/settings/configuration/ConfigurationSettings"));
 const MyProfile = lazy(() => import("./pages/dashboard/navigation/Profile"));
 
 // Admin Routes
@@ -110,7 +67,7 @@ function App() {
     socket.on(socketEvent.NOTIFICATIONS, async (data) => {
       if (user && (user?.role == "user" || user?.role == "site-admin")) {
         await Promise.all([
-          dispatch(getAllNotificationsAction()),
+          dispatch(getAllNotificationsAction(false, false, false, 1, 10, "true")),
           dispatch(getNewNotificationsAction()),
           dispatch(adminDashboardDetailsAction()),
         ]);
@@ -162,36 +119,16 @@ function App() {
         <Suspense fallback={<GlobalLoader />}>
           <ScrollToTop />
           <Routes>
-            <Route
-              element={
-                <ProtectedRoute
-                  isLogin={user ? false : true}
-                  user={user}
-                  redirect="/dashboard/home"
-                />
-              }
-            >
+            <Route element={<ProtectedRoute isLogin={user ? false : true} user={user} redirect="/dashboard/home" />}>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
             </Route>
             <Route path="/verify-otp" element={<Otp />} />
             <Route path="/forget-password" element={<ForgetPassword />} />
-            <Route
-              path="/verify-email"
-              element={
-                <NotVerified user={user} isVerified={user?.isVerified} />
-              }
-            />
-            <Route
-              path="/reset-password/:reset-token"
-              element={<ResetPassword />}
-            />
+            <Route path="/verify-email" element={<NotVerified user={user} isVerified={user?.isVerified} />} />
+            <Route path="/reset-password/:reset-token" element={<ResetPassword />} />
             <Route path="/" element={<Navigate replace to="/login" />} />
-            <Route
-              element={
-                <ProtectedRoute user={user} isLogin={user ? true : false} />
-              }
-            >
+            <Route element={<ProtectedRoute user={user} isLogin={user ? true : false} />}>
               <Route path="/dashboard" element={<Dashboard />}>
                 <Route index element={<Navigate replace to="home" />} />
                 <Route path="home" element={<Home />} />
@@ -199,30 +136,18 @@ function App() {
                 <Route path="truck-report" element={<TruckReport />} />
                 <Route path="devices-report" element={<DevicesReport />} />
                 <Route path="drivers-report" element={<DriversReport />} />
-                <Route
-                  path="notifications-report"
-                  element={<NotificationsReport />}
-                />
+                <Route path="notifications-report" element={<NotificationsReport />} />
                 <Route path="reports/video" element={<VideoEvidence />} />
                 <Route path="alerts" element={<AlertType />} />
                 <Route path="drivers" element={<Drivers />} />
                 <Route path="trucks" element={<Trucks />} />
                 <Route path="devices" element={<Devices />} />
                 <Route path="employees" element={<Employees />} />
-                <Route
-                  path="configuration-settings"
-                  element={<ConfigurationSettings />}
-                />
+                <Route path="configuration-settings" element={<ConfigurationSettings />} />
                 <Route path="real-time-map" element={<RealTimeMap />} />
                 <Route path="geofence" element={<GeoFence />} />
-                <Route
-                  path="subscription-plan"
-                  element={<SubscriptionPlan />}
-                />
-                <Route
-                  path="subscription-history"
-                  element={<SubscriptionHistory />}
-                />
+                <Route path="subscription-plan" element={<SubscriptionPlan />} />
+                <Route path="subscription-history" element={<SubscriptionHistory />} />
                 <Route path="truck-detail/:truckId" element={<TruckDetail />} />
                 <Route path="notification" element={<Notification />} />
               </Route>
