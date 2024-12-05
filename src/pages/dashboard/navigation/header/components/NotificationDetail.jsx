@@ -25,8 +25,8 @@ const NotificationDetail = () => {
   const [isDelLoading, setIsDelLoading] = useState(false);
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(25);
-  const { notifications, currentPage, totalPages } = useSelector((state) => state.notification);
+  const [pageSize, setPageSize] = useState(9);
+  const { notifications, totalPages } = useSelector((state) => state.notification);
 
   const handleDeleteList = async (row) => {
     confirmAlert({
@@ -115,25 +115,24 @@ const NotificationDetail = () => {
     },
   ];
 
-  const handlePageChange = (newPage) => setPage(newPage + 1);
-  const handlePageSizeChange = (newPageSize) => setPageSize(newPageSize);
-
   const handleReadNotification = async (row) => {
     await dispatch(readNotificationAction(row.id));
-    await Promise.all([dispatch(getAllNotificationsAction()), dispatch(getNewNotificationsAction())]);
+    await Promise.all([
+      dispatch(getAllNotificationsAction(false, false, false, page, pageSize, "true")),
+      dispatch(getNewNotificationsAction()),
+    ]);
   };
 
-  // const enterInPage = useCallback(async () => {
-  //   await Promise.all([
-  //     dispatch(getAllNotificationsAction(false, false, false, page, pageSize, "true")),
-  //     dispatch(getNewNotificationsAction()),
-  //   ]);
-  // }, [dispatch, page, pageSize]);
+  const enterInPage = useCallback(async () => {
+    await Promise.all([
+      dispatch(getAllNotificationsAction(false, false, false, page, pageSize, "true")),
+      dispatch(getNewNotificationsAction()),
+    ]);
+  }, [dispatch, page, pageSize]);
 
   useEffect(() => {
-    dispatch(getAllNotificationsAction(false, false, false, page, pageSize, "true"));
-    dispatch(getNewNotificationsAction());
-  }, [dispatch, page, pageSize]);
+    enterInPage();
+  }, [enterInPage]);
 
   useEffect(() => {
     if (notifications) {
@@ -182,16 +181,19 @@ const NotificationDetail = () => {
         <DataGrid
           rows={rows}
           columns={columns}
-          pageSize={pageSize}
+          initialState={{
+            pagination: { paginationModel: { pageSize: 9 } },
+          }}
           rowCount={totalPages * pageSize}
           pagination
-          page={page}
+          page={page - 1}
           paginationMode="server"
-          onPageChange={handlePageChange}
-          onPageSizeChange={handlePageSizeChange}
-          rowsPerPageOptions={[10, 20, 30]}
-          headerClassName={() => "MuiDataGrid-colCell-center"}
-          cellClassName={() => "MuiDataGrid-cell-center"}
+          onPaginationModelChange={(paginationModel) => {
+            setPage(paginationModel.page + 1);
+            setPageSize(paginationModel.pageSize);
+            console.log("Page or page size changed", paginationModel);
+          }}
+          pageSizeOptions={[9, 15, 25]}
           getRowClassName={(params) => {
             const { severity, isRead } = params.row;
             if (!isRead) {
@@ -209,7 +211,7 @@ const NotificationDetail = () => {
             return "";
           }}
           sx={{
-            height: 600,
+            height: "calc(100% - 50px)",
             "& .MuiDataGrid-row.severity-high": {
               backgroundColor: "#FBDCD9",
             },
