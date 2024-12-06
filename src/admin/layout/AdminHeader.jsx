@@ -1,14 +1,13 @@
+import { MenuRounded } from "@mui/icons-material";
 import { Box, Drawer, Menu, MenuItem, Typography, styled } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import HeaderBgImg from "../../assets/images/header-bg-img.png";
 import profilePic from "../../assets/images/settings/driver-profile.png";
-import { MenuRounded } from "@mui/icons-material";
+import { logoutUserAction } from "../../redux/actions/user.actions";
 import Aside from "./AdminAside";
 import Notification from "./components/Notification";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { logoutUserAction } from "../../redux/actions/user.actions";
-import { getAllNotificationsAction } from "../../redux/actions/notification.actions";
 
 const AdminHeader = () => {
   const dispatch = useDispatch();
@@ -50,11 +49,6 @@ const AdminHeader = () => {
       setNewNotificationLength(unreadNotifications?.length);
     }
   }, [notifications]);
-
-  useEffect(() => {
-    dispatch(getAllNotificationsAction());
-  }, [dispatch]);
-
   return (
     <>
       <HeaderBg>

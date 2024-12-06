@@ -1,14 +1,13 @@
+import { MenuRounded } from "@mui/icons-material";
+import { Box, Drawer } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import HeaderBgImg from "../../../../assets/images/header-bg-img.png";
 import profilePic from "../../../../assets/images/settings/driver-profile.png";
-import { getAllNotificationsAction } from "../../../../redux/actions/notification.actions";
 import { logoutUserAction } from "../../../../redux/actions/user.actions";
-import Notification from "./components/Notification";
-import { Box, Drawer } from "@mui/material";
 import Aside from "../Aside";
-import { MenuRounded } from "@mui/icons-material";
+import Notification from "./components/Notification";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -47,12 +46,6 @@ const Header = () => {
       setNewNotificationLength(unreadNotifications?.length);
     }
   }, [newNotifications]);
-
-  useEffect(() => {
-    if (user && (user?.role == "user" || user?.role == "site-admin")) {
-      dispatch(getAllNotificationsAction());
-    }
-  }, [dispatch, user]);
 
   return (
     <div

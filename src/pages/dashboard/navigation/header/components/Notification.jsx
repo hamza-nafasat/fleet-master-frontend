@@ -1,25 +1,13 @@
 /* eslint-disable react/prop-types */
 import { Box, styled } from "@mui/material";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import NotificationIcon from "../../../../../assets/svgs/NotifictionIcon";
-import { adminDashboardDetailsAction } from "../../../../../redux/actions/admin.actions";
-import { getAllNotificationsAction } from "../../../../../redux/actions/notification.actions";
 import NotificationContent from "./NotificationContent";
 
 const Notification = ({ length }) => {
-  const dispatch = useDispatch();
   const [notificationOpen, setNotificationOpen] = useState(null);
-
-  const handleNotificationOpen = async (e) => {
-    setNotificationOpen(e.currentTarget);
-    await dispatch(getAllNotificationsAction());
-    await dispatch(adminDashboardDetailsAction());
-  };
-
-  const handleNotificationClose = async () => {
-    setNotificationOpen(null);
-  };
+  const handleNotificationOpen = async (e) => setNotificationOpen(e.currentTarget);
+  const handleNotificationClose = async () => setNotificationOpen(null);
 
   return (
     <>
@@ -28,10 +16,7 @@ const Notification = ({ length }) => {
         {length > 0 && <NotificationNumbers>{length}</NotificationNumbers>}
       </NotificationBox>
       {notificationOpen && (
-        <NotificationContent
-          notificationOpen={notificationOpen}
-          handleNotificationClose={handleNotificationClose}
-        />
+        <NotificationContent notificationOpen={notificationOpen} handleNotificationClose={handleNotificationClose} />
       )}
     </>
   );
@@ -40,9 +25,6 @@ const Notification = ({ length }) => {
 export default Notification;
 
 const NotificationBox = styled(Box)({
-  // position: "absolute",
-  // right: "50px",
-  // top: "50px",
   width: "52px",
   cursor: "pointer",
 });
