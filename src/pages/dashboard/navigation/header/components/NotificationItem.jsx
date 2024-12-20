@@ -14,9 +14,20 @@ import AlertIcon from "../../../../../assets/svgs/notification/AlertIcon";
 import DangerIcon from "../../../../../assets/svgs/notification/DangerIcon";
 import LikeIcon from "../../../../../assets/svgs/notification/LikeIcon";
 import { timeAgo } from "../../../../../utils/features";
+import RuleEngineIcon from "../../../../../assets/svgs/notification/RuleEngineIcon";
 
-const NotificationItem = ({ id, truckId, createdAt, type, message, isRead, onClose, severity }) => {
+const NotificationItem = ({
+  id,
+  truckId,
+  createdAt,
+  type,
+  message,
+  isRead,
+  onClose,
+  severity,
+}) => {
   const { icon, miniIcon } = getNotificationDetails(type);
+  console.log("sssssss", type);
 
   return (
     <Link onClick={() => onClose()} to={`/dashboard/truck-detail/${truckId}`}>
@@ -131,6 +142,10 @@ const getNotificationDetails = (type) => {
       return {
         icon: towImg,
         miniIcon: <AlertIcon />,
+      };
+    case "ruleengine":
+      return {
+        miniIcon: <RuleEngineIcon />,
       };
     case "sensor-offline":
       return {
