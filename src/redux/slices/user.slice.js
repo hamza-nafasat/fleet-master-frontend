@@ -59,7 +59,7 @@ const userSlice = createSlice({
     // get my profile
     // --------------
     getMyProfileStart: (state) => {
-      state.loading = true;
+      state.loading = false;
     },
     getMyProfileSuccess: (state, action) => {
       state.loading = false;
