@@ -20,7 +20,11 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
 import AddIcon from "../../../../../assets/svgs/settings/AddIcon";
-import { createRuleEngineActions, getAllRuleEngineActions } from "../../../../../redux/actions/ruleEngine.actions";
+import {
+  createRuleEngineActions,
+  getAllRuleEngineActions,
+} from "../../../../../redux/actions/ruleEngine.actions";
+import MultiSelectParameters from "../../devices/components/MultiSelectParameters";
 
 const alertType = [
   { type: "speed-alert" },
@@ -30,6 +34,21 @@ const alertType = [
   { type: "sensor-offline" },
   { type: "idle-engine" },
   { type: "damage-alert" },
+];
+const parameters = [
+  { parameter: "Temperature" },
+  { parameter: "Humidity" },
+  { parameter: "Pressure" },
+];
+
+const sensors = [
+  "Sensor-1",
+  "Sensor-2",
+  "Sensor-3",
+  "Sensor-4",
+  "Sensor-5",
+  "Sensor-6",
+  "Sensor-7",
 ];
 const severityType = [{ type: "high" }, { type: "medium" }, { type: "low" }];
 
@@ -57,7 +76,9 @@ const AddRuleEngine = ({ onClose }) => {
 
   // Function to remove an accordion
   const handleRemoveAccordion = (id) => {
-    setAccordionList((prevList) => prevList.filter((accordion) => accordion.id !== id));
+    setAccordionList((prevList) =>
+      prevList.filter((accordion) => accordion.id !== id)
+    );
   };
 
   const handleChange = (e) => {
@@ -83,7 +104,8 @@ const AddRuleEngine = ({ onClose }) => {
 
   const handleSave = async () => {
     const { alertName, email, severityType, platform, status } = formData;
-    if (!alertName || !severityType || !platform || !status) return toast.error("All fields are required");
+    if (!alertName || !severityType || !platform || !status)
+      return toast.error("All fields are required");
     if (platform === "email" && !email) return toast.error("Email is required");
     const alerts = accordionList.map((item) => {
       const data = {};
@@ -94,7 +116,8 @@ const AddRuleEngine = ({ onClose }) => {
 
       if (data.type) return data;
     });
-    if (!alerts[0]?.type) return toast.error("At least one alert type is required");
+    if (!alerts[0]?.type)
+      return toast.error("At least one alert type is required");
     // CHECK IS ALL FIELDS ARE COMPLETED OR NOT
     if (!isAccordionComplete) return setIsAccordionComplete(true);
 
@@ -220,7 +243,11 @@ const AddRuleEngine = ({ onClose }) => {
             <FormGroup row>
               <FormControlLabel
                 control={
-                  <Checkbox name="email" checked={formData?.platform === "email"} onChange={handleCheckboxChange} />
+                  <Checkbox
+                    name="email"
+                    checked={formData?.platform === "email"}
+                    onChange={handleCheckboxChange}
+                  />
                 }
                 label="Email"
               />
@@ -251,7 +278,11 @@ const AddRuleEngine = ({ onClose }) => {
             ))}
           </Grid>
           <Box sx={{ ml: "auto" }}>
-            <IconButton onClick={handleAddAccordion} color="primary" aria-label="add accordion">
+            <IconButton
+              onClick={handleAddAccordion}
+              color="primary"
+              aria-label="add accordion"
+            >
               <AddIcon />
             </IconButton>
           </Box>
@@ -303,6 +334,7 @@ const AddRuleEngine = ({ onClose }) => {
 
 const Accordion = ({ id, onRemove, accordionList, setAccordionList }) => {
   const [formData, setFormData] = useState({});
+  const [selectedParameters, setSelectedParameters] = useState([]);
 
   // Handle alert type change
   const handleChange = (e) => {
@@ -321,7 +353,9 @@ const Accordion = ({ id, onRemove, accordionList, setAccordionList }) => {
 
   // Filter alert types based on what's already selected
   const availableAlertTypes = alertType.filter((type) => {
-    const allSelectedAlertTypes = accordionList?.map((accordion) => accordion.alert);
+    const allSelectedAlertTypes = accordionList?.map(
+      (accordion) => accordion.alert
+    );
     return !allSelectedAlertTypes.includes(type?.type);
   });
 
@@ -342,25 +376,31 @@ const Accordion = ({ id, onRemove, accordionList, setAccordionList }) => {
       <AccordionDetails>
         <Grid container spacing={2}>
           {/* Alert Type Dropdown */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} lg={6}>
             <TextField
-              name="type"
+              name="sensor"
               onChange={handleChange}
               select
-              required
               fullWidth
-              label="Alert Type"
-              value={formData?.type || ""}
+              label="Select Sensor"
+              value={formData.sensor}
             >
-              {availableAlertTypes.map((type, i) => (
-                <MenuItem key={i} value={type.type}>
-                  {type?.type?.toUpperCase()}
+              {sensors.map((sensor, i) => (
+                <MenuItem key={i} value={sensor}>
+                  {sensor?.toUpperCase()}
                 </MenuItem>
               ))}
             </TextField>
           </Grid>
+          <Grid item xs={12} lg={6}>
+            <MultiSelectParameters
+              setSelectedParameters={setSelectedParameters}
+              parameters={parameters}
+            />
+          </Grid>
           {/* Additional Fields for Specific Alert Types */}
-          {(formData?.type === "tire-pressure" || formData?.type === "speed-alert") && (
+          {(formData?.type === "tire-pressure" ||
+            formData?.type === "speed-alert") && (
             <>
               <Grid item xs={12} sm={6}>
                 <TextField

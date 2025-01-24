@@ -13,16 +13,25 @@ import {
   styled,
 } from "@mui/material";
 import { useFormik } from "formik";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import BackIcon from "../../../../../assets/svgs/modal/BackIcon";
 import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
 import SaveIcon from "../../../../../assets/svgs/settings/SaveIcon";
 import { addDeviceSchema } from "../../../../../schemas";
 import { useDispatch } from "react-redux";
 import { addDeviceAction } from "../../../../../redux/actions/device.actions";
+import MultiSelectParameters from "./MultiSelectParameters";
+
+const parameters = [
+  { parameter: "Temperature" },
+  { parameter: "Humidity" },
+  { parameter: "Pressure" },
+];
 
 const AddDevice = ({ onClose }) => {
   const dispatch = useDispatch();
+  const [selectedParameters, setSelectedParameters] = useState([]);
+  console.log('selectedparams', selectedParameters)
   const initialValues = {
     deviceName: "",
     deviceType: "",
@@ -144,6 +153,9 @@ const AddDevice = ({ onClose }) => {
                 )}
               </FormControl>
             </Grid>
+            <Grid item xs={12} lg={6}>
+              <MultiSelectParameters setSelectedParameters={setSelectedParameters} parameters={parameters} />
+            </Grid>
             <Grid item xs="12" lg="6">
               <TextField
                 fullWidth
@@ -159,7 +171,6 @@ const AddDevice = ({ onClose }) => {
                 helperText={touched.uniqueId && errors.uniqueId}
               />
             </Grid>
-
             {values.deviceType == "video" && (
               <Grid item xs="12" lg="12">
                 <TextField
