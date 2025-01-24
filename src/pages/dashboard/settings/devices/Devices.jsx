@@ -82,14 +82,20 @@ const Devices = () => {
           </Box>
         </Box>
         <Grid container spacing={2}>
-          {devices?.map((device, i) => (
-            <DeviceCard
-              key={i}
-              device={device}
-              handleDeleteDevice={handleDeleteDevice}
-              handleOpenEditModal={handleOpenEditModal}
-            />
-          ))}
+          {devices?.length > 0 ? (
+            devices?.map((device, i) => (
+              <DeviceCard
+                key={i}
+                device={device}
+                handleDeleteDevice={handleDeleteDevice}
+                handleOpenEditModal={handleOpenEditModal}
+              />
+            ))
+          ) : (
+            <Grid item xs={12} md={4}>
+              No Device available yet
+            </Grid>
+          )}
         </Grid>
       </Box>
       {modalType === "edit" && (

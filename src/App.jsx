@@ -1,7 +1,7 @@
 /* eslint-disable no-constant-condition */
 /* eslint-disable no-unused-vars */
 import { Elements } from "@stripe/react-stripe-js";
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
@@ -51,6 +51,7 @@ const AdminHome = lazy(() => import("./admin/pages/home/Home"));
 const AdminUsers = lazy(() => import("./admin/pages/users/Users"));
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
   const { user, message, error, loading } = useSelector((state) => state.user);
 
@@ -77,7 +78,15 @@ function App() {
   // use effect for get profile and all notification in first time
   // ------------------------------------------------------------
   useEffect(() => {
-    dispatch(getMyProfileAction());
+    (async () => {
+      try {
+        await dispatch(getMyProfileAction());
+      } catch (error) {
+        console.log("Error occurred while getting my profile First time", error);
+      } finally {
+        setIsLoading(false);
+      }
+    })();
   }, [dispatch]);
   useEffect(() => {
     if (user && (user?.role == "user" || user?.role == "site-admin")) {
@@ -103,7 +112,7 @@ function App() {
     if (user?.interval) {
       interval = setInterval(
         () => {
-          dispatch(getMyAllSensorsDataAction());
+          // dispatch(getMyAllSensorsDataAction());
         },
         Number(user?.interval || 30) * 1000
       );
@@ -111,7 +120,7 @@ function App() {
     return () => clearInterval(interval);
   }, [dispatch, user?.interval]);
 
-  return loading ? (
+  return isLoading ? (
     <GlobalLoader />
   ) : (
     <Elements stripe={stripeLoad}>

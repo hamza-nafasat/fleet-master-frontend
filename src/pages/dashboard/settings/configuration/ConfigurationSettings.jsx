@@ -17,10 +17,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Modal from "../../../../components/modal/Modal";
-import {
-  getMyProfileAction,
-  updateMyProfileAction,
-} from "../../../../redux/actions/user.actions";
+import { getMyProfileAction, updateMyProfileAction } from "../../../../redux/actions/user.actions";
 import { CiCircleCheck } from "react-icons/ci";
 import { RxCrossCircled } from "react-icons/rx";
 
@@ -49,10 +46,9 @@ const ConfigurationSettings = () => {
   const instructionsModalHandler = () => setModal("instruction-modal");
 
   const confirmDatabaseChange = () => {
-    if (newDatabase) {
-      setSelectedDatabase(newDatabase);
-    }
+    if (newDatabase) setSelectedDatabase(newDatabase);
     setModal(false);
+    if (newDatabase === "remote-database") instructionsModalHandler();
   };
 
   const selectedDatabaseHandler = (e) => {
@@ -63,8 +59,6 @@ const ConfigurationSettings = () => {
 
   const saveConfigrationHandler = async () => {
     setIsLoading(true);
-    instructionsModalHandler();
-
     try {
       if (!intervalValue) toast.error("Please select time interval");
       const formData = new FormData();
@@ -80,7 +74,7 @@ const ConfigurationSettings = () => {
       } else {
         dbData.isCustomDb = "yes";
       }
-      if (selectedDatabase === "local-database") {
+      if (selectedDatabase === "remote-database") {
         if (
           !dataBase.customDbName ||
           !dataBase.customDbHost ||
@@ -88,9 +82,7 @@ const ConfigurationSettings = () => {
           !dataBase.customDbPassword ||
           !dataBase.customDbPort
         ) {
-          return toast.error(
-            "Please fill all the fields in local database section otherwise it will not work"
-          );
+          return toast.error("Please fill all the fields in local database section otherwise it will not work");
         }
       }
       formData.append("interval", intervalValue);
@@ -107,9 +99,7 @@ const ConfigurationSettings = () => {
   useEffect(() => {
     if (user) {
       setIntervalValue(user.interval);
-      setSelectedDatabase(
-        user?.isCustomDb ? "remote-database" : "local-database"
-      );
+      setSelectedDatabase(user?.isCustomDb ? "remote-database" : "local-database");
       setDataBase({
         isCustomDb: user?.isCustomDb === "yes" ? true : false,
         customDbName: user?.customDbName,
@@ -123,10 +113,10 @@ const ConfigurationSettings = () => {
   }, [dispatch, user]);
 
   useEffect(() => {
-    if(!user?.isCustomDbConnected) {
+    if (!user?.isCustomDbConnected && user?.isCustomDb) {
       setModal("instruction-modal");
     }
-  }, [user])
+  }, [user]);
 
   return (
     <Box
@@ -183,39 +173,20 @@ const ConfigurationSettings = () => {
               }}
             >
               <FormControl>
-                <RadioGroup
-                  row
-                  name="database-type-radios"
-                  value={selectedDatabase}
-                  onChange={selectedDatabaseHandler}
-                >
-                  <FormControlLabel
-                    value="local-database"
-                    control={<Radio />}
-                    label="Local Database"
-                  />
-                  <FormControlLabel
-                    value="remote-database"
-                    control={<Radio />}
-                    label="Remote Database"
-                  />
+                <RadioGroup row name="database-type-radios" value={selectedDatabase} onChange={selectedDatabaseHandler}>
+                  <FormControlLabel value="local-database" control={<Radio />} label="Local Database" />
+                  <FormControlLabel value="remote-database" control={<Radio />} label="Remote Database" />
                 </RadioGroup>
               </FormControl>
               {selectedDatabase === "remote-database" && (
-                <Box
-                  sx={{ display: "flex", alignItems: "center", gap: "0.3rem" }}
-                >
+                <Box sx={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
                   {user?.isCustomDbConnected ? (
                     <CiCircleCheck fontSize={20} color="green" />
                   ) : (
                     <RxCrossCircled fontSize={18} color="red" />
                   )}
-                  <Typography
-                    color={user?.isCustomDbConnected ? "green" : "red"}
-                  >
-                    {user?.isCustomDbConnected
-                      ? "Connected"
-                      : "Connection failed"}
+                  <Typography color={user?.isCustomDbConnected ? "green" : "red"}>
+                    {user?.isCustomDbConnected ? "Connected" : "Connection failed"}
                   </Typography>
                 </Box>
               )}
@@ -359,19 +330,19 @@ export default ConfigurationSettings;
 const InstructionModalContent = ({ onClose }) => {
   return (
     <div className="px-4 pl-7">
-      <h6 className="text-base md:text-2xl font-semibold text-center">
-        Instructions
-      </h6>
+      <h6 className="text-base md:text-2xl font-semibold text-center">Instructions</h6>
       <ul className="mt-4 md:mt-6 flex flex-col gap-4 text-sm md:text-[15px] text-red-500">
         <li className="list-decimal">
-        Double-check the database host, port, username, password, and database name for accuracy. Ensure there are no typos.
+          Double-check the database host, port, username, password, and database name for accuracy. Ensure there are no
+          typos.
         </li>
         <li className="list-decimal">
-        Confirm that the database server is running, and remote access is enabled for your IP address or the server you&#39;re connecting from.
+          Confirm that the database server is running, and remote access is enabled for your IP address or the server
+          you&#39;re connecting from.
         </li>
         <li className="list-decimal">
-        Test Connection Locally: Use a database management tool (e.g., MySQL Workbench or phpMyAdmin) to verify the credentials are correct and can establish a successful connection.
-
+          Test Connection Locally: Use a database management tool (e.g., MySQL Workbench or phpMyAdmin) to verify the
+          credentials are correct and can establish a successful connection.
         </li>
       </ul>
       <div className="mt-4 flex justify-end">
@@ -423,13 +394,9 @@ const Label = ({ label }) => {
 const DatabaseChangeModal = ({ onClose, changeDatabase, selectedDatabase }) => {
   return (
     <Box>
-      <Typography
-        sx={{ fontSize: { xs: "18px", md: "22px" }, fontWeight: 600 }}
-      >
-        {selectedDatabase === "remote-database" &&
-          "Local Database Storage Confirmation"}
-        {selectedDatabase === "local-database" &&
-          "Remote Database Storage Confirmation"}
+      <Typography sx={{ fontSize: { xs: "18px", md: "22px" }, fontWeight: 600 }}>
+        {selectedDatabase === "remote-database" && "Local Database Storage Confirmation"}
+        {selectedDatabase === "local-database" && "Remote Database Storage Confirmation"}
       </Typography>
       <Typography
         sx={{
@@ -440,10 +407,8 @@ const DatabaseChangeModal = ({ onClose, changeDatabase, selectedDatabase }) => {
           mb: 4,
         }}
       >
-        {selectedDatabase === "remote-database" &&
-          "Do you want   store your data in a local database?"}
-        {selectedDatabase === "local-database" &&
-          "Do you want to store your data in a remote database?"}
+        {selectedDatabase === "remote-database" && "Do you want   store your data in a local database?"}
+        {selectedDatabase === "local-database" && "Do you want to store your data in a remote database?"}
       </Typography>
       <Box
         sx={{

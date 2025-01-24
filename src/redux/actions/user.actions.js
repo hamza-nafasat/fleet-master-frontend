@@ -36,7 +36,7 @@ const registerUserAction = (formData) => async (dispatch) => {
     dispatch(registerUserSuccess(response.data));
   } catch (error) {
     // console.log(error);
-    dispatch(registerUserFailure(error?.response?.data?.message || "Error ocurred while Register"));
+    dispatch(registerUserFailure(error?.response?.data?.message || "Error occurred while Register"));
   }
 };
 
@@ -51,9 +51,7 @@ const resendVerificationTokenAction = () => async (dispatch) => {
   } catch (error) {
     // console.log(error);
     dispatch(
-      resendVerificationTokenFailure(
-        error?.response?.data?.message || "Error ocurred while resend verification token"
-      )
+      resendVerificationTokenFailure(error?.response?.data?.message || "Error occurred while resend verification token")
     );
   }
 };
@@ -68,7 +66,7 @@ const loginUserAction = (email, password) => async (dispatch) => {
     dispatch(loginUserSuccess(response.data));
   } catch (error) {
     // console.log(error);
-    dispatch(loginUserFailure(error?.response?.data?.message || "Error ocurred while login"));
+    dispatch(loginUserFailure(error?.response?.data?.message || "Error occurred while login"));
   }
 };
 
@@ -79,12 +77,10 @@ const getMyProfileAction = () => async (dispatch) => {
   try {
     const response = await customAxios.get("/user/profile");
     // console.log("get my profile api response ", response);
-    dispatch(getMyProfileSuccess(response.data));
+    await dispatch(getMyProfileSuccess(response.data));
   } catch (error) {
     // console.log(error);
-    dispatch(
-      getMyProfileFailure(error?.response?.data?.message || "Error ocurred while getting my profile")
-    );
+    dispatch(getMyProfileFailure(error?.response?.data?.message || "Error occurred while getting my profile"));
   }
 };
 // update my profile
@@ -97,9 +93,7 @@ const updateMyProfileAction = (formData) => async (dispatch) => {
     dispatch(updateMyProfileSuccess(response.data));
   } catch (error) {
     // console.log(error);
-    dispatch(
-      updateMyProfileFailure(error?.response?.data?.message || "Error ocurred while getting my profile")
-    );
+    dispatch(updateMyProfileFailure(error?.response?.data?.message || "Error occurred while getting my profile"));
   }
 };
 
@@ -113,9 +107,7 @@ const forgetPasswordAction = (email) => async (dispatch) => {
     dispatch(forgetPasswordSuccess(response.data));
   } catch (error) {
     // console.log(error);
-    dispatch(
-      forgetPasswordFailure(error?.response?.data?.message || "Error ocurred while forget password")
-    );
+    dispatch(forgetPasswordFailure(error?.response?.data?.message || "Error occurred while forget password"));
   }
 };
 
@@ -131,7 +123,7 @@ const resetPasswordAction = (resetToken, newPassword) => async (dispatch) => {
     dispatch(resetPasswordSuccess(response?.data));
   } catch (error) {
     // console.log(error);
-    dispatch(resetPasswordFailure(error?.response?.data?.message || "Error ocurred while reset password"));
+    dispatch(resetPasswordFailure(error?.response?.data?.message || "Error occurred while reset password"));
   }
 };
 
@@ -145,7 +137,7 @@ const logoutUserAction = () => async (dispatch) => {
     dispatch(logoutUserSuccess(response.data));
   } catch (error) {
     // console.log(error);
-    dispatch(logoutUserFailure(error?.response?.data?.message || "Error ocurred while logout"));
+    dispatch(logoutUserFailure(error?.response?.data?.message || "Error occurred while logout"));
   }
 };
 
