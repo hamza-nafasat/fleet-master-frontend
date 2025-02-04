@@ -16,7 +16,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
 import AddIcon from "../../../../../assets/svgs/settings/AddIcon";
@@ -38,6 +38,9 @@ const sensors = ["Sensor-1", "Sensor-2", "Sensor-3", "Sensor-4", "Sensor-5", "Se
 const severityType = [{ type: "high" }, { type: "medium" }, { type: "low" }];
 
 const AddRuleEngine = ({ onClose }) => {
+  const { trucks } = useSelector((state) => state.truck);
+
+  console.log("trucks ", trucks);
   const dispatch = useDispatch();
   const [addLoading, setAddLoading] = useState(false);
   const [isAccordionComplete, setIsAccordionComplete] = useState(true);
@@ -48,6 +51,7 @@ const AddRuleEngine = ({ onClose }) => {
     email: "",
     platform: "",
     status: "",
+    truck: {},
   });
   const [inputEmail, setInputEmail] = useState(false);
 
@@ -174,6 +178,23 @@ const AddRuleEngine = ({ onClose }) => {
                 </MenuItem>
               ))}
             </TextField>
+          </Grid>{" "}
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="truck"
+              onChange={handleChange}
+              select
+              required
+              fullWidth
+              label="Select Truck"
+              value={formData.truck}
+            >
+              {trucks.map((type, i) => (
+                <MenuItem key={i} value={type}>
+                  {type.truckName?.toUpperCase()}
+                </MenuItem>
+              ))}
+            </TextField>
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -192,7 +213,6 @@ const AddRuleEngine = ({ onClose }) => {
               ))}
             </TextField>
           </Grid>
-
           {/* Email Input */}
           {inputEmail && (
             <Grid item xs={12}>
@@ -207,7 +227,6 @@ const AddRuleEngine = ({ onClose }) => {
               />
             </Grid>
           )}
-
           {/* Notification Type */}
           <Grid
             item
@@ -234,13 +253,13 @@ const AddRuleEngine = ({ onClose }) => {
               />
             </FormGroup>
           </Grid>
-
           {/* Accordion Component */}
           <Grid item xs={12}>
             {accordionList?.map((accordion) => (
               <Accordion
                 key={accordion?.id}
                 id={accordion?.id}
+                truck={formData?.truck}
                 onRemove={handleRemoveAccordion}
                 handleChange={handleChange}
                 accordionList={accordionList}
@@ -299,7 +318,7 @@ const AddRuleEngine = ({ onClose }) => {
   );
 };
 
-const Accordion = ({ id, onRemove, accordionList, setAccordionList }) => {
+const Accordion = ({ id, onRemove, accordionList, setAccordionList, truck }) => {
   const [formData, setFormData] = useState({});
   const [selectedParameters, setSelectedParameters] = useState([]);
 
@@ -341,11 +360,28 @@ const Accordion = ({ id, onRemove, accordionList, setAccordionList }) => {
       <AccordionDetails>
         <Grid container spacing={2}>
           {/* Alert Type Dropdown */}
-          <Grid item xs={12} lg={6}>
+          {/* <Grid item xs={12} lg={6}>
             <TextField name="sensor" onChange={handleChange} select fullWidth label="Select Sensor" value={formData.sensor}>
               {sensors.map((sensor, i) => (
                 <MenuItem key={i} value={sensor}>
                   {sensor?.toUpperCase()}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid> */}
+          <Grid item xs={12} lg={6}>
+            <TextField
+              name="sensorUniqueiD"
+              onChange={handleChange}
+              select
+              fullWidth
+              label="Select Sensor"
+              value={formData?.sensorUniqueiD || ""}
+            >
+              <MenuItem value={""}>Select Sensor</MenuItem>
+              {truck?.devices?.map((sensor, i) => (
+                <MenuItem key={i} value={sensor}>
+                  {sensor?.name?.toUpperCase()}
                 </MenuItem>
               ))}
             </TextField>
