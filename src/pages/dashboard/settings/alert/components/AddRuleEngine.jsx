@@ -31,6 +31,7 @@ const AddRuleEngine = ({ onClose }) => {
   const [addLoading, setAddLoading] = useState(false);
   const [isAccordionComplete, setIsAccordionComplete] = useState(true);
   const [accordionList, setAccordionList] = useState([{ id: 1, type: "" }]);
+  const [inputEmail, setInputEmail] = useState(false);
   const [formData, setFormData] = useState({
     alertName: "",
     severityType: "",
@@ -39,7 +40,6 @@ const AddRuleEngine = ({ onClose }) => {
     status: "",
     truck: "",
   });
-  const [inputEmail, setInputEmail] = useState(false);
 
   // Function to add a new accordion
   const handleAddAccordion = () => {
@@ -92,8 +92,6 @@ const AddRuleEngine = ({ onClose }) => {
 
     // hit the api
     // ------------
-    console.log("alerts", alertName, email, severityType, platform, truck?._id, status, alerts);
-
     try {
       setAddLoading(true);
       await dispatch(

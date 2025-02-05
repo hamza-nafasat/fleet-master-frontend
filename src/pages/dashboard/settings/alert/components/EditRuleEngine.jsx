@@ -26,8 +26,8 @@ import { getRuleEngineParameters } from "./data";
 const severityType = [{ type: "high" }, { type: "medium" }, { type: "low" }];
 
 const EditRuleEngine = ({ onClose, selectedRuleEngine }) => {
-  const { trucks } = useSelector((state) => state.truck);
   const dispatch = useDispatch();
+  const { trucks } = useSelector((state) => state.truck);
   const [editRuleEngine, setEditRuleEngine] = useState(false);
   const [isAccordionComplete, setIsAccordionComplete] = useState(true);
   const [inputEmail, setInputEmail] = useState(false);
@@ -42,15 +42,9 @@ const EditRuleEngine = ({ onClose, selectedRuleEngine }) => {
     // truck: selectedRuleEngine.truck,
   });
 
-  // Function to add a new accordion
-  const handleAddAccordion = () => {
-    setAccordionList((prevList) => [...prevList, { id: prevList.length + 1 }]);
-  };
-
-  // Function to remove an accordion
-  const handleRemoveAccordion = (id) => {
-    setAccordionList((prevList) => prevList.filter((accordion) => accordion.id !== id));
-  };
+  // Function to add a new accordion and remove accordion
+  const handleAddAccordion = () => setAccordionList((prevList) => [...prevList, { id: prevList.length + 1 }]);
+  const handleRemoveAccordion = (id) => setAccordionList((prevList) => prevList.filter((accordion) => accordion.id !== id));
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -66,18 +60,14 @@ const EditRuleEngine = ({ onClose, selectedRuleEngine }) => {
       ...prev,
       platform: checked ? name : "",
     }));
-    if (name === "email") {
-      setInputEmail(true);
-    } else {
-      setInputEmail(false);
-    }
+    if (name === "email") setInputEmail(true);
+    else setInputEmail(false);
   };
 
   const handleSave = async () => {
     const { alertName, email, severityType, platform, status, truck } = formData;
     if (!alertName || !severityType || !platform || !status || !truck?._id) return toast.error("All fields are required");
     if (platform === "email" && !email) return toast.error("Email is required");
-    console.log("this is update baby", accordionList);
     const alerts = accordionList.map((item) => {
       if (!item?.sensor?.uniqueId) return toast.error(`Select Sensor for ${item?.type}`);
       const data = {};
@@ -325,12 +315,10 @@ const EditRuleEngine = ({ onClose, selectedRuleEngine }) => {
 };
 
 const Accordion = ({ id, onRemove, accordionList, setAccordionList, truck }) => {
-  console.log(truck);
   const [formData, setFormData] = useState({
     sensor: "",
     type: "",
   });
-  console.log("formData;asdf", formData);
 
   // Handle alert type change
   const handleChange = (e) => {
@@ -348,12 +336,8 @@ const Accordion = ({ id, onRemove, accordionList, setAccordionList, truck }) => 
   };
 
   useEffect(() => {
-    accordionList.find((accordion) => {
-      let form = accordion?.id == id ? accordion : {};
-      // let sen = truck?.devices.find((device) => device.uniqueId == accordion.sensor);
-      setFormData({ ...form });
-    });
-  }, [id, accordionList, truck?.devices]);
+    setFormData(accordionList.find((accordion) => accordion?.id === id) || {});
+  }, [accordionList, id]);
 
   return (
     <MuiAccordion sx={{ margin: "10px 0" }}>

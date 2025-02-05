@@ -118,13 +118,7 @@ const AlertType = () => {
             height: "100%",
           }}
         >
-          {params.value === "speed" ? (
-            <HighSpeedIcon />
-          ) : params.value === "infence" ? (
-            <InfenceIcon />
-          ) : (
-            <OutfenceIcon />
-          )}
+          {params.value === "speed" ? <HighSpeedIcon /> : params.value === "infence" ? <InfenceIcon /> : <OutfenceIcon />}
           <Typography
             sx={{
               color: "rgba(0, 74, 142, 1)",
