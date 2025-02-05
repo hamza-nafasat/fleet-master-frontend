@@ -21,26 +21,12 @@ import { toast } from "react-toastify";
 import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
 import AddIcon from "../../../../../assets/svgs/settings/AddIcon";
 import { createRuleEngineActions, getAllRuleEngineActions } from "../../../../../redux/actions/ruleEngine.actions";
-import MultiSelectParameters from "../../devices/components/MultiSelectParameters";
+import { getRuleEngineParameters } from "./data";
 
-const alertType = [
-  { type: "speed-alert" },
-  { type: "sudden-stop" },
-  { type: "two-detection" },
-  { type: "tire-pressure" },
-  { type: "sensor-offline" },
-  { type: "idle-engine" },
-  { type: "damage-alert" },
-];
-const parameters = [{ parameter: "Temperature" }, { parameter: "Humidity" }, { parameter: "Pressure" }];
-
-const sensors = ["Sensor-1", "Sensor-2", "Sensor-3", "Sensor-4", "Sensor-5", "Sensor-6", "Sensor-7"];
 const severityType = [{ type: "high" }, { type: "medium" }, { type: "low" }];
 
 const AddRuleEngine = ({ onClose }) => {
   const { trucks } = useSelector((state) => state.truck);
-
-  console.log("trucks ", trucks);
   const dispatch = useDispatch();
   const [addLoading, setAddLoading] = useState(false);
   const [isAccordionComplete, setIsAccordionComplete] = useState(true);
@@ -51,16 +37,13 @@ const AddRuleEngine = ({ onClose }) => {
     email: "",
     platform: "",
     status: "",
-    truck: {},
+    truck: "",
   });
   const [inputEmail, setInputEmail] = useState(false);
 
   // Function to add a new accordion
   const handleAddAccordion = () => {
-    setAccordionList((prevList) => [
-      ...prevList,
-      { id: prevList.length + 1 }, // Add a new accordion with a unique ID
-    ]);
+    setAccordionList((prevList) => [...prevList, { id: prevList.length + 1 }]);
   };
 
   // Function to remove an accordion
@@ -72,7 +55,7 @@ const AddRuleEngine = ({ onClose }) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: value || "",
     }));
   };
 
@@ -90,16 +73,17 @@ const AddRuleEngine = ({ onClose }) => {
   };
 
   const handleSave = async () => {
-    const { alertName, email, severityType, platform, status } = formData;
-    if (!alertName || !severityType || !platform || !status) return toast.error("All fields are required");
+    const { alertName, email, severityType, platform, status, truck } = formData;
+    if (!alertName || !severityType || !platform || !status || !truck?._id) return toast.error("All fields are required");
     if (platform === "email" && !email) return toast.error("Email is required");
     const alerts = accordionList.map((item) => {
+      if (!item.sensor.uniqueId) return toast.error(`Select Sensor for ${item.type}`);
       const data = {};
       if (item?.type) data.type = item.type;
       if (item?.speed) data.speed = item.speed;
       if (item?.lessThen) data.lessThen = item.lessThen;
       if (item?.moreThen) data.moreThen = item.moreThen;
-
+      if (item?.sensor) data.sensorUniqueId = item.sensor.uniqueId;
       if (data.type) return data;
     });
     if (!alerts[0]?.type) return toast.error("At least one alert type is required");
@@ -108,6 +92,7 @@ const AddRuleEngine = ({ onClose }) => {
 
     // hit the api
     // ------------
+    console.log("alerts", alertName, email, severityType, platform, truck?._id, status, alerts);
 
     try {
       setAddLoading(true);
@@ -118,11 +103,11 @@ const AddRuleEngine = ({ onClose }) => {
           severity: formData.severityType,
           platform: formData.platform,
           onMil: formData.email,
+          truck: formData.truck._id,
           status: formData.status,
         })
       );
       await dispatch(getAllRuleEngineActions());
-      onClose();
       setAddLoading(false);
     } catch (error) {
       setAddLoading(false);
@@ -184,10 +169,9 @@ const AddRuleEngine = ({ onClose }) => {
               name="truck"
               onChange={handleChange}
               select
-              required
               fullWidth
               label="Select Truck"
-              value={formData.truck}
+              value={formData.truck || ""}
             >
               {trucks.map((type, i) => (
                 <MenuItem key={i} value={type}>
@@ -320,7 +304,6 @@ const AddRuleEngine = ({ onClose }) => {
 
 const Accordion = ({ id, onRemove, accordionList, setAccordionList, truck }) => {
   const [formData, setFormData] = useState({});
-  const [selectedParameters, setSelectedParameters] = useState([]);
 
   // Handle alert type change
   const handleChange = (e) => {
@@ -336,12 +319,6 @@ const Accordion = ({ id, onRemove, accordionList, setAccordionList, truck }) => 
       })
     );
   };
-
-  // Filter alert types based on what's already selected
-  const availableAlertTypes = alertType.filter((type) => {
-    const allSelectedAlertTypes = accordionList?.map((accordion) => accordion.alert);
-    return !allSelectedAlertTypes.includes(type?.type);
-  });
 
   useEffect(() => {
     setFormData(accordionList.find((accordion) => accordion?.id === id) || {});
@@ -359,26 +336,15 @@ const Accordion = ({ id, onRemove, accordionList, setAccordionList, truck }) => 
       {/* Accordion Details */}
       <AccordionDetails>
         <Grid container spacing={2}>
-          {/* Alert Type Dropdown */}
-          {/* <Grid item xs={12} lg={6}>
-            <TextField name="sensor" onChange={handleChange} select fullWidth label="Select Sensor" value={formData.sensor}>
-              {sensors.map((sensor, i) => (
-                <MenuItem key={i} value={sensor}>
-                  {sensor?.toUpperCase()}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid> */}
           <Grid item xs={12} lg={6}>
             <TextField
-              name="sensorUniqueiD"
+              name="sensor"
               onChange={handleChange}
               select
               fullWidth
               label="Select Sensor"
-              value={formData?.sensorUniqueiD || ""}
+              value={formData?.sensor || ""}
             >
-              <MenuItem value={""}>Select Sensor</MenuItem>
               {truck?.devices?.map((sensor, i) => (
                 <MenuItem key={i} value={sensor}>
                   {sensor?.name?.toUpperCase()}
@@ -386,11 +352,8 @@ const Accordion = ({ id, onRemove, accordionList, setAccordionList, truck }) => 
               ))}
             </TextField>
           </Grid>
+          {/* <MultiSelectParameters setSelectedParameters={setSelectedParameters} parameters={parameters} /> */}
           <Grid item xs={12} lg={6}>
-            <MultiSelectParameters setSelectedParameters={setSelectedParameters} parameters={parameters} />
-          </Grid>
-          {/* Alert Type Dropdown */}
-          <Grid item xs={12} sm={6}>
             <TextField
               name="type"
               onChange={handleChange}
@@ -400,7 +363,7 @@ const Accordion = ({ id, onRemove, accordionList, setAccordionList, truck }) => 
               label="Alert Type"
               value={formData?.type || ""}
             >
-              {availableAlertTypes.map((type, i) => (
+              {getRuleEngineParameters(formData?.sensor?.type).map((type, i) => (
                 <MenuItem key={i} value={type.type}>
                   {type?.type?.toUpperCase()}
                 </MenuItem>
