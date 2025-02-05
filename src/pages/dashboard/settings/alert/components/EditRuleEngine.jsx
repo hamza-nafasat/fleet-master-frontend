@@ -16,24 +16,17 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
 import AddIcon from "../../../../../assets/svgs/settings/AddIcon";
 import { getAllRuleEngineActions, updateRuleEngineActions } from "../../../../../redux/actions/ruleEngine.actions";
+import { getRuleEngineParameters } from "./data";
 
-const alertType = [
-  { type: "speed-alert" },
-  { type: "sudden-stop" },
-  { type: "two-detection" },
-  { type: "tire-pressure" },
-  { type: "sensor-offline" },
-  { type: "idle-engine" },
-  { type: "damage-alert" },
-];
 const severityType = [{ type: "high" }, { type: "medium" }, { type: "low" }];
 
 const EditRuleEngine = ({ onClose, selectedRuleEngine }) => {
+  const { trucks } = useSelector((state) => state.truck);
   const dispatch = useDispatch();
   const [editRuleEngine, setEditRuleEngine] = useState(false);
   const [isAccordionComplete, setIsAccordionComplete] = useState(true);
@@ -45,14 +38,13 @@ const EditRuleEngine = ({ onClose, selectedRuleEngine }) => {
     email: selectedRuleEngine.onMail,
     platform: selectedRuleEngine.platform,
     status: selectedRuleEngine.status,
+    truck: trucks?.find((truck) => truck._id == selectedRuleEngine?.truck?._id),
+    // truck: selectedRuleEngine.truck,
   });
 
   // Function to add a new accordion
   const handleAddAccordion = () => {
-    setAccordionList((prevList) => [
-      ...prevList,
-      { id: prevList.length + 1 }, // Add a new accordion with a unique ID
-    ]);
+    setAccordionList((prevList) => [...prevList, { id: prevList.length + 1 }]);
   };
 
   // Function to remove an accordion
@@ -82,22 +74,24 @@ const EditRuleEngine = ({ onClose, selectedRuleEngine }) => {
   };
 
   const handleSave = async () => {
-    const { alertName, email, severityType, platform, status } = formData;
-    if (!alertName || !severityType || !platform || !status) return toast.error("All fields are required");
+    const { alertName, email, severityType, platform, status, truck } = formData;
+    if (!alertName || !severityType || !platform || !status || !truck?._id) return toast.error("All fields are required");
     if (platform === "email" && !email) return toast.error("Email is required");
+    console.log("this is update baby", accordionList);
     const alerts = accordionList.map((item) => {
+      if (!item?.sensor?.uniqueId) return toast.error(`Select Sensor for ${item?.type}`);
       const data = {};
       if (item?.type) data.type = item.type;
       if (item?.speed) data.speed = item.speed;
       if (item?.lessThen) data.lessThen = item.lessThen;
       if (item?.moreThen) data.moreThen = item.moreThen;
+      if (item?.sensor) data.sensorUniqueId = item.sensor.uniqueId;
       if (data.type) return data;
     });
     if (!alerts[0]?.type) return toast.error("At least one alert type is required");
     // CHECK IS ALL FIELDS ARE COMPLETED OR NOT
     if (!isAccordionComplete) return setIsAccordionComplete(true);
 
-    console.log("alerts", alerts);
     // hit the api
     // ------------
 
@@ -111,11 +105,11 @@ const EditRuleEngine = ({ onClose, selectedRuleEngine }) => {
           severity: formData.severityType,
           platform: formData.platform,
           onMil: formData.email,
+          truck: formData.truck._id,
           status: formData.status,
         })
       );
       await dispatch(getAllRuleEngineActions());
-      onClose();
       setEditRuleEngine(false);
     } catch (error) {
       setEditRuleEngine(false);
@@ -132,12 +126,13 @@ const EditRuleEngine = ({ onClose, selectedRuleEngine }) => {
           type: item.type,
           lessThen: item.lessThen,
           moreThen: item.moreThen,
+          sensor: formData.truck?.devices?.find((device) => device.uniqueId == item.sensorUniqueId),
           id: id,
         };
       });
       setAccordionList(updatedDate);
     }
-  }, [selectedRuleEngine]);
+  }, [formData.truck?.devices, selectedRuleEngine]);
 
   return (
     <Box>
@@ -190,6 +185,22 @@ const EditRuleEngine = ({ onClose, selectedRuleEngine }) => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
+              name="truck"
+              onChange={handleChange}
+              select
+              fullWidth
+              label="Select Truck"
+              value={formData.truck || ""}
+            >
+              {trucks.map((type, i) => (
+                <MenuItem key={i} value={type}>
+                  {type.truckName?.toUpperCase()}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
               name="status"
               onChange={handleChange}
               select
@@ -236,18 +247,12 @@ const EditRuleEngine = ({ onClose, selectedRuleEngine }) => {
             </Typography>
             <FormGroup row>
               <FormControlLabel
-                control={
-                  <Checkbox name="email" checked={formData?.platform === "email"} onChange={handleCheckboxChange} />
-                }
+                control={<Checkbox name="email" checked={formData?.platform === "email"} onChange={handleCheckboxChange} />}
                 label="Email"
               />
               <FormControlLabel
                 control={
-                  <Checkbox
-                    name="platform"
-                    checked={formData?.platform === "platform"}
-                    onChange={handleCheckboxChange}
-                  />
+                  <Checkbox name="platform" checked={formData?.platform === "platform"} onChange={handleCheckboxChange} />
                 }
                 label="Platform"
               />
@@ -260,6 +265,7 @@ const EditRuleEngine = ({ onClose, selectedRuleEngine }) => {
               <Accordion
                 key={accordion?.id}
                 id={accordion?.id}
+                truck={formData?.truck}
                 onRemove={handleRemoveAccordion}
                 handleChange={handleChange}
                 accordionList={accordionList}
@@ -318,8 +324,13 @@ const EditRuleEngine = ({ onClose, selectedRuleEngine }) => {
   );
 };
 
-const Accordion = ({ id, onRemove, accordionList, setAccordionList }) => {
-  const [formData, setFormData] = useState({});
+const Accordion = ({ id, onRemove, accordionList, setAccordionList, truck }) => {
+  console.log(truck);
+  const [formData, setFormData] = useState({
+    sensor: "",
+    type: "",
+  });
+  console.log("formData;asdf", formData);
 
   // Handle alert type change
   const handleChange = (e) => {
@@ -336,15 +347,13 @@ const Accordion = ({ id, onRemove, accordionList, setAccordionList }) => {
     );
   };
 
-  // Filter alert types based on what's already selected
-  const availableAlertTypes = alertType.filter((type) => {
-    const allSelectedAlertTypes = accordionList?.map((accordion) => accordion.alert);
-    return !allSelectedAlertTypes.includes(type?.type);
-  });
-
   useEffect(() => {
-    setFormData(accordionList.find((accordion) => accordion?.id === id) || {});
-  }, [id, accordionList]);
+    accordionList.find((accordion) => {
+      let form = accordion?.id == id ? accordion : {};
+      // let sen = truck?.devices.find((device) => device.uniqueId == accordion.sensor);
+      setFormData({ ...form });
+    });
+  }, [id, accordionList, truck?.devices]);
 
   return (
     <MuiAccordion sx={{ margin: "10px 0" }}>
@@ -358,8 +367,24 @@ const Accordion = ({ id, onRemove, accordionList, setAccordionList }) => {
       {/* Accordion Details */}
       <AccordionDetails>
         <Grid container spacing={2}>
+          <Grid item xs={12} lg={6}>
+            <TextField
+              name="sensor"
+              onChange={handleChange}
+              select
+              fullWidth
+              label="Select Sensor"
+              value={formData?.sensor || ""}
+            >
+              {truck?.devices?.map((sensor, i) => (
+                <MenuItem key={i} value={sensor}>
+                  {sensor?.name?.toUpperCase()}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
           {/* Alert Type Dropdown */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} lg={6}>
             <TextField
               name="type"
               onChange={handleChange}
@@ -369,13 +394,14 @@ const Accordion = ({ id, onRemove, accordionList, setAccordionList }) => {
               label="Alert Type"
               value={formData?.type || ""}
             >
-              {availableAlertTypes.map((type, i) => (
+              {getRuleEngineParameters(formData?.sensor?.type).map((type, i) => (
                 <MenuItem key={i} value={type.type}>
                   {type?.type?.toUpperCase()}
                 </MenuItem>
               ))}
             </TextField>
           </Grid>
+
           {/* Additional Fields for Specific Alert Types */}
           {(formData?.type === "tire-pressure" || formData?.type === "speed-alert") && (
             <>
