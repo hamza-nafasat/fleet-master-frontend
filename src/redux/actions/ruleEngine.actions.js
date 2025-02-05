@@ -15,7 +15,7 @@ import {
 } from "../slices/ruleEngine.slice";
 
 // create ruleEngine
-const createRuleEngineActions = ({ name, alerts, platform, severity, onMil, status }) => {
+const createRuleEngineActions = ({ name, alerts, truck, platform, severity, onMil, status }) => {
   return async (dispatch) => {
     dispatch(createRuleEngineStart());
     try {
@@ -25,6 +25,7 @@ const createRuleEngineActions = ({ name, alerts, platform, severity, onMil, stat
         platform,
         severity,
         onMil,
+        truck,
         status,
       });
       // console.log("create alert api response ", response);
@@ -36,7 +37,7 @@ const createRuleEngineActions = ({ name, alerts, platform, severity, onMil, stat
   };
 };
 // update ruleEngine
-const updateRuleEngineActions = ({ id, name, alerts, platform, severity, onMil, status }) => {
+const updateRuleEngineActions = ({ id, name, alerts, truck, platform, severity, onMil, status }) => {
   return async (dispatch) => {
     dispatch(updateRuleEngineStart());
     try {
@@ -46,6 +47,7 @@ const updateRuleEngineActions = ({ id, name, alerts, platform, severity, onMil, 
         platform,
         severity,
         onMil,
+        truck,
         status,
       });
       // console.log("create alert api response ", response);
