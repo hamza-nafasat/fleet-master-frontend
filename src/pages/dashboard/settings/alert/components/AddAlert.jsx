@@ -1,24 +1,11 @@
 /* eslint-disable react/prop-types */
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
-  Grid,
-  MenuItem,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Checkbox, FormControlLabel, FormGroup, Grid, MenuItem, TextField, Typography } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import BackIcon from "../../../../../assets/svgs/modal/BackIcon";
 import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
-import {
-  createAlertActions,
-  getAllAlertsActions,
-} from "../../../../../redux/actions/alert.actions";
+import { createAlertActions, getAllAlertsActions } from "../../../../../redux/actions/alert.actions";
 import MultiSelectParameters from "../../devices/components/MultiSelectParameters";
 
 const alertType = [
@@ -33,21 +20,9 @@ const alertType = [
   { type: "damage-alert" },
 ];
 
-const parameters = [
-  { parameter: "Temperature" },
-  { parameter: "Humidity" },
-  { parameter: "Pressure" },
-];
+const parameters = [{ parameter: "Temperature" }, { parameter: "Humidity" }, { parameter: "Pressure" }];
 
-const sensors = [
-  "Sensor-1",
-  "Sensor-2",
-  "Sensor-3",
-  "Sensor-4",
-  "Sensor-5",
-  "Sensor-6",
-  "Sensor-7",
-];
+const sensors = ["Sensor-1", "Sensor-2", "Sensor-3", "Sensor-4", "Sensor-5", "Sensor-6", "Sensor-7"];
 const severityType = [{ type: "high" }, { type: "medium" }, { type: "low" }];
 
 const AddAlert = ({ onClose }) => {
@@ -153,7 +128,7 @@ const AddAlert = ({ onClose }) => {
               />
             </Grid>
             <Grid item xs={12} lg={6}>
-              <TextField
+              {/* <TextField
                 name="sensor"
                 onChange={handleChange}
                 select
@@ -166,8 +141,8 @@ const AddAlert = ({ onClose }) => {
                     {sensor?.toUpperCase()}
                   </MenuItem>
                 ))}
-              </TextField>
-              {/* <TextField
+              </TextField> */}
+              <TextField
                 name="alertType"
                 onChange={handleChange}
                 select
@@ -180,11 +155,11 @@ const AddAlert = ({ onClose }) => {
                     {type.type?.toUpperCase()}
                   </MenuItem>
                 ))}
-              </TextField> */}
+              </TextField>
             </Grid>
-            <Grid item xs={12} lg={6}>
+            {/* <Grid item xs={12} lg={6}>
               <MultiSelectParameters setSelectedParameters={setSelectedParameters} parameters={parameters} />
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} lg={6}>
               <TextField
                 name="severityType"
@@ -202,28 +177,18 @@ const AddAlert = ({ onClose }) => {
               </TextField>
             </Grid>
             {formData.alertType == "idle-engine" && (
-              <Grid item xs={12} lg={12}>
+              <Grid item xs={12} lg={6}>
                 <TextField name="alertName" fullWidth type="time" />
               </Grid>
             )}
             {formData.alertType == "tire-pressure" && (
-              <Grid item xs={12} lg={12}>
-                <TextField
-                  name="alertName"
-                  label="Tyre Pressure"
-                  fullWidth
-                  type="number"
-                />
+              <Grid item xs={12} lg={6}>
+                <TextField name="alertName" label="Tyre Pressure" fullWidth type="number" />
               </Grid>
             )}
             {formData.alertType == "speed-alert" && (
-              <Grid item xs={12} lg={12}>
-                <TextField
-                  name="alertName"
-                  label="Speed Alert"
-                  fullWidth
-                  type="number"
-                />
+              <Grid item xs={12} lg={6}>
+                <TextField name="alertName" label="Speed Alert" fullWidth type="number" />
               </Grid>
             )}
             {inputEmail && (
