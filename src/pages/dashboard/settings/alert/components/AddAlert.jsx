@@ -1,5 +1,15 @@
 /* eslint-disable react/prop-types */
-import { Box, Button, Checkbox, FormControlLabel, FormGroup, Grid, MenuItem, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Grid,
+  MenuItem,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -176,7 +186,7 @@ const AddAlert = ({ onClose }) => {
                 ))}
               </TextField>
             </Grid>
-            {formData.alertType == "idle-engine" && (
+            {/* {formData.alertType == "idle-engine" && (
               <Grid item xs={12} lg={6}>
                 <TextField name="alertName" fullWidth type="time" />
               </Grid>
@@ -190,7 +200,7 @@ const AddAlert = ({ onClose }) => {
               <Grid item xs={12} lg={6}>
                 <TextField name="alertName" label="Speed Alert" fullWidth type="number" />
               </Grid>
-            )}
+            )} */}
             {inputEmail && (
               <Grid item xs={12} lg={6}>
                 <TextField
