@@ -16,18 +16,9 @@ import LikeIcon from "../../../../../assets/svgs/notification/LikeIcon";
 import { timeAgo } from "../../../../../utils/features";
 import RuleEngineIcon from "../../../../../assets/svgs/notification/RuleEngineIcon";
 
-const NotificationItem = ({
-  id,
-  truckId,
-  createdAt,
-  type,
-  message,
-  isRead,
-  onClose,
-  severity,
-}) => {
+const NotificationItem = ({ id, truckId, createdAt, type, message, isRead, onClose, severity }) => {
+  console.log("creted at", createdAt);
   const { icon, miniIcon } = getNotificationDetails(type);
-  console.log("sssssss", type);
 
   return (
     <Link onClick={() => onClose()} to={`/dashboard/truck-detail/${truckId}`}>
