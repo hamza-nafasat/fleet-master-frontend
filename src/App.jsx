@@ -112,9 +112,9 @@ function App() {
     if (user?.interval) {
       interval = setInterval(
         () => {
-          // dispatch(getMyAllSensorsDataAction());
+          dispatch(getMyAllSensorsDataAction());
         },
-        Number(user?.interval || 30) * 1000
+        Number(user?.interval || 180) * 1000
       );
     }
     return () => clearInterval(interval);
