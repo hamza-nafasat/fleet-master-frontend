@@ -13,7 +13,7 @@ const NotificationContent = ({ notificationOpen, handleNotificationClose }) => {
       PaperProps={{
         sx: {
           width: "300px",
-          height: 'auto',
+          height: "auto",
           maxHeight: "396px",
           borderRadius: "6px",
           boxShadow: "2px 2px 8px 0px rgba(0, 0, 0, 0.32), -2px 2px 8px 0px rgba(0, 0, 0, 0.32)",
@@ -65,18 +65,20 @@ const NotificationInnerContent = ({ handleNotificationClose }) => {
           width: "100%",
         }}
       >
-        {notifications?.map((notification, index) => (
-          <NotificationItem
-            key={index}
-            id={notification?._id}
-            truckId={notification?.truckId}
-            type={notification?.type}
-            message={notification?.message}
-            createdAt={notification?.createdAt}
-            isRead={notification?.isRead}
-            onClose={handleNotificationClose}
-          />
-        ))}
+        {notifications?.map((notification, index) => {
+          return (
+            <NotificationItem
+              key={index}
+              id={notification?._id}
+              truckId={notification?.truckId}
+              type={notification?.type}
+              message={notification?.message}
+              createdAt={notification?.createdAt}
+              isRead={notification?.isRead}
+              onClose={handleNotificationClose}
+            />
+          );
+        })}
       </Box>
 
       <Link
