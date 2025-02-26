@@ -1,7 +1,14 @@
 function timeAgo(createdAt) {
-  const notificationDate = new Date(createdAt);
+  let notificationDate = new Date(createdAt);
+  if (isNaN(notificationDate.getTime())) {
+    notificationDate = new Date(); // Default to now if invalid
+  }
+
   const now = new Date();
   const diffInMs = now - notificationDate;
+
+  // Handle future timestamps
+  if (diffInMs < 0) return "Just now";
 
   const seconds = Math.floor(diffInMs / 1000);
   const minutes = Math.floor(seconds / 60);
@@ -11,22 +18,15 @@ function timeAgo(createdAt) {
   const months = Math.floor(days / 30);
   const years = Math.floor(days / 365);
 
-  if (years > 0) {
-    return `${years} year${years > 1 ? "s" : ""} ago`;
-  } else if (months > 0) {
-    return `${months} month${months > 1 ? "s" : ""} ago`;
-  } else if (weeks > 0) {
-    return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
-  } else if (days > 0) {
-    return `${days} day${days > 1 ? "s" : ""} ago`;
-  } else if (hours > 0) {
-    return `${hours} hour${hours > 1 ? "s" : ""}`;
-  } else if (minutes > 0) {
-    return `${minutes} min`;
-  } else {
-    return `${seconds} second${seconds > 1 ? "s" : ""}`;
-  }
+  if (years > 0) return `${years} year${years > 1 ? "s" : ""} ago`;
+  if (months > 0) return `${months} month${months > 1 ? "s" : ""} ago`;
+  if (weeks > 0) return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
+  if (days > 0) return `${days} day${days > 1 ? "s" : ""} ago`;
+  if (hours > 0) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+  if (minutes > 0) return `${minutes} min ago`;
+  return `${seconds} second${seconds !== 1 ? "s" : ""} ago`;
 }
+
 function calculatePolygonArea(coordinates) {
   function toRadians(degrees) {
     return (degrees * Math.PI) / 180;
