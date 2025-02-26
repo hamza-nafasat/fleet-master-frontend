@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import { Box, Typography } from "@mui/material";
-import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import damageSensorImg from "../../../assets/images/notifications/damage-sensor.png";
 import geofencingImg from "../../../assets/images/notifications/geo-fencing.png";
@@ -80,7 +79,7 @@ const NotificationItem = ({ id, truckId, createdAt, type, message, isRead, onClo
             mt: 0.3,
           }}
         >
-          {timeAgo(createdAt)}
+          {timeAgo(createdAt || new Date())}
         </Typography>
       </Box>
     </Link>
