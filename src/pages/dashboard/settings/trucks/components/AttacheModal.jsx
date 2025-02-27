@@ -1,15 +1,5 @@
 /* eslint-disable react/prop-types */
-import {
-  Box,
-  Button,
-  FormControl,
-  FormHelperText,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  styled,
-} from "@mui/material";
+import { Box, Button, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, styled } from "@mui/material";
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,10 +7,7 @@ import BackIcon from "../../../../../assets/svgs/modal/BackIcon";
 import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
 import SaveIcon from "../../../../../assets/svgs/settings/SaveIcon";
 import { getAllDevicesAction } from "../../../../../redux/actions/device.actions";
-import {
-  attachDeviceToTruckAction,
-  getSingleTruckAction,
-} from "../../../../../redux/actions/truck.actions";
+import { attachDeviceToTruckAction, getSingleTruckAction } from "../../../../../redux/actions/truck.actions";
 import { attachModalSchema } from "../../../../../schemas";
 
 const AttacheModal = ({ onClose, truckId }) => {
@@ -107,10 +94,9 @@ const AttacheModal = ({ onClose, truckId }) => {
               >
                 <MenuItem value="video">Video</MenuItem>
                 <MenuItem value="gps">GPS</MenuItem>
+                <MenuItem value="other">Other</MenuItem>
               </Select>
-              {touched.deviceType && errors.deviceType && (
-                <FormHelperText>{errors.deviceType}</FormHelperText>
-              )}
+              {touched.deviceType && errors.deviceType && <FormHelperText>{errors.deviceType}</FormHelperText>}
             </FormControl>
           </Grid>
           <Grid item xs={12} md={6}>
