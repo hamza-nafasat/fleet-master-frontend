@@ -22,16 +22,22 @@ import { useDispatch } from "react-redux";
 import { addDeviceAction } from "../../../../../redux/actions/device.actions";
 import MultiSelectParameters from "./MultiSelectParameters";
 
-const parameters = [
-  { parameter: "Temperature" },
-  { parameter: "Humidity" },
-  { parameter: "Pressure" },
-];
+// const parameters = [
+//   { parameter: "infence" },
+//   { parameter: "outfence" },
+//   { parameter: "speed-alert" },
+//   { parameter: "sudden-stop" },
+//   { parameter: "two-detection" },
+//   { parameter: "tire-pressure" },
+//   { parameter: "sensor-offline" },
+//   { parameter: "idle-engine" },
+//   { parameter: "damage-alert" },
+// ];
 
 const AddDevice = ({ onClose }) => {
   const dispatch = useDispatch();
-  const [selectedParameters, setSelectedParameters] = useState([]);
-  console.log('selectedparams', selectedParameters)
+  // const [selectedParameters, setSelectedParameters] = useState([]);
+  // console.log("selectedparams", selectedParameters);
   const initialValues = {
     deviceName: "",
     deviceType: "",
@@ -39,22 +45,21 @@ const AddDevice = ({ onClose }) => {
     url: "",
   };
 
-  const { values, touched, errors, handleBlur, handleChange, handleSubmit } =
-    useFormik({
-      initialValues,
-      validationSchema: addDeviceSchema,
-      onSubmit: (values) => {
-        const data = {
-          name: values.deviceName,
-          type: values.deviceType,
-          uniqueId: values.uniqueId,
-        };
-        if (values.deviceType == "video") {
-          data.url = values.url;
-        }
-        dispatch(addDeviceAction(data));
-      },
-    });
+  const { values, touched, errors, handleBlur, handleChange, handleSubmit } = useFormik({
+    initialValues,
+    validationSchema: addDeviceSchema,
+    onSubmit: (values) => {
+      const data = {
+        name: values.deviceName,
+        type: values.deviceType,
+        uniqueId: values.uniqueId,
+      };
+      if (values.deviceType == "video") {
+        data.url = values.url;
+      }
+      dispatch(addDeviceAction(data));
+    },
+  });
 
   return (
     <Fragment>
@@ -122,10 +127,7 @@ const AddDevice = ({ onClose }) => {
               />
             </Grid>
             <Grid item xs={12} lg={6}>
-              <FormControl
-                fullWidth
-                error={touched.deviceType && Boolean(errors.deviceType)}
-              >
+              <FormControl fullWidth error={touched.deviceType && Boolean(errors.deviceType)}>
                 <InputLabel
                   sx={{
                     backgroundColor: "whitesmoke",
@@ -148,14 +150,12 @@ const AddDevice = ({ onClose }) => {
                   <MenuItem value="video">Video</MenuItem>
                   <MenuItem value="other">Other</MenuItem>
                 </Select>
-                {touched.deviceType && errors.deviceType && (
-                  <FormHelperText>{errors.deviceType}</FormHelperText>
-                )}
+                {touched.deviceType && errors.deviceType && <FormHelperText>{errors.deviceType}</FormHelperText>}
               </FormControl>
             </Grid>
-            <Grid item xs={12} lg={6}>
+            {/* <Grid item xs={12} lg={6}>
               <MultiSelectParameters setSelectedParameters={setSelectedParameters} parameters={parameters} />
-            </Grid>
+            </Grid> */}
             <Grid item xs="12" lg="6">
               <TextField
                 fullWidth
