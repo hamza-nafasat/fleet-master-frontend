@@ -33,10 +33,8 @@ const EditDevice = ({ onClose, device }) => {
       const data = {};
       if (deviceName && deviceName != device?.name) data.name = deviceName;
       if (deviceType && deviceType != device?.type) data.type = deviceType;
-      if (deviceUniqueId && deviceUniqueId != device?.uniqueId)
-        data.uniqueId = deviceUniqueId;
-      if (deviceType == "video" && deviceUrl && deviceUrl != device?.url)
-        data.url = deviceUrl;
+      if (deviceUniqueId && deviceUniqueId != device?.uniqueId) data.uniqueId = deviceUniqueId;
+      if (deviceType == "video" && deviceUrl && deviceUrl != device?.url) data.url = deviceUrl;
       else if (deviceType !== "video" && deviceUrl) {
         data.url = "remove";
       }
@@ -142,6 +140,7 @@ const EditDevice = ({ onClose, device }) => {
               >
                 <MenuItem value="gps">GPS</MenuItem>
                 <MenuItem value="video">Video</MenuItem>
+                <MenuItem value="other">Other</MenuItem>
               </Select>
             </FormControl>
           </Grid>
