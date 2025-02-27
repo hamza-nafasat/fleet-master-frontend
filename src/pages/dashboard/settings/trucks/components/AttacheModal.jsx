@@ -126,6 +126,7 @@ const AttacheModal = ({ onClose, truckId }) => {
               {touched.deviceId && errors.deviceId && <FormHelperText>{errors.deviceId}</FormHelperText>}
             </FormControl>
           </Grid>
+
           <Grid item xs={12} md={6}>
             <Box
               sx={{
