@@ -9,6 +9,7 @@ import SaveIcon from "../../../../../assets/svgs/settings/SaveIcon";
 import { getAllDevicesAction } from "../../../../../redux/actions/device.actions";
 import { attachDeviceToTruckAction, getSingleTruckAction } from "../../../../../redux/actions/truck.actions";
 import { attachModalSchema } from "../../../../../schemas";
+import { devicesOptions } from "../../devices/components/options";
 
 const AttacheModal = ({ onClose, truckId }) => {
   const dispatch = useDispatch();
@@ -92,9 +93,11 @@ const AttacheModal = ({ onClose, truckId }) => {
                 onBlur={handleBlur}
                 sx={{ width: "100%" }}
               >
-                <MenuItem value="video">Video</MenuItem>
-                <MenuItem value="gps">GPS</MenuItem>
-                <MenuItem value="other">Other</MenuItem>
+                {devicesOptions?.map((option, i) => (
+                  <MenuItem key={i} value={option?.value}>
+                    {option?.name}
+                  </MenuItem>
+                ))}
               </Select>
               {touched.deviceType && errors.deviceType && <FormHelperText>{errors.deviceType}</FormHelperText>}
             </FormControl>
