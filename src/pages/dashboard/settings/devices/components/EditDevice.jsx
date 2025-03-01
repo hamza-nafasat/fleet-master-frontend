@@ -11,43 +11,59 @@ import {
   Typography,
   styled,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BackIcon from "../../../../../assets/svgs/modal/BackIcon";
 import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
 import SaveIcon from "../../../../../assets/svgs/settings/SaveIcon";
 import { useDispatch } from "react-redux";
 import { updateDeviceAction } from "../../../../../redux/actions/device.actions";
 import { toast } from "react-toastify";
+import MultiSelectParameters from "./MultiSelectParameters";
+import { alertsTypesAccordingDevice, devicesOptions } from "./options";
 
 const EditDevice = ({ onClose, device }) => {
   const dispatch = useDispatch();
+  const [parameters, setParameters] = useState([]);
+  const [selectedParameters, setSelectedParameters] = useState(
+    device?.parameters?.map((p) => ({ parameter: p })) || []
+  );
   const [deviceName, setDeviceName] = useState(device?.name);
   const [deviceType, setDeviceType] = useState(device?.type);
   const [deviceUrl, setDeviceUrl] = useState(device?.url);
-  const [deviceUniqueId, setDeviceUniqueId] = useState(device?.uniqueId);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSaveEditDevice = async () => {
     try {
       setIsLoading(true);
       const data = {};
-      if (deviceName && deviceName != device?.name) data.name = deviceName;
+      if (deviceName) data.name = deviceName;
       if (deviceType && deviceType != device?.type) data.type = deviceType;
-      if (deviceUniqueId && deviceUniqueId != device?.uniqueId) data.uniqueId = deviceUniqueId;
+      if (selectedParameters.length) data.parameters = selectedParameters?.map((parameter) => parameter.parameter);
+
       if (deviceType == "video" && deviceUrl && deviceUrl != device?.url) data.url = deviceUrl;
-      else if (deviceType !== "video" && deviceUrl) {
-        data.url = "remove";
-      }
+      else if (deviceType !== "video" && deviceUrl) data.url = "remove";
+
       if (!Object.keys(data).length) {
         setIsLoading(false);
         return toast.error("You have not made any changes");
       }
-      await dispatch(updateDeviceAction(device._id, data));
+      await dispatch(updateDeviceAction(device?._id, data));
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    const deviceOptions = alertsTypesAccordingDevice(deviceType);
+    const deviceOptionsArr = deviceOptions?.map((p) => p.parameter);
+    const selectedParameters = [];
+    device?.parameters?.forEach((p) => {
+      deviceOptionsArr.includes(p) && selectedParameters.push({ parameter: p });
+    });
+    setSelectedParameters(selectedParameters);
+    setParameters(deviceOptions);
+  }, [device?.parameters, deviceType]);
   return (
     <React.Fragment>
       <Box
@@ -108,17 +124,6 @@ const EditDevice = ({ onClose, device }) => {
               onChange={(e) => setDeviceName(e.target.value)}
             />
           </Grid>
-
-          <Grid item xs="12" lg="6">
-            <TextField
-              fullWidth
-              type="text"
-              label="Unique Id"
-              maxLength="30"
-              value={deviceUniqueId}
-              onChange={(e) => setDeviceUniqueId(e.target.value)}
-            />
-          </Grid>
           <Grid item xs="12" lg="6">
             <FormControl fullWidth>
               <InputLabel
@@ -135,14 +140,24 @@ const EditDevice = ({ onClose, device }) => {
                 labelId="deviceType-label"
                 id="deviceType"
                 name="deviceType"
-                value={deviceType}
+                value={devicesOptions?.find((option) => option?.value == deviceType)?.value || ""}
                 onChange={(e) => setDeviceType(e.target.value)}
               >
-                <MenuItem value="gps">GPS</MenuItem>
-                <MenuItem value="video">Video</MenuItem>
-                <MenuItem value="other">Other</MenuItem>
+                {devicesOptions?.map((option, i) => (
+                  <MenuItem key={i} value={option?.value}>
+                    {option?.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
+          </Grid>
+
+          <Grid item xs={12} lg={6}>
+            <MultiSelectParameters
+              selectedParameters={selectedParameters}
+              setSelectedParameters={setSelectedParameters}
+              parameters={parameters}
+            />
           </Grid>
 
           {deviceType === "video" && (
