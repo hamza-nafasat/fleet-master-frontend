@@ -26,10 +26,10 @@ const addDeviceAction = (data) => async (dispatch) => {
   dispatch(addDeviceStart());
   try {
     const response = await customAxios.post("/device/create", data);
-    // console.log("truck create api response ", response);
+    console.log("truck create api response ", response);
     dispatch(addDeviceSuccess(response.data));
   } catch (error) {
-    // console.log("add device api error", error);
+    console.log("add device api error", error);
     dispatch(addDeviceFailure(error?.response?.data?.message || "Error occurred while creating truck"));
   }
 };
@@ -102,7 +102,9 @@ const getMyAllSensorsDataAction = () => async (dispatch) => {
   } catch (error) {
     // console.log("get my all sensors latest data api error", error);
     dispatch(
-      getMyAllSensorsDataFailure(error?.response?.data?.message || "Error occurred while getting my all sensors latest data")
+      getMyAllSensorsDataFailure(
+        error?.response?.data?.message || "Error occurred while getting my all sensors latest data"
+      )
     );
   }
 };
