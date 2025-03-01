@@ -77,7 +77,6 @@ export const attachModalSchema = Yup.object({
 export const addDeviceSchema = Yup.object({
   deviceName: Yup.string().required("Device name is required and unique"),
   deviceType: Yup.string().required("Device type is required"),
-  uniqueId: Yup.string().required("Unique id is required"),
   // ipAddress: Yup.string().required("Ip address is required"),
 });
 
