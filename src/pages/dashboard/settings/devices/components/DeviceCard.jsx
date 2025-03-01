@@ -109,7 +109,7 @@ const DeviceCard = ({ device, handleDeleteDevice, handleOpenEditModal }) => {
                 fontSize: "16px",
               }}
             >
-              {device?.uniqueId}
+              {device?.uniqueId?.slice(0, 5) + "..." + device?.uniqueId?.slice(-3)}
             </Typography>
           </Box>
         </Box>
