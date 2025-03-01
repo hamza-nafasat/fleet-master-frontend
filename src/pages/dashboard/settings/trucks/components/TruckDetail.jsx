@@ -257,7 +257,9 @@ const DeviceCard = ({ device, truck }) => {
       >
         <Box sx={{ display: "flex", justifyContent: "space-between", gap: "1rem" }}>
           <Box>
-            <Typography sx={{ color: "rgba(0, 107, 206, 1)" }}>{device?.uniqueId}</Typography>
+            <Typography sx={{ color: "rgba(0, 107, 206, 1)" }}>
+              {device?.uniqueId?.slice(0, 8) + "..." + device?.uniqueId?.slice(-5)}
+            </Typography>
             <Typography
               sx={{
                 color: "rgba(70, 66, 85, 1)",
@@ -292,8 +294,10 @@ const DeviceCard = ({ device, truck }) => {
             </Grid>
           ) : (
             <Grid item xs={6} md={10}>
-              <Typography sx={{ color: "rgba(127,127,146,1)", fontSize: "12px" }}>Ip Address</Typography>
-              <Typography sx={{ color: "rgba(0, 107, 206, 1)", fontSize: "14px" }}>{device?.ip}</Typography>
+              <Typography sx={{ color: "rgba(127,127,146,1)", fontSize: "12px" }}>createdAt</Typography>
+              <Typography sx={{ color: "rgba(0, 107, 206, 1)", fontSize: "14px" }}>
+                {device?.createdAt?.split("T")[0]}
+              </Typography>
             </Grid>
           )}
           <Grid item xs={6} md={2} display="flex" flexDirection="column" alignItems="flex-end">
@@ -343,14 +347,8 @@ const SingleTruckDetail = ({ handleOpenMapModal, handleOpenVideoModal, truck }) 
         <TruckDataList title="Plate Number" value={truck?.plateNumber} />
         <TruckDataList title="Fleet Number" value={truck?.fleetNumber} />
         <TruckDataList title="Status" value={truck?.status} />
-        <TruckDataList
-          title="Last Update"
-          value={truck?.updatedAt?.split("T")[0].split("-").reverse().join("-")}
-        />
-        <TruckDataList
-          title="Created At"
-          value={truck?.createdAt?.split("T")[0].split("-").reverse().join("-")}
-        />
+        <TruckDataList title="Last Update" value={truck?.updatedAt?.split("T")[0].split("-").reverse().join("-")} />
+        <TruckDataList title="Created At" value={truck?.createdAt?.split("T")[0].split("-").reverse().join("-")} />
       </Grid>
       <Grid item xs={12} md={5}>
         <Box
@@ -451,18 +449,9 @@ const UserProfile = ({ driver }) => {
       </Box>
       {/* <UserList title="Email" value={driver?.email} /> */}
       <UserList title="Mobile Number" value={driver?.phoneNumber} />
-      <UserList
-        title="License Expiry "
-        value={driver?.licenseExpiry?.split("T")[0].split("-").reverse().join("-")}
-      />
-      <UserList
-        title="Last Update"
-        value={driver?.updatedAt?.split("T")[0].split("-").reverse().join("-")}
-      />
-      <UserList
-        title="Created At"
-        value={driver?.createdAt?.split("T")[0].split("-").reverse().join("-")}
-      />
+      <UserList title="License Expiry " value={driver?.licenseExpiry?.split("T")[0].split("-").reverse().join("-")} />
+      <UserList title="Last Update" value={driver?.updatedAt?.split("T")[0].split("-").reverse().join("-")} />
+      <UserList title="Created At" value={driver?.createdAt?.split("T")[0].split("-").reverse().join("-")} />
     </Box>
   );
 };
