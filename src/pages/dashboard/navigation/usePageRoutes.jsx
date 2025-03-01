@@ -393,6 +393,237 @@ const usePageRoutes = (initialIsActive, initialUser) => {
       },
     ];
   }, [isActivePage]);
+
+  const userRoutesU = useMemo(() => {
+    return [
+      {
+        icon: <HomeIcon isActivePage={isActivePage} />,
+        title: "Home",
+        route: "/dashboard/home",
+        page: "home",
+      },
+      {
+        icon: <DashboardIcon isActivePage={isActivePage} />,
+        title: "Dashboard",
+        page: "dashboard",
+        subPages: [
+          {
+            icon: <RealTimeMapIcon isActivePage={isActivePage} />,
+            title: "Real Time Map",
+            route: "/dashboard/real-time-map",
+            page: "real-time-map",
+          },
+        ],
+      },
+      {
+        icon: <SettingIcon isActivePage={isActivePage} />,
+        title: "Settings",
+        page: "settings",
+        subPages: [
+          {
+            icon: <SettingNestedIcon />,
+            title: "Alerts Type",
+            route: "/dashboard/alerts",
+            page: "alerts-type",
+          },
+          {
+            icon: <SettingNestedIcon />,
+            title: "Drivers",
+            route: "/dashboard/drivers",
+            page: "drivers",
+          },
+          {
+            icon: <SettingNestedIcon />,
+            title: "Trucks",
+            route: "/dashboard/trucks",
+            page: "trucks",
+          },
+          {
+            icon: <SettingNestedIcon />,
+            title: "Devices",
+            route: "/dashboard/devices",
+            page: "devices",
+          },
+        ],
+      },
+      {
+        icon: <PricingIcon isActivePage={isActivePage} />,
+        title: "Pricing Plan",
+        page: "plans",
+        subPages: [
+          {
+            icon: <PlanIcon />,
+            title: "Plans",
+            route: "/dashboard/subscription-plan",
+            page: "subscription-plan",
+          },
+          {
+            icon: <ReceiptIcon />,
+            title: "Receipt",
+            route: "/dashboard/subscription-history",
+            page: "subscription-history",
+          },
+        ],
+      },
+    ];
+  }, [isActivePage]);
+  const siteAdminRoutesU = useMemo(() => {
+    return [
+      {
+        icon: <HomeIcon isActivePage={isActivePage} />,
+        title: "Home",
+        route: "/dashboard/home",
+        page: "home",
+      },
+      {
+        icon: <DashboardIcon isActivePage={isActivePage} />,
+        title: "Dashboard",
+        page: "dashboard",
+        subPages: [
+          {
+            icon: <RealTimeMapIcon isActivePage={isActivePage} />,
+            title: "Real Time Map",
+            route: "/dashboard/real-time-map",
+            page: "real-time-map",
+          },
+        ],
+      },
+      {
+        icon: <SettingIcon isActivePage={isActivePage} />,
+        title: "Settings",
+        page: "settings",
+        subPages: [
+          {
+            icon: <SettingNestedIcon />,
+            title: "Alerts Type",
+            route: "/dashboard/alerts",
+            page: "alerts-type",
+          },
+          {
+            icon: <SettingNestedIcon />,
+            title: "Drivers",
+            route: "/dashboard/drivers",
+            page: "drivers",
+          },
+          {
+            icon: <SettingNestedIcon />,
+            title: "Trucks",
+            route: "/dashboard/trucks",
+            page: "trucks",
+          },
+          {
+            icon: <SettingNestedIcon />,
+            title: "Devices",
+            route: "/dashboard/devices",
+            page: "devices",
+          },
+        ],
+      },
+      {
+        icon: <PricingIcon isActivePage={isActivePage} />,
+        title: "Pricing Plan",
+        page: "plans",
+        subPages: [
+          {
+            icon: <PlanIcon />,
+            title: "Plans",
+            route: "/dashboard/subscription-plan",
+            page: "subscription-plan",
+          },
+          {
+            icon: <ReceiptIcon />,
+            title: "Receipt",
+            route: "/dashboard/subscription-history",
+            page: "subscription-history",
+          },
+        ],
+      },
+    ];
+  }, [isActivePage]);
+  const paymentManagerRoutesU = useMemo(() => {
+    return [
+      {
+        icon: <HomeIcon isActivePage={isActivePage} />,
+        title: "Home",
+        route: "/dashboard/home",
+        page: "home",
+      },
+      {
+        icon: <PricingIcon isActivePage={isActivePage} />,
+        title: "Pricing Plan",
+        page: "plans",
+        subPages: [
+          {
+            icon: <PlanIcon />,
+            title: "Plans",
+            route: "/dashboard/plans/subscription-plan",
+            page: "subscription-plan",
+          },
+          {
+            icon: <ReceiptIcon />,
+            title: "Receipt",
+            route: "/dashboard/plans/subscription-history",
+            page: "subscription-history",
+          },
+        ],
+      },
+    ];
+  }, [isActivePage]);
+  const reportsManagerRoutesU = useMemo(() => {
+    return [
+      {
+        icon: <HomeIcon isActivePage={isActivePage} />,
+        title: "Home",
+        route: "/dashboard/home",
+        page: "home",
+      },
+      {
+        icon: <DashboardIcon isActivePage={isActivePage} />,
+        title: "Dashboard",
+        page: "dashboard",
+        subPages: [
+          {
+            icon: <RealTimeMapIcon isActivePage={isActivePage} />,
+            title: "Real Time Map",
+            route: "/dashboard/real-time-map",
+            page: "real-time-map",
+          },
+        ],
+      },
+      {
+        icon: <SettingIcon isActivePage={isActivePage} />,
+        title: "Settings",
+        page: "settings",
+        subPages: [
+          {
+            icon: <SettingNestedIcon />,
+            title: "Alerts Type",
+            route: "/dashboard/alerts",
+            page: "alerts-type",
+          },
+          {
+            icon: <SettingNestedIcon />,
+            title: "Drivers",
+            route: "/dashboard/drivers",
+            page: "drivers",
+          },
+          {
+            icon: <SettingNestedIcon />,
+            title: "Trucks",
+            route: "/dashboard/trucks",
+            page: "trucks",
+          },
+          {
+            icon: <SettingNestedIcon />,
+            title: "Devices",
+            route: "/dashboard/devices",
+            page: "devices",
+          },
+        ],
+      },
+    ];
+  }, [isActivePage]);
+
   const refetch = useCallback(
     (newIsActive, newUser) => {
       if (user?.role) setUser(newUser);
@@ -402,25 +633,62 @@ const usePageRoutes = (initialIsActive, initialUser) => {
     [user.role]
   );
   useEffect(() => {
+    let isSubscribed = false;
     if (user) {
-      switch (user.role) {
-        case "site-admin":
-          setRoutes(siteAdminRoutes);
-          break;
-        case "report-manager":
-          setRoutes(reportsManagerRoutes);
-          break;
-        case "payment-manager":
-          setRoutes(paymentManagerRoutes);
-          break;
-        case "user":
-          setRoutes(userRoutes);
-          break;
-        default:
-          setRoutes([]);
+      if (user?.subscriptionId) isSubscribed = true;
+      else if (user?.ownerId) {
+        if (user.ownerId?.subscriptionId) isSubscribed = true;
+        else isSubscribed = false;
+      }
+
+      if (isSubscribed) {
+        switch (user.role) {
+          case "site-admin":
+            setRoutes(siteAdminRoutes);
+            break;
+          case "report-manager":
+            setRoutes(reportsManagerRoutes);
+            break;
+          case "payment-manager":
+            setRoutes(paymentManagerRoutes);
+            break;
+          case "user":
+            setRoutes(userRoutes);
+            break;
+          default:
+            setRoutes([]);
+        }
+      } else {
+        switch (user.role) {
+          case "site-admin":
+            setRoutes(siteAdminRoutesU);
+            break;
+          case "report-manager":
+            setRoutes(reportsManagerRoutesU);
+            break;
+          case "payment-manager":
+            setRoutes(paymentManagerRoutesU);
+            break;
+          case "user":
+            setRoutes(userRoutesU);
+            break;
+          default:
+            setRoutes([]);
+        }
       }
     }
-  }, [user, isActivePage, refetchTrigger, siteAdminRoutes, reportsManagerRoutes, paymentManagerRoutes, userRoutes]);
+  }, [
+    paymentManagerRoutes,
+    paymentManagerRoutesU,
+    reportsManagerRoutes,
+    reportsManagerRoutesU,
+    siteAdminRoutes,
+    siteAdminRoutesU,
+    user,
+    refetchTrigger,
+    userRoutes,
+    userRoutesU,
+  ]);
   return [routes, refetch];
 };
 

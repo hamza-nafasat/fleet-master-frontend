@@ -100,12 +100,10 @@ const getMyAllSensorsDataAction = () => async (dispatch) => {
     // console.log("get my all sensors latest data api response ", response?.data?.data);
     dispatch(getMyAllSensorsDataSuccess(response.data));
   } catch (error) {
-    // console.log("get my all sensors latest data api error", error);
-    dispatch(
-      getMyAllSensorsDataFailure(
-        error?.response?.data?.message || "Error occurred while getting my all sensors latest data"
-      )
-    );
+    console.log("get my all sensors latest data api error", error);
+    // getMyAllSensorsDataFailure(
+    //   error?.response?.data?.message || "Error occurred while getting my all sensors latest data"
+    // )
   }
 };
 

@@ -17,14 +17,9 @@ const alertsTypesAccordingDevice = (device) => {
       { parameter: "tire-pressure" },
     ],
     video: [{ parameter: "remove-sd-card" }],
-    seatBelt: [{ parameter: "detach-seat-belt" }, { parameter: "damage-seat-belt" }],
+    seatBelt: [{ parameter: "remove-seat-belt" }, { parameter: "damage-seat-belt" }],
     fule: [{ parameter: "fule-leakage" }, { parameter: "low-fule" }],
-    temperature: [
-      { parameter: "high-temperature" },
-      { parameter: "high-humidity" },
-      { parameter: "low-temperature" },
-      { parameter: "low-humidity" },
-    ],
+    temperature: [{ parameter: "temperature-alert" }, { parameter: "humidity-alert" }],
     airConditioner: [{ parameter: "on/off-alert" }, { parameter: "dust-alert" }],
     engine: [{ parameter: "engine-overheat" }, { parameter: "engine-damage" }, { parameter: "idle-engine" }],
   };

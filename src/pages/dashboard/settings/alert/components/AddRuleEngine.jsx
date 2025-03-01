@@ -21,7 +21,6 @@ import { toast } from "react-toastify";
 import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
 import AddIcon from "../../../../../assets/svgs/settings/AddIcon";
 import { createRuleEngineActions, getAllRuleEngineActions } from "../../../../../redux/actions/ruleEngine.actions";
-import { getRuleEngineParameters } from "./data";
 
 const severityType = [{ type: "high" }, { type: "medium" }, { type: "low" }];
 

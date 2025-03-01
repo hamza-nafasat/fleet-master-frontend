@@ -16,17 +16,11 @@ const Devices = () => {
   const [selectedDevice, setSelectedDevice] = useState(null);
   const [modalType, setModalType] = useState(null);
 
+  const handleCloseModal = () => setModalType(null);
+  const handleOpenAddModal = () => setModalType("add");
   const handleOpenEditModal = (device) => {
     setSelectedDevice(device);
     setModalType("edit");
-  };
-
-  const handleOpenAddModal = () => {
-    setModalType("add");
-  };
-
-  const handleCloseModal = () => {
-    setModalType(null);
   };
 
   const handleDeleteDevice = (deviceId) => {
