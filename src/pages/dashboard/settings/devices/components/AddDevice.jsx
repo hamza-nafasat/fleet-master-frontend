@@ -13,7 +13,7 @@ import {
   styled,
 } from "@mui/material";
 import { useFormik } from "formik";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import BackIcon from "../../../../../assets/svgs/modal/BackIcon";
 import CloseIcon from "../../../../../assets/svgs/modal/CloseIcon";
 import SaveIcon from "../../../../../assets/svgs/settings/SaveIcon";
@@ -21,29 +21,19 @@ import { addDeviceSchema } from "../../../../../schemas";
 import { useDispatch } from "react-redux";
 import { addDeviceAction } from "../../../../../redux/actions/device.actions";
 import MultiSelectParameters from "./MultiSelectParameters";
+import { alertsTypesAccordingDevice, devicesOptions } from "./options";
+import { v4 as uuid } from "uuid";
 
-// const parameters = [
-//   { parameter: "infence" },
-//   { parameter: "outfence" },
-//   { parameter: "speed-alert" },
-//   { parameter: "sudden-stop" },
-//   { parameter: "two-detection" },
-//   { parameter: "tire-pressure" },
-//   { parameter: "sensor-offline" },
-//   { parameter: "idle-engine" },
-//   { parameter: "damage-alert" },
-// ];
+const initialValues = {
+  deviceName: "",
+  deviceType: "",
+  url: "",
+};
 
 const AddDevice = ({ onClose }) => {
   const dispatch = useDispatch();
-  // const [selectedParameters, setSelectedParameters] = useState([]);
-  // console.log("selectedparams", selectedParameters);
-  const initialValues = {
-    deviceName: "",
-    deviceType: "",
-    uniqueId: "",
-    url: "",
-  };
+  const [parameters, setParameters] = useState([]);
+  const [selectedParameters, setSelectedParameters] = useState([]);
 
   const { values, touched, errors, handleBlur, handleChange, handleSubmit } = useFormik({
     initialValues,
@@ -52,14 +42,17 @@ const AddDevice = ({ onClose }) => {
       const data = {
         name: values.deviceName,
         type: values.deviceType,
-        uniqueId: values.uniqueId,
+        uniqueId: uuid(),
+        parameters: selectedParameters?.map((parameter) => parameter.parameter),
       };
-      if (values.deviceType == "video") {
-        data.url = values.url;
-      }
+      console.log("working", data);
+      if (values.deviceType == "video") data.url = values.url;
       dispatch(addDeviceAction(data));
     },
   });
+  useEffect(() => {
+    setParameters(alertsTypesAccordingDevice(values?.deviceType));
+  }, [values?.deviceType]);
 
   return (
     <Fragment>
@@ -146,29 +139,20 @@ const AddDevice = ({ onClose }) => {
                   onBlur={handleBlur}
                   onChange={handleChange}
                 >
-                  <MenuItem value="gps">GPS</MenuItem>
-                  <MenuItem value="video">Video</MenuItem>
-                  <MenuItem value="other">Other</MenuItem>
+                  {devicesOptions.map((option, i) => (
+                    <MenuItem key={i} value={option?.value}>
+                      {option?.name}
+                    </MenuItem>
+                  ))}
                 </Select>
                 {touched.deviceType && errors.deviceType && <FormHelperText>{errors.deviceType}</FormHelperText>}
               </FormControl>
             </Grid>
-            {/* <Grid item xs={12} lg={6}>
-              <MultiSelectParameters setSelectedParameters={setSelectedParameters} parameters={parameters} />
-            </Grid> */}
-            <Grid item xs="12" lg="6">
-              <TextField
-                fullWidth
-                type="text"
-                label="Unique Id"
-                maxLength="30"
-                name="uniqueId"
-                id="uniqueId"
-                value={values.uniqueId}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                error={touched.uniqueId && Boolean(errors.uniqueId)}
-                helperText={touched.uniqueId && errors.uniqueId}
+            <Grid item xs={12} lg={6}>
+              <MultiSelectParameters
+                selectedParameters={selectedParameters}
+                setSelectedParameters={setSelectedParameters}
+                parameters={parameters}
               />
             </Grid>
             {values.deviceType == "video" && (
