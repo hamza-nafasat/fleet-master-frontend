@@ -74,7 +74,8 @@ const AddRuleEngine = ({ onClose }) => {
 
   const handleSave = async () => {
     const { alertName, email, severityType, platform, status, truck } = formData;
-    if (!alertName || !severityType || !platform || !status || !truck?._id) return toast.error("All fields are required");
+    if (!alertName || !severityType || !platform || !status || !truck?._id)
+      return toast.error("All fields are required");
     if (platform === "email" && !email) return toast.error("Email is required");
     const alerts = accordionList.map((item) => {
       if (!item.sensor.uniqueId) return toast.error(`Select Sensor for ${item.type}`);
@@ -83,7 +84,7 @@ const AddRuleEngine = ({ onClose }) => {
       if (item?.speed) data.speed = item.speed;
       if (item?.lessThen) data.lessThen = item.lessThen;
       if (item?.moreThen) data.moreThen = item.moreThen;
-      if (item?.sensor) data.sensorUniqueId = item.sensor.uniqueId;
+      if (item?.sensor) data.sensorUniqueId = item?.sensor?.uniqueId;
       if (data.type) return data;
     });
     if (!alerts[0]?.type) return toast.error("At least one alert type is required");
@@ -224,12 +225,18 @@ const AddRuleEngine = ({ onClose }) => {
             </Typography>
             <FormGroup row>
               <FormControlLabel
-                control={<Checkbox name="email" checked={formData?.platform === "email"} onChange={handleCheckboxChange} />}
+                control={
+                  <Checkbox name="email" checked={formData?.platform === "email"} onChange={handleCheckboxChange} />
+                }
                 label="Email"
               />
               <FormControlLabel
                 control={
-                  <Checkbox name="platform" checked={formData?.platform === "platform"} onChange={handleCheckboxChange} />
+                  <Checkbox
+                    name="platform"
+                    checked={formData?.platform === "platform"}
+                    onChange={handleCheckboxChange}
+                  />
                 }
                 label="Platform"
               />
@@ -343,11 +350,15 @@ const Accordion = ({ id, onRemove, accordionList, setAccordionList, truck }) => 
               label="Select Sensor"
               value={formData?.sensor || ""}
             >
-              {truck?.devices?.map((sensor, i) => (
-                <MenuItem key={i} value={sensor}>
-                  {sensor?.name?.toUpperCase()}
-                </MenuItem>
-              ))}
+              {truck?.devices?.length ? (
+                truck?.devices?.map((sensor, i) => (
+                  <MenuItem key={i} value={sensor}>
+                    {sensor?.name?.toUpperCase()}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem value={""}>{"No sensors available"}</MenuItem>
+              )}
             </TextField>
           </Grid>
           {/* <MultiSelectParameters setSelectedParameters={setSelectedParameters} parameters={parameters} /> */}
@@ -361,16 +372,35 @@ const Accordion = ({ id, onRemove, accordionList, setAccordionList, truck }) => 
               label="Alert Type"
               value={formData?.type || ""}
             >
-              {getRuleEngineParameters(formData?.sensor?.type).map((type, i) => (
-                <MenuItem key={i} value={type.type}>
-                  {type?.type?.toUpperCase()}
+              {formData?.sensor?.parameters?.map((type, i) => (
+                <MenuItem key={i} value={type}>
+                  {type?.toUpperCase()}
                 </MenuItem>
               ))}
             </TextField>
           </Grid>
-
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="lessThen"
+              fullWidth
+              label="Less Then"
+              type="number"
+              onChange={handleChange}
+              value={formData?.lessThen || ""}
+            />
+          </Grid>{" "}
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="moreThen"
+              fullWidth
+              label="More Then"
+              type="number"
+              onChange={handleChange}
+              value={formData?.moreThen || ""}
+            />
+          </Grid>
           {/* Additional Fields for Specific Alert Types */}
-          {(formData?.type === "tire-pressure" || formData?.type === "speed-alert") && (
+          {/* {(formData?.type === "tire-pressure" || formData?.type === "speed-alert") && (
             <>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -405,7 +435,7 @@ const Accordion = ({ id, onRemove, accordionList, setAccordionList, truck }) => 
                 value={formData?.moreThen || ""}
               />
             </Grid>
-          )}
+          )} */}
         </Grid>
         <Box sx={{ ml: "auto", mt: 2 }}>
           <Button variant="contained" onClick={() => onRemove(id)}>
