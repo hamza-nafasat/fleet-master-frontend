@@ -637,7 +637,7 @@ const usePageRoutes = (initialIsActive, initialUser) => {
     if (user) {
       if (user?.subscriptionId) isSubscribed = true;
       else if (user?.ownerId) {
-        if (user.ownerId?.subscriptionId) isSubscribed = true;
+        if (user?.subscriptionId) isSubscribed = true;
         else isSubscribed = false;
       }
 
@@ -646,7 +646,7 @@ const usePageRoutes = (initialIsActive, initialUser) => {
           case "site-admin":
             setRoutes(siteAdminRoutes);
             break;
-          case "report-manager":
+          case "operator":
             setRoutes(reportsManagerRoutes);
             break;
           case "payment-manager":
@@ -663,7 +663,7 @@ const usePageRoutes = (initialIsActive, initialUser) => {
           case "site-admin":
             setRoutes(siteAdminRoutesU);
             break;
-          case "report-manager":
+          case "operator":
             setRoutes(reportsManagerRoutesU);
             break;
           case "payment-manager":

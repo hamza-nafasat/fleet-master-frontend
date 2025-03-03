@@ -192,7 +192,7 @@ const AddEmployee = ({ onClose }) => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                 >
-                  <MenuItem value="report-manager">Oprator</MenuItem>
+                  <MenuItem value="operator">Oprator</MenuItem>
                   <MenuItem value="site-admin">Admin</MenuItem>
                   <MenuItem value="payment-manager">Payment Manager</MenuItem>
                 </Select>

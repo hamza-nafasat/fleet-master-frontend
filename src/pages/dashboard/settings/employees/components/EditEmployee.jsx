@@ -133,7 +133,7 @@ const EditEmployee = ({ onClose, employ }) => {
             <FormControl fullWidth>
               <InputLabel id="role-label">Role</InputLabel>
               <Select labelId="role-label" id="role" name="role" value={role} onChange={(e) => setRole(e.target.value)}>
-                <MenuItem value="report-manager">Oprator</MenuItem>
+                <MenuItem value="operator">Oprator</MenuItem>
                 <MenuItem value="site-admin">Admin</MenuItem>
                 <MenuItem value="payment-manager">Payment Manager</MenuItem>
               </Select>
