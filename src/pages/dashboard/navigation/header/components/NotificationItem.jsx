@@ -17,7 +17,6 @@ import { timeAgo } from "../../../../../utils/features";
 import RuleEngineIcon from "../../../../../assets/svgs/notification/RuleEngineIcon";
 
 const NotificationItem = ({ id, truckId, createdAt, type, message, isRead, onClose, severity }) => {
-  console.log("creted at", createdAt);
   const { icon, miniIcon } = getNotificationDetails(type);
 
   return (

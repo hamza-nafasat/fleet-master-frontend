@@ -10,8 +10,6 @@ const SubscriptionPlan = () => {
   const [selectedTab, setSelectedTab] = useState("plans");
   const [selectedCard, setSelectedCard] = useState(null);
 
-  console.log("user", user);
-
   const handleChangeTabs = (event, newValue) => {
     setSelectedTab(newValue);
   };
@@ -48,10 +46,7 @@ const SubscriptionPlan = () => {
               borderRadius: "10px",
               backgroundColor: "#e3f2fd",
               color: "black",
-              border:
-                selectedTab === "plans"
-                  ? "1px solid rgba(49, 39, 91, 1)"
-                  : "1px solid rgba(0, 103, 194, 1)",
+              border: selectedTab === "plans" ? "1px solid rgba(49, 39, 91, 1)" : "1px solid rgba(0, 103, 194, 1)",
               "&.Mui-selected": {
                 backgroundColor: "#1976d2",
                 color: "white",

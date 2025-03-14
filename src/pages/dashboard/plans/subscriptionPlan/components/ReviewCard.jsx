@@ -117,9 +117,7 @@ const ReviewCard = ({ card }) => {
           }}
         >
           {loading ? <CircularProgress size={24} sx={{ mx: 2, color: "#fff" }} /> : ""}
-          {user?.subscriptionId && user?.subscriptionId?.plan == card?.type
-            ? "Cancel Subscription"
-            : "Subscribe"}
+          {user?.subscriptionId && user?.subscriptionId?.plan == card?.type ? "Cancel Subscription" : "Subscribe"}
         </Button>
       </Box>
     </Box>

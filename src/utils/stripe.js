@@ -208,7 +208,6 @@ async function getExchangeRates(baseCurrency = "USD") {
   try {
     const response = await fetch(`https://v6.exchangerate-api.com/v6/${CURRENCY_TOKEN}/latest/${baseCurrency}`);
     const data = await response.json();
-    console.log(data); // Check what the API returns
     return data.conversion_rates;
   } catch (error) {
     console.error("Error fetching exchange rates:", error);
@@ -219,11 +218,8 @@ async function getLocalizedPrice(basePrice, baseCurrency = "USD") {
   if (!COUNTRY_TOKEN || !CURRENCY_TOKEN) throw new Error("Missing env variables");
   const userCountry = await getUserCountry();
   const userCurrency = countryToCurrency[userCountry] || baseCurrency;
-
   // Get exchange rates
   const rates = await getExchangeRates(baseCurrency);
-  console.log(rates);
-
   // Calculate price in user's currency
   const conversionRate = rates[userCurrency];
   const localizedPrice = (basePrice * conversionRate).toFixed(2);
