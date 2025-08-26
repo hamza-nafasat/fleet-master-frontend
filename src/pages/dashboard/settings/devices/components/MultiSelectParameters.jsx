@@ -8,8 +8,9 @@ import CheckBoxIcon from "@mui/icons-material/CheckBox";
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-// eslint-disable-next-line react/prop-types
 export default function MultiSelectParameters({ selectedParameters, setSelectedParameters, parameters }) {
+  console.log("parameters", parameters);
+
   return (
     <Autocomplete
       multiple
@@ -18,9 +19,13 @@ export default function MultiSelectParameters({ selectedParameters, setSelectedP
       disableCloseOnSelect
       value={selectedParameters}
       onChange={(event, value) => setSelectedParameters(value)}
-      getOptionLabel={(option) => option.parameter}
+      // ✅ If object has parameter → show it, else use name
+      getOptionLabel={(option) => option.parameter || option.name || ""}
+      // ✅ Compare either by parameter text OR _id if available
+      isOptionEqualToValue={(option, value) =>
+        option._id ? option._id === value._id : option.parameter === value.parameter
+      }
       renderOption={(props, option, { selected }) => {
-        console.log("selected", selected);
         const { key, ...optionProps } = props;
         return (
           <li key={key} {...optionProps}>
@@ -28,13 +33,15 @@ export default function MultiSelectParameters({ selectedParameters, setSelectedP
               icon={icon}
               checkedIcon={checkedIcon}
               style={{ marginRight: 8 }}
-              checked={selectedParameters?.some((p) => p.parameter === option.parameter)}
+              checked={selected}
             />
-            {option.parameter}
+            {option.parameter || option.name}
           </li>
         );
       }}
-      renderInput={(params) => <TextField {...params} label="Parameters" placeholder="Select parameters" />}
+      renderInput={(params) => (
+        <TextField {...params} label="Select" placeholder="Choose option(s)" />
+      )}
     />
   );
 }
